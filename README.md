@@ -22,7 +22,7 @@ npm install @pamapa/oidc-client-react
 
 ## Getting Started
 
-Configure the SDK by wrapping your application in `AuthProvider`:
+Configure the library by wrapping your application in `AuthProvider`:
 
 ```jsx
 // src/index.js
@@ -82,7 +82,7 @@ export default App
 
 ### Use with a Class Component
 
-Use the `withAuth` higher order component to add the `auth` property to Class components:
+Use the `withAuth` higher order component to add the `auth` property to class components:
 
 ```jsx
 import React from "react"
@@ -100,9 +100,9 @@ export default withAuth(Profile)
 ```
 
 
-### Call an API
+### Call a protected API
 
-Call a protected API with an Access Token:
+As a child of `AuthProvider` with an access token:
 
 ```jsx
 import React from "react"
@@ -142,6 +142,28 @@ const Posts = () => {
 }
 
 export default Posts
+```
+
+As **not** a child of `AuthProvider` (e.g. redux slice) with an access token in `WebStorageStateStore`:
+```jsx
+import { User } from "oidc-client"
+
+function getOidcUser() {
+  const oidcStorage = localStorage.getItem(`oidc.user:<your authority>:<your client id>`)
+  if (!oidcStorage) {
+    return null
+  }
+
+  return User.fromStorageString(oidcStorage)
+}
+
+const user = getOidcUser()
+const token = user?.access_token
+const response = await fetch("https://api.example.com/posts", {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+})
 ```
 
 
