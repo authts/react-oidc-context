@@ -41,7 +41,7 @@ ReactDOM.render(
   <AuthProvider {...oidcConfig}>
     <App />
   </AuthProvider>,
-  document.getElementById('app')
+  document.getElementById("app")
 )
 ```
 
@@ -53,30 +53,30 @@ import React from "react"
 import { useAuth } from "@pamapa/oidc-client-react"
 
 function App() {
-  const auth = useAuth();
+  const auth = useAuth()
 
   if (auth.isLoading) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
   if (auth.error) {
-    return <div>Oops... {error.message}</div>;
+    return <div>Oops... {error.message}</div>
   }
 
   if (auth.isAuthenticated) {
     return (
       <div>
-        Hello {user.name}{' '}
+        Hello {user.name}{" "}
         <button onClick={auth.signOut}>
           Log out
         </button>
       </div>
-    );
+    )
   } else {
-    return <button onClick={auth.signInRedirect}>Log in</button>;
+    return <button onClick={auth.signInRedirect}>Log in</button>
   }
 }
 
-export default App;
+export default App
 ```
 
 
@@ -91,12 +91,12 @@ import { withAuth } from "@pamapa/oidc-client-react"
 class Profile extends React.Component {
   render() {
     // `this.props.auth` has all the same properties as the `useAuth` hook
-    const auth = this.props.auth;
-    return <div>Hello {auth.user.name}</div>;
+    const auth = this.props.auth
+    return <div>Hello {auth.user.name}</div>
   }
 }
 
-export default withAuth(Profile);
+export default withAuth(Profile)
 ```
 
 
@@ -109,39 +109,39 @@ import React from "react"
 import { useAuth0 } from "@pamapa/oidc-client-react"
 
 const Posts = () => {
-  const auth = useAuth();
-  const [posts, setPosts] = useState(null);
+  const auth = useAuth()
+  const [posts, setPosts] = useState(null)
 
   React.useEffect(() => {
     (async () => {
       try {
-        const token = user?.access_token
-        const response = await fetch('https://api.example.com/posts', {
+        const token = auth.user?.access_token
+        const response = await fetch("https://api.example.com/posts", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        });
-        setPosts(await response.json());
+        })
+        setPosts(await response.json())
       } catch (e) {
-        console.error(e);
+        console.error(e)
       }
-    })();
-  }, [auth]);
+    })()
+  }, [auth])
 
   if (!posts) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   return (
     <ul>
       {posts.map((post, index) => {
-        return <li key={index}>{post}</li>;
+        return <li key={index}>{post}</li>
       })}
     </ul>
-  );
-};
+  )
+}
 
-export default Posts;
+export default Posts
 ```
 
 
