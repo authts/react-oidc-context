@@ -106,7 +106,7 @@ As a child of `AuthProvider` with an access token:
 
 ```jsx
 import React from "react"
-import { useAuth0 } from "@pamapa/oidc-client-react"
+import { useAuth } from "@pamapa/oidc-client-react"
 
 const Posts = () => {
   const auth = useAuth()
@@ -176,4 +176,4 @@ This library is inspired by [oidc-react](https://github.com/bjerkio/oidc-react),
 
 
 ## License
-This project is licensed under the MIT license. See the [LICENSE](https://github.com/auth0/auth0-react/blob/master/LICENSE) file for more info.
+This project is licensed under the MIT license. See the [LICENSE](https://github.com/pamapa/oidc-client-react/blob/main/LICENSE) file for more info.
