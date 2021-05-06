@@ -83,7 +83,7 @@ function App() {
   if (auth.isAuthenticated) {
     return (
       <div>
-        Hello {user.name}{" "}
+        Hello {user.profile.sub}{" "}
         <button onClick={auth.signOut}>
           Log out
         </button>
@@ -111,7 +111,7 @@ class Profile extends React.Component {
   render() {
     // `this.props.auth` has all the same properties as the `useAuth` hook
     const auth = this.props.auth
-    return <div>Hello {auth.user.name}</div>
+    return <div>Hello {auth.user.profile.sub}</div>
   }
 }
 
