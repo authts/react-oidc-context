@@ -181,13 +181,19 @@ function getOidcUser() {
     return User.fromStorageString(oidcStorage)
 }
 
-const user = getOidcUser()
-const token = user?.access_token
-const response = await fetch("https://api.example.com/posts", {
-    headers: {
-        Authorization: `Bearer ${token}`,
+export const getPosts = createAsyncThunk(
+    "store/getPosts",
+    async () => {
+        const user = getOidcUser()
+        const token = user?.access_token
+        return fetch("https://api.example.com/posts", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
     },
-})
+    ...
+)
 ```
 
 
