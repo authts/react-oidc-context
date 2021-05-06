@@ -43,24 +43,24 @@ import { AuthProvider } from "@pamapa/oidc-client-react"
 import App from "./App"
 
 const oidcConfig = {
-  authority: <your authority>,
-  client_id: <your client id>,
-  redirect_uri: <your redirect uri>,
-  
-  // authorization code flow with proof key for code exchange (PKCE)
-  response_type: "code",
-  scope: "openid",
-  
-  // additional
-  automaticSilentRenew: true,
-  ...
+    authority: <your authority>,
+    client_id: <your client id>,
+    redirect_uri: <your redirect uri>,
+
+    // authorization code flow with proof key for code exchange (PKCE)
+    response_type: "code",
+    scope: "openid",
+
+    // additional
+    automaticSilentRenew: true,
+    ...
 }
 
 ReactDOM.render(
-  <AuthProvider {...oidcConfig}>
-    <App />
-  </AuthProvider>,
-  document.getElementById("app")
+    <AuthProvider {...oidcConfig}>
+        <App />
+    </AuthProvider>,
+    document.getElementById("app")
 )
 ```
 
@@ -72,28 +72,28 @@ import React from "react"
 import { useAuth } from "@pamapa/oidc-client-react"
 
 function App() {
-  const auth = useAuth()
+    const auth = useAuth()
 
-  if (auth.isLoading) {
-    return <div>Loading...</div>
-  }
-  
-  if (auth.error) {
-    return <div>Oops... {error.message}</div>
-  }
+    if (auth.isLoading) {
+        return <div>Loading...</div>
+    }
 
-  if (auth.isAuthenticated) {
-    return (
-      <div>
-        Hello {user.profile.sub}{" "}
-        <button onClick={auth.signOut}>
-          Log out
-        </button>
-      </div>
-    )
-  } else {
+    if (auth.error) {
+        return <div>Oops... {auth.error.message}</div>
+    }
+
+    if (auth.isAuthenticated) {
+        return (
+            <div>
+                Hello {auth.user?.profile.sub}{" "}
+                <button onClick={auth.signOut}>
+                    Log out
+                </button>
+            </div>
+        )
+    }
+
     return <button onClick={auth.signInRedirect}>Log in</button>
-  }
 }
 
 export default App
@@ -110,11 +110,11 @@ import React from "react"
 import { withAuth } from "@pamapa/oidc-client-react"
 
 class Profile extends React.Component {
-  render() {
-    // `this.props.auth` has all the same properties as the `useAuth` hook
-    const auth = this.props.auth
-    return <div>Hello {auth.user.profile.sub}</div>
-  }
+    render() {
+        // `this.props.auth` has all the same properties as the `useAuth` hook
+        const auth = this.props.auth
+        return <div>Hello {auth.user.profile.sub}</div>
+    }
 }
 
 export default withAuth(Profile)
@@ -131,36 +131,36 @@ import React from "react"
 import { useAuth } from "@pamapa/oidc-client-react"
 
 const Posts = () => {
-  const auth = useAuth()
-  const [posts, setPosts] = useState(null)
+    const auth = useAuth()
+    const [posts, setPosts] = useState(null)
 
-  React.useEffect(() => {
-    (async () => {
-      try {
-        const token = auth.user?.access_token
-        const response = await fetch("https://api.example.com/posts", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        setPosts(await response.json())
-      } catch (e) {
-        console.error(e)
-      }
-    })()
-  }, [auth])
+    React.useEffect(() => {
+        (async () => {
+            try {
+                const token = auth.user?.access_token
+                const response = await fetch("https://api.example.com/posts", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                setPosts(await response.json())
+            } catch (e) {
+                console.error(e)
+            }
+        })()
+    }, [auth])
 
-  if (!posts) {
-    return <div>Loading...</div>
-  }
+    if (!posts) {
+        return <div>Loading...</div>
+    }
 
-  return (
-    <ul>
-      {posts.map((post, index) => {
-        return <li key={index}>{post}</li>
-      })}
-    </ul>
-  )
+    return (
+        <ul>
+            {posts.map((post, index) => {
+                return <li key={index}>{post}</li>
+            })}
+        </ul>
+    )
 }
 
 export default Posts
@@ -172,20 +172,20 @@ As **not** a child of `AuthProvider` (e.g. redux slice) with an access token in 
 import { User } from "oidc-client"
 
 function getOidcUser() {
-  const oidcStorage = localStorage.getItem(`oidc.user:<your authority>:<your client id>`)
-  if (!oidcStorage) {
-    return null
-  }
+    const oidcStorage = localStorage.getItem(`oidc.user:<your authority>:<your client id>`)
+    if (!oidcStorage) {
+        return null
+    }
 
-  return User.fromStorageString(oidcStorage)
+    return User.fromStorageString(oidcStorage)
 }
 
 const user = getOidcUser()
 const token = user?.access_token
 const response = await fetch("https://api.example.com/posts", {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
+    headers: {
+        Authorization: `Bearer ${token}`,
+    },
 })
 ```
 
