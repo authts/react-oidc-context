@@ -28,7 +28,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.5.0",
     "@testing-library/react": "^11.2.6",
-    "@testing-library/react-hooks": "^3.2.1",
+    "@testing-library/react-hooks": "^5.1.2",
     "@types/react": "^17.0.5",
     "@types/react-dom": "^17.0.3",
     "react": "^17.0.2",
