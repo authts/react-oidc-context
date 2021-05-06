@@ -4,6 +4,7 @@
 
 
 Lightweight auth library using the [oidc-client](https://github.com/IdentityModel/oidc-client-js) library for React Single Page Applications (SPA).
+Support for [hooks](https://reactjs.org/docs/hooks-intro.html) and [higher-order components (HOC)](https://reactjs.org/docs/higher-order-components.html).
 
 
 ## Table of Contents
@@ -102,7 +103,7 @@ export default App
 
 ### Use with a Class Component
 
-Use the `withAuth` higher order component to add the `auth` property to class components:
+Use the `withAuth` higher-order component to add the `auth` property to class components:
 
 ```jsx
 // src/Profile.jsx
