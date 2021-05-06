@@ -34,7 +34,7 @@ npm install @pamapa/oidc-client-react
 Configure the library by wrapping your application in `AuthProvider`:
 
 ```jsx
-// src/index.js
+// src/index.jsx
 import React from "react"
 import ReactDOM from "react-dom"
 import { AuthProvider } from "@pamapa/oidc-client-react"
@@ -54,10 +54,10 @@ ReactDOM.render(
 )
 ```
 
-Use the `useAuth` hook in your components to access authentication state (`isLoading`, `isAuthenticated` and `user`) and authentication methods (`signInRedirect`, `signIn` and `signOut`):
+Use the `useAuth` hook in your components to access authentication state (`isLoading`, `isAuthenticated` and `user`) and authentication methods (`signInRedirect`, `signOut` and `signOutRedirect`):
 
 ```jsx
-// src/App.js
+// src/App.jsx
 import React from "react"
 import { useAuth } from "@pamapa/oidc-client-react"
 
@@ -67,6 +67,7 @@ function App() {
   if (auth.isLoading) {
     return <div>Loading...</div>
   }
+  
   if (auth.error) {
     return <div>Oops... {error.message}</div>
   }
@@ -94,6 +95,7 @@ export default App
 Use the `withAuth` higher order component to add the `auth` property to class components:
 
 ```jsx
+// src/Profile.jsx
 import React from "react"
 import { withAuth } from "@pamapa/oidc-client-react"
 
@@ -114,6 +116,7 @@ export default withAuth(Profile)
 As a child of `AuthProvider` with an access token:
 
 ```jsx
+// src/Posts.jsx
 import React from "react"
 import { useAuth } from "@pamapa/oidc-client-react"
 
@@ -155,6 +158,7 @@ export default Posts
 
 As **not** a child of `AuthProvider` (e.g. redux slice) with an access token in `WebStorageStateStore`:
 ```jsx
+// src/slice.js
 import { User } from "oidc-client"
 
 function getOidcUser() {
