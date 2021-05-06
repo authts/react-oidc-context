@@ -1,8 +1,11 @@
-name: Build
-on: [pull_request]
+name: Release
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
 
     strategy:
@@ -20,5 +23,3 @@ jobs:
           
     - run: npm install
     - run: npm run build
-#TODO    - run: npm run lint
-    - run: npm test
