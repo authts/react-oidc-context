@@ -3,7 +3,7 @@
 ![Release](https://github.com/pamapa/oidc-client-react/workflows/Release/badge.svg)
 
 
-Lightweight auth library using the [oidc-client](https://github.com/IdentityModel/oidc-client-js) library for React Single Page Applications (SPA) 
+Lightweight auth library using the [oidc-client](https://github.com/IdentityModel/oidc-client-js) library for React Single Page Applications (SPA).
 
 
 ## Table of Contents
