@@ -38,6 +38,10 @@
     "tslib": "^2.2.0",
     "typescript": "^4.2.4"
   },
+  "jest": {
+    "clearMocks": true,
+    "testURL": "https://www.example.com/"
+  },
   "engines": {
     "node": ">=10"
   }
