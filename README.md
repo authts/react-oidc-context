@@ -3,7 +3,7 @@
 ![Release](https://github.com/pamapa/oidc-client-react/workflows/Release/badge.svg)
 
 
-Lightweight auth library based on oidc-client for React Single Page Applications (SPA) 
+Lightweight auth library using the [oidc-client](https://github.com/IdentityModel/oidc-client-js) library for React Single Page Applications (SPA) 
 
 
 ## Table of Contents
@@ -16,7 +16,9 @@ Lightweight auth library based on oidc-client for React Single Page Applications
 
 
 ## Documentation
-This library acts as a context provider arround the `oidc-client` library.
+This library implements an auth context provider by making use of the `oidc-client` library. Its configuration is
+tight coupled to that library.
+
 - [oidc-client](https://github.com/IdentityModel/oidc-client-js/wiki)
 
 
