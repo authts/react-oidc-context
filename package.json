@@ -1,6 +1,10 @@
 {
   "name": "oidc-client-react",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com:pamapa/oidc-client-react.git"
+  },
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/oidc-client-react.esm.js",
@@ -12,9 +16,8 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test --passWithNoTests",
-    "lint": "tsdx lint",
-    "prepare": "tsdx build"
+    "test": "tsdx test",
+    "lint": "tsdx lint"
   },
   "peerDependencies": {
     "react": ">=16"
@@ -23,10 +26,14 @@
     "oidc-client": "^1.11.5"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.5.0",
+    "@testing-library/react": "^10.0.4",
+    "@testing-library/react-hooks": "^3.2.1",
     "@types/react": "^17.0.5",
     "@types/react-dom": "^17.0.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.2.0",
     "typescript": "^4.2.4"
