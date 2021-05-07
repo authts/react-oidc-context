@@ -13,18 +13,13 @@ export interface AuthProviderProps extends UserManagerSettings {
     children?: React.ReactNode
 
     /**
-     * On sign out hook. Can be a async function.
-     * @param user User
+     * By default this removes the code and state parameters from the url when you are redirected from the authorize page.
+     * It uses `window.history` but you might want to overwrite this if you are using a custom router, like `react-router-dom`
      */
-    onSignIn?: (user: User | null) => Promise<void> | void
+    onSigninCallback?: (user: User | null) => void
 
     /**
-     * On sign out hook. Can be a async function.
-     */
-    onSignOut?: () => Promise<void> | void
-
-    /**
-     * By default, if the page url has code/state params, the SDK will call automatically the userManager.signinCallback.
+     * By default, if the page url has code/state params, this provider will call automatically the userManager.signinCallback.
      * In some cases the code might be for something else (another OAuth SDK perhaps). In these
      * instances you can instruct the client to ignore them eg
      *
@@ -35,6 +30,22 @@ export interface AuthProviderProps extends UserManagerSettings {
      * ```
      */
     skipSigninCallback?: boolean
+
+    /**
+     * On sign out hook. Can be a async function.
+     */
+    onSignOut?: () => Promise<void> | void
+}
+
+/**
+ * @ignore
+ */
+const defaultOnSigninCallback = (_user: User | null): void => {
+    window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+    )
 }
 
 /**
@@ -44,9 +55,9 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     const {
         children,
 
-        onSignIn,
-        onSignOut,
+        onSigninCallback = defaultOnSigninCallback,
         skipSigninCallback,
+        onSignOut,
 
         ...userManagerProps
     } = props
@@ -55,12 +66,12 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     const [state, dispatch] = React.useReducer(reducer, initialAuthState)
 
     React.useEffect(() => {
-        const initialise = async (): Promise<void> => {
+        (async (): Promise<void> => {
             try {
                 // check if returning back from authority server
                 if (hasAuthParams() && !skipSigninCallback) {
                     const user = await userManager.signinCallback()
-                    onSignIn && onSignIn(user)
+                    onSigninCallback(user)
                 }
             } catch (error) {
                 dispatch({ type: "ERROR", error })
@@ -69,8 +80,8 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
             const user = await userManager.getUser()
             dispatch({ type: "INITIALISED", user })
         }
-        initialise()
-    }, [userManager, skipSigninCallback, onSignIn])
+        )()
+    }, [userManager, skipSigninCallback, onSigninCallback])
 
     // register to userManager events
     React.useEffect(() => {
