@@ -26,7 +26,8 @@ describe("AuthProvider", () => {
         expect(userManagerMock.getUser).toHaveBeenCalled()
     })
 
-    it("should handle signinCallback success and clear the url", async () => {
+    it("should handle signinCallback success and call onSigninCallback", async () => {
+        const onSigninCallback = jest.fn()
         window.history.pushState(
             {},
             document.title,
@@ -36,17 +37,17 @@ describe("AuthProvider", () => {
             "https://www.example.com/?code=__test_code__&state=__test_state__"
         )
 
-        const wrapper = createWrapper()
+        const wrapper = createWrapper({ onSigninCallback })
         const { waitForNextUpdate } = renderHook(() => useAuth(), {
             wrapper,
         })
         await waitForNextUpdate()
 
         expect(userManagerMock.signinCallback).toHaveBeenCalled()
-        expect(window.location.href).toBe("https://www.example.com/")
+        expect(onSigninCallback).toHaveBeenCalled()
     })
 
-    it("should handle signOut", async () => {
+    it("should handle signOut and call onSignOut", async () => {
         const onSignOut = jest.fn()
 
         const wrapper = createWrapper({ onSignOut })
@@ -63,7 +64,7 @@ describe("AuthProvider", () => {
         expect(onSignOut).toHaveBeenCalled()
     })
 
-    it("should handle signoutRedirect", async () => {
+    it("should handle signoutRedirect and call onSignOut", async () => {
         const onSignOut = jest.fn()
         const wrapper = createWrapper({ onSignOut })
         const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
