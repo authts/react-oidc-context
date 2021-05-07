@@ -13,15 +13,25 @@ export interface AuthProviderProps extends UserManagerSettings {
     children?: React.ReactNode
 
     /**
-     * By default this removes the code and state parameters from the url when you are redirected from the authorize page.
-     * It uses `window.history` but you might want to overwrite this if you are using a custom router, like `react-router-dom`
+     * On sign out hook. Can be a async function.
+     * Here you can remove the code and state parameters from the url when you are redirected from the authorize page.
+     *
+     * ```jsx
+     * const onSigninCallback = (_user: User | null): void => {
+     *     window.history.replaceState(
+     *         {},
+     *         document.title,
+     *         window.location.pathname
+     *     )
+     * }
+     * ```
      */
-    onSigninCallback?: (user: User | null) => void
+    onSigninCallback?: (user: User | null) => Promise<void> | void
 
     /**
      * By default, if the page url has code/state params, this provider will call automatically the userManager.signinCallback.
      * In some cases the code might be for something else (another OAuth SDK perhaps). In these
-     * instances you can instruct the client to ignore them eg
+     * instances you can instruct the client to ignore them.
      *
      * ```jsx
      * <AuthProvider
@@ -33,19 +43,15 @@ export interface AuthProviderProps extends UserManagerSettings {
 
     /**
      * On sign out hook. Can be a async function.
+     * Here you can change the url after the logout.
+     * ```jsx
+     * const onSignOut = (): void => {
+     *     // go to home after logout
+     *     window.location.pathname = ""
+     * }
+     * ```
      */
     onSignOut?: () => Promise<void> | void
-}
-
-/**
- * @ignore
- */
-const defaultOnSigninCallback = (_user: User | null): void => {
-    window.history.replaceState(
-        {},
-        document.title,
-        window.location.pathname
-    )
 }
 
 /**
@@ -55,7 +61,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     const {
         children,
 
-        onSigninCallback = defaultOnSigninCallback,
+        onSigninCallback,
         skipSigninCallback,
         onSignOut,
 
@@ -71,7 +77,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                 // check if returning back from authority server
                 if (hasAuthParams() && !skipSigninCallback) {
                     const user = await userManager.signinCallback()
-                    onSigninCallback(user)
+                    onSigninCallback && onSigninCallback(user)
                 }
             } catch (error) {
                 dispatch({ type: "ERROR", error })
