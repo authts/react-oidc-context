@@ -13,7 +13,7 @@ export interface AuthProviderProps extends UserManagerSettings {
     children?: React.ReactNode
 
     /**
-     * On sign out hook. Can be a async function.
+     * On sign in callback hook. Can be a async function.
      * Here you can remove the code and state parameters from the url when you are redirected from the authorize page.
      *
      * ```jsx
@@ -42,16 +42,21 @@ export interface AuthProviderProps extends UserManagerSettings {
     skipSigninCallback?: boolean
 
     /**
-     * On sign out hook. Can be a async function.
+     * On remove user hook. Can be a async function.
+     */
+    onRemoveUser?: () => Promise<void> | void
+
+    /**
+     * On sign out redirect hook. Can be a async function.
      * Here you can change the url after the logout.
      * ```jsx
-     * const onSignOut = (): void => {
+     * const onSignOutRedirect = (): void => {
      *     // go to home after logout
      *     window.location.pathname = ""
      * }
      * ```
      */
-    onSignOut?: () => Promise<void> | void
+    onSignOutRedirect?: () => Promise<void> | void
 }
 
 /**
@@ -63,7 +68,9 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
 
         onSigninCallback,
         skipSigninCallback,
-        onSignOut,
+
+        onRemoveUser,
+        onSignOutRedirect,
 
         ...userManagerProps
     } = props
@@ -126,20 +133,20 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         [userManager]
     )
 
-    const signOut = React.useCallback(
+    const removeUser = React.useCallback(
         async (): Promise<void> => {
             await userManager.removeUser()
-            onSignOut && onSignOut()
+            onRemoveUser && onRemoveUser()
         },
-        [userManager, onSignOut]
+        [userManager, onRemoveUser]
     )
 
     const signOutRedirect = React.useCallback(
         async (args?: any): Promise<void> => {
             await userManager.signoutRedirect(args)
-            onSignOut && onSignOut()
+            onSignOutRedirect && onSignOutRedirect()
         },
-        [userManager, onSignOut]
+        [userManager, onSignOutRedirect]
     )
 
     return (
@@ -148,7 +155,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                 ...state,
                 userManager,
                 signInRedirect,
-                signOut,
+                removeUser,
                 signOutRedirect,
             }}
         >

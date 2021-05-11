@@ -32,7 +32,7 @@ function App() {
         return (
             <div>
                 Hello {auth.user?.profile.sub}{" "}
-                <button onClick={auth.signOut}>
+                <button onClick={auth.removeUser}>
                     Log out
                 </button>
             </div>

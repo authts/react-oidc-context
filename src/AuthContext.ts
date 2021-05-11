@@ -17,7 +17,7 @@ export interface AuthContextProps extends AuthState {
     /**
      * Alias for userManager.removeUser
      */
-    signOut: () => Promise<void>
+    removeUser: () => Promise<void>
 
     /**
      * Alias for userManager.signoutRedirect

@@ -47,26 +47,26 @@ describe("AuthProvider", () => {
         expect(onSigninCallback).toHaveBeenCalled()
     })
 
-    it("should handle signOut and call onSignOut", async () => {
-        const onSignOut = jest.fn()
+    it("should handle removeUser and call onRemoveUser", async () => {
+        const onRemoveUser = jest.fn()
 
-        const wrapper = createWrapper({ onSignOut })
+        const wrapper = createWrapper({ onRemoveUser })
         const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
             wrapper,
         })
         await waitForNextUpdate()
 
         await act(async () => {
-            result.current.signOut()
+            result.current.removeUser()
         })
 
         expect(userManagerMock.removeUser).toHaveBeenCalled()
-        expect(onSignOut).toHaveBeenCalled()
+        expect(onRemoveUser).toHaveBeenCalled()
     })
 
     it("should handle signoutRedirect and call onSignOut", async () => {
-        const onSignOut = jest.fn()
-        const wrapper = createWrapper({ onSignOut })
+        const onSignOutRedirect = jest.fn()
+        const wrapper = createWrapper({ onSignOutRedirect })
         const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
             wrapper,
         })
@@ -77,7 +77,7 @@ describe("AuthProvider", () => {
         })
 
         expect(userManagerMock.signoutRedirect).toHaveBeenCalled()
-        expect(onSignOut).toHaveBeenCalled()
+        expect(onSignOutRedirect).toHaveBeenCalled()
     })
 
     it("should get the user", async () => {
