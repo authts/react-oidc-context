@@ -47,6 +47,27 @@ describe("AuthProvider", () => {
         expect(onSigninCallback).toHaveBeenCalled()
     })
 
+    it("should handle signinCallback errors and call onSigninCallback", async () => {
+        const onSigninCallback = jest.fn()
+        window.history.pushState(
+            {},
+            document.title,
+            "/?error=__test_error__&state=__test_state__"
+        )
+        expect(window.location.href).toBe(
+            "https://www.example.com/?error=__test_error__&state=__test_state__"
+        )
+
+        const wrapper = createWrapper({ onSigninCallback })
+        const { waitForNextUpdate } = renderHook(() => useAuth(), {
+            wrapper,
+        })
+        await waitForNextUpdate()
+
+        expect(userManagerMock.signinCallback).toHaveBeenCalled()
+        expect(onSigninCallback).toHaveBeenCalled()
+    })
+
     it("should handle removeUser and call onRemoveUser", async () => {
         const onRemoveUser = jest.fn()
 
