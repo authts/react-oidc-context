@@ -56,7 +56,12 @@ export interface AuthProviderProps extends UserManagerSettings {
      * }
      * ```
      */
-    onSignOutRedirect?: () => Promise<void> | void
+    onSignoutRedirect?: () => Promise<void> | void
+
+    /**
+     * On sign out popup hook. Can be a async function.
+     */
+    onSignoutPopup?: () => Promise<void> | void
 }
 
 /**
@@ -70,7 +75,8 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         skipSigninCallback,
 
         onRemoveUser,
-        onSignOutRedirect,
+        onSignoutRedirect,
+        onSignoutPopup,
 
         ...userManagerProps
     } = props
@@ -126,13 +132,6 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         }
     }, [userManager])
 
-    const signInRedirect = React.useCallback(
-        async (args: any): Promise<void> => {
-            await userManager.signinRedirect(args)
-        },
-        [userManager]
-    )
-
     const removeUser = React.useCallback(
         async (): Promise<void> => {
             await userManager.removeUser()
@@ -141,22 +140,38 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         [userManager, onRemoveUser]
     )
 
-    const signOutRedirect = React.useCallback(
+    const signoutRedirect = React.useCallback(
         async (args?: any): Promise<void> => {
             await userManager.signoutRedirect(args)
-            onSignOutRedirect && onSignOutRedirect()
+            onSignoutRedirect && onSignoutRedirect()
         },
-        [userManager, onSignOutRedirect]
+        [userManager, onSignoutRedirect]
+    )
+
+    const signoutPopup = React.useCallback(
+        async (args?: any): Promise<void> => {
+            await userManager.signoutPopup(args)
+            onSignoutPopup && onSignoutPopup()
+        },
+        [userManager, onSignoutPopup]
     )
 
     return (
         <AuthContext.Provider
             value={{
                 ...state,
-                userManager,
-                signInRedirect,
+                settings: userManager.settings,
+                clearStaleState: userManager.clearStaleState,
                 removeUser,
-                signOutRedirect,
+                signinPopup: userManager.signinPopup,
+                signinSilent: userManager.signinSilent,
+                signinRedirect: userManager.signinRedirect,
+                signoutRedirect,
+                signoutPopup,
+                querySessionStatus: userManager.querySessionStatus,
+                revokeAccessToken: userManager.revokeAccessToken,
+                startSilentRenew: userManager.startSilentRenew,
+                stopSilentRenew: userManager.stopSilentRenew,
             }}
         >
             {children}

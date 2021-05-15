@@ -65,7 +65,7 @@ ReactDOM.render(
 )
 ```
 
-Use the `useAuth` hook in your components to access authentication state (`isLoading`, `isAuthenticated` and `user`) and authentication methods (`signInRedirect`, `removeUser` and `signOutRedirect`):
+Use the `useAuth` hook in your components to access authentication state (`isLoading`, `isAuthenticated` and `user`) and authentication methods (`signinRedirect`, `removeUser` and `signOutRedirect`):
 
 ```jsx
 // src/App.jsx
@@ -94,7 +94,7 @@ function App() {
         )
     }
 
-    return <button onClick={auth.signInRedirect}>Log in</button>
+    return <button onClick={auth.signinRedirect}>Log in</button>
 }
 
 export default App

@@ -13,7 +13,7 @@ describe("useAuth", () => {
 
     it("should throw with no provider", () => {
         const { result } = renderHook(useAuth)
-        expect(() => { result.current.signInRedirect() }).toThrowError(
+        expect(() => { result.current.signinRedirect() }).toThrowError(
             "AuthProvider context is undefined, please verify you are calling useAuth() as child of a <AuthProvider> component."
         )
     })

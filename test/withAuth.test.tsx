@@ -9,7 +9,7 @@ describe("withAuth", () => {
         await act(async () => {
             class MyComponent extends Component<AuthContextProps> {
                 render(): JSX.Element {
-                    return <>hasAuth: {`${!!this.props.signInRedirect}`}</>
+                    return <>hasAuth: {`${!!this.props.signinRedirect}`}</>
                 }
             }
             const WrappedComponent = withAuth(MyComponent);

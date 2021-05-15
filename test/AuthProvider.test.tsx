@@ -10,7 +10,7 @@ const userManagerMock = mocked(new UserManager({ client_id: "" }))
 const user = { id_token: "__test_user__" } as User
 
 describe("AuthProvider", () => {
-    it("should signInRedirect when asked", async () => {
+    it("should signinRedirect when asked", async () => {
         const wrapper = createWrapper()
         const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
             wrapper,
@@ -19,7 +19,7 @@ describe("AuthProvider", () => {
         expect(result.current.user).toBeUndefined()
 
         await act(async () => {
-            result.current.signInRedirect()
+            result.current.signinRedirect()
         })
 
         expect(userManagerMock.signinRedirect).toHaveBeenCalled()
@@ -64,20 +64,36 @@ describe("AuthProvider", () => {
         expect(onRemoveUser).toHaveBeenCalled()
     })
 
-    it("should handle signoutRedirect and call onSignOut", async () => {
-        const onSignOutRedirect = jest.fn()
-        const wrapper = createWrapper({ onSignOutRedirect })
+    it("should handle signoutRedirect and call onSignoutRedirect", async () => {
+        const onSignoutRedirect = jest.fn()
+        const wrapper = createWrapper({ onSignoutRedirect })
         const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
             wrapper,
         })
         await waitForNextUpdate()
 
         await act(async () => {
-            result.current.signOutRedirect()
+            result.current.signoutRedirect()
         })
 
         expect(userManagerMock.signoutRedirect).toHaveBeenCalled()
-        expect(onSignOutRedirect).toHaveBeenCalled()
+        expect(onSignoutRedirect).toHaveBeenCalled()
+    })
+
+    it("should handle signoutPopup and call onSignoutPopup", async () => {
+        const onSignoutPopup = jest.fn()
+        const wrapper = createWrapper({ onSignoutPopup })
+        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+            wrapper,
+        })
+        await waitForNextUpdate()
+
+        await act(async () => {
+            result.current.signoutPopup()
+        })
+
+        expect(userManagerMock.signoutPopup).toHaveBeenCalled()
+        expect(onSignoutPopup).toHaveBeenCalled()
     })
 
     it("should get the user", async () => {

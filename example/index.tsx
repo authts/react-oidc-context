@@ -39,7 +39,7 @@ function App() {
         )
     }
 
-    return <button onClick={auth.signInRedirect}>Log in</button>
+    return <button onClick={auth.signinRedirect}>Log in</button>
 }
 
 ReactDOM.render(
