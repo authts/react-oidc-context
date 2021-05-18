@@ -1,6 +1,7 @@
 # react-oidc-context
 
-![Release](https://github.com/pamapa/oidc-client-react/workflows/Release/badge.svg)
+[![Stable Release](https://img.shields.io/npm/v/react-oidc-context.svg)](https://npm.im/react-oidc-context)
+![Pipeline](https://github.com/pamapa/oidc-client-react/workflows/Release/badge.svg)
 
 
 Lightweight auth library using the [oidc-client](https://github.com/IdentityModel/oidc-client-js) library for React Single Page Applications (SPA).
@@ -167,7 +168,7 @@ containing an access token:
 // src/slice.js
 import { User } from "oidc-client"
 
-function getOidcUser() {
+function getUser() {
     const oidcStorage = localStorage.getItem(`oidc.user:<your authority>:<your client id>`)
     if (!oidcStorage) {
         return null
@@ -179,7 +180,7 @@ function getOidcUser() {
 export const getPosts = createAsyncThunk(
     "store/getPosts",
     async () => {
-        const user = getOidcUser()
+        const user = getUser()
         const token = user?.access_token
         return fetch("https://api.example.com/posts", {
             headers: {
