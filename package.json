@@ -12,6 +12,15 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "authentication",
+    "context-api",
+    "oauth2",
+    "oidc",
+    "openid",
+    "OpenID Connect",
+    "react-component"
+  ],
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
