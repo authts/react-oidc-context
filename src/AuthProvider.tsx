@@ -161,17 +161,17 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
             value={{
                 ...state,
                 settings: userManager.settings,
-                clearStaleState: userManager.clearStaleState,
+                clearStaleState: userManager.clearStaleState.bind(userManager),
                 removeUser,
-                signinPopup: userManager.signinPopup,
-                signinSilent: userManager.signinSilent,
-                signinRedirect: userManager.signinRedirect,
+                signinPopup: userManager.signinPopup.bind(userManager),
+                signinSilent: userManager.signinSilent.bind(userManager),
+                signinRedirect: userManager.signinRedirect.bind(userManager),
                 signoutRedirect,
                 signoutPopup,
-                querySessionStatus: userManager.querySessionStatus,
-                revokeAccessToken: userManager.revokeAccessToken,
-                startSilentRenew: userManager.startSilentRenew,
-                stopSilentRenew: userManager.stopSilentRenew,
+                querySessionStatus: userManager.querySessionStatus.bind(userManager),
+                revokeAccessToken: userManager.revokeAccessToken.bind(userManager),
+                startSilentRenew: userManager.startSilentRenew.bind(userManager),
+                stopSilentRenew: userManager.stopSilentRenew.bind(userManager),
             }}
         >
             {children}
