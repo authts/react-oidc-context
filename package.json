@@ -1,6 +1,6 @@
 {
-  "name": "oidc-client-react",
-  "version": "0.0.1",
+  "name": "react-oidc-context",
+  "version": "0.0.1-alpha0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com:pamapa/oidc-client-react.git"
@@ -10,8 +10,16 @@
   "module": "dist/oidc-client-react.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
-    "dist",
-    "src"
+    "dist"
+  ],
+  "keywords": [
+    "authentication",
+    "context-api",
+    "oauth2",
+    "oidc",
+    "openid",
+    "OpenID Connect",
+    "react-component"
   ],
   "scripts": {
     "start": "tsdx watch",
