@@ -1,4 +1,4 @@
-# oidc-client-react
+# react-oidc-context
 
 ![Release](https://github.com/pamapa/oidc-client-react/workflows/Release/badge.svg)
 
@@ -28,7 +28,7 @@ tight coupled to that library.
 Using [npm](https://npmjs.org/)
 
 ```bash
-npm install @pamapa/oidc-client-react
+npm install react-oidc-context
 ```
 
 
@@ -40,7 +40,7 @@ Configure the library by wrapping your application in `AuthProvider`:
 // src/index.jsx
 import React from "react"
 import ReactDOM from "react-dom"
-import { AuthProvider } from "@pamapa/oidc-client-react"
+import { AuthProvider } from "react-oidc-context"
 import App from "./App"
 
 const oidcConfig = {
@@ -70,7 +70,7 @@ Use the `useAuth` hook in your components to access authentication state (`isLoa
 ```jsx
 // src/App.jsx
 import React from "react"
-import { useAuth } from "@pamapa/oidc-client-react"
+import { useAuth } from "react-oidc-context"
 
 function App() {
     const auth = useAuth()
@@ -108,7 +108,7 @@ Use the `withAuth` higher-order component to add the `auth` property to class co
 ```jsx
 // src/Profile.jsx
 import React from "react"
-import { withAuth } from "@pamapa/oidc-client-react"
+import { withAuth } from "react-oidc-context"
 
 class Profile extends React.Component {
     render() {
@@ -129,7 +129,7 @@ As a child of `AuthProvider` with an access token:
 ```jsx
 // src/Posts.jsx
 import React from "react"
-import { useAuth } from "@pamapa/oidc-client-react"
+import { useAuth } from "react-oidc-context"
 
 const Posts = () => {
     const auth = useAuth()

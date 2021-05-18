@@ -1,6 +1,6 @@
 {
-  "name": "oidc-client-react",
-  "version": "0.0.1",
+  "name": "react-oidc-context",
+  "version": "0.0.1-alpha0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com:pamapa/oidc-client-react.git"
