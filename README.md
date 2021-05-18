@@ -47,13 +47,6 @@ const oidcConfig = {
     authority: <your authority>,
     client_id: <your client id>,
     redirect_uri: <your redirect uri>,
-
-    // authorization code flow with proof key for code exchange (PKCE)
-    response_type: "code",
-    scope: "openid",
-
-    // additional
-    automaticSilentRenew: true,
     ...
 }
 
@@ -65,7 +58,8 @@ ReactDOM.render(
 )
 ```
 
-Use the `useAuth` hook in your components to access authentication state (`isLoading`, `isAuthenticated` and `user`) and authentication methods (`signInRedirect`, `removeUser` and `signOutRedirect`):
+Use the `useAuth` hook in your components to access authentication state (`isLoading`, `isAuthenticated` and `user`) and
+authentication methods (`signinRedirect`, `removeUser` and `signOutRedirect`):
 
 ```jsx
 // src/App.jsx
@@ -94,7 +88,7 @@ function App() {
         )
     }
 
-    return <button onClick={auth.signInRedirect}>Log in</button>
+    return <button onClick={auth.signinRedirect}>Log in</button>
 }
 
 export default App
@@ -114,7 +108,7 @@ class Profile extends React.Component {
     render() {
         // `this.props.auth` has all the same properties as the `useAuth` hook
         const auth = this.props.auth
-        return <div>Hello {auth.user.profile.sub}</div>
+        return <div>Hello {auth.user?.profile.sub}</div>
     }
 }
 
@@ -124,7 +118,7 @@ export default withAuth(Profile)
 
 ### Call a protected API
 
-As a child of `AuthProvider` with an access token:
+As a child of `AuthProvider` with a user containing an access token:
 
 ```jsx
 // src/Posts.jsx
@@ -167,7 +161,8 @@ const Posts = () => {
 export default Posts
 ```
 
-As **not** a child of `AuthProvider` (e.g. redux slice) with an access token in `WebStorageStateStore`:
+As **not** a child of `AuthProvider` (e.g. redux slice) when using local storage (`WebStorageStateStore`) for the user
+containing an access token:
 ```jsx
 // src/slice.js
 import { User } from "oidc-client"

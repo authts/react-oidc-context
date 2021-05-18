@@ -8,13 +8,6 @@ const oidcConfig = {
     authority: "<your authority>",
     client_id: "<your client id>",
     redirect_uri: "<your redirect uri>",
-
-    // authorization code flow with proof key for code exchange (PKCE)
-    response_type: "code",
-    scope: "openid",
-
-    // additional
-    automaticSilentRenew: true,
 }
 
 function App() {
@@ -39,7 +32,7 @@ function App() {
         )
     }
 
-    return <button onClick={auth.signInRedirect}>Log in</button>
+    return <button onClick={auth.signinRedirect}>Log in</button>
 }
 
 ReactDOM.render(
