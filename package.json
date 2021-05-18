@@ -10,8 +10,7 @@
   "module": "dist/oidc-client-react.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "scripts": {
     "start": "tsdx watch",
