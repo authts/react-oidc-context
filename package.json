@@ -4,11 +4,12 @@
   "description": "OpenID Connect & OAuth2 authentication using react context api as state management",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com:pamapa/oidc-client-react.git"
+    "url": "git+https://github.com:pamapa/react-oidc-context.git"
   },
+  "homepage": "https://github.com/pamapa/react-oidc-context#readme",
   "license": "MIT",
   "main": "dist/index.js",
-  "module": "dist/oidc-client-react.esm.js",
+  "module": "dist/react-oidc-context.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
