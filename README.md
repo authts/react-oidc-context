@@ -4,7 +4,7 @@
 ![Pipeline](https://github.com/pamapa/oidc-client-react/workflows/Release/badge.svg)
 
 
-Lightweight auth library using the [oidc-client](https://github.com/IdentityModel/oidc-client-js) library for React Single Page Applications (SPA).
+Lightweight auth library using the [oidc-client](https://github.com/IdentityModel/oidc-client-js) library for React single page applications (SPA).
 Support for [hooks](https://reactjs.org/docs/hooks-intro.html) and [higher-order components (HOC)](https://reactjs.org/docs/higher-order-components.html).
 
 
