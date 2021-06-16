@@ -4,7 +4,7 @@ import { UserManager, UserManagerSettings, User } from "oidc-client"
 import { AuthContext } from "./AuthContext"
 import { initialAuthState } from "./AuthState"
 import { reducer } from "./reducer"
-import { hasAuthParams } from "./utils"
+import { hasAuthParams, loginError } from "./utils"
 
 export interface AuthProviderProps extends UserManagerSettings {
     /**
@@ -92,12 +92,11 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                     const user = await userManager.signinCallback()
                     onSigninCallback && onSigninCallback(user)
                 }
+                const user = await userManager.getUser()
+                dispatch({ type: "INITIALISED", user })
             } catch (error) {
-                dispatch({ type: "ERROR", error })
+                dispatch({ type: "ERROR", error: loginError(error) })
             }
-
-            const user = await userManager.getUser()
-            dispatch({ type: "INITIALISED", user })
         }
         )()
     }, [userManager, skipSigninCallback, onSigninCallback])
