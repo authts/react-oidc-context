@@ -92,12 +92,11 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                     const user = await userManager.signinCallback()
                     onSigninCallback && onSigninCallback(user)
                 }
+                const user = await userManager.getUser()
+                dispatch({ type: "INITIALISED", user })
             } catch (error) {
                 dispatch({ type: "ERROR", error })
             }
-
-            const user = await userManager.getUser()
-            dispatch({ type: "INITIALISED", user })
         }
         )()
     }, [userManager, skipSigninCallback, onSigninCallback])
