@@ -22,7 +22,7 @@ export const reducer = (state: AuthState, action: Action): AuthState => {
                 ...state,
                 user: action.user,
                 isLoading: false,
-                isAuthenticated: !!action.user,
+                isAuthenticated: action.user ? !action.user.expired : false,
                 error: undefined,
             }
         case "USER_UNLOADED":
