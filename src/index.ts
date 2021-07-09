@@ -1,5 +1,6 @@
 export * from "./AuthContext"
 export * from "./AuthProvider"
+export * from "./errors"
 export * from "./useAuth"
 export * from "./utils"
 export * from "./withAuth"
