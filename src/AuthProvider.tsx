@@ -104,11 +104,8 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     // register to userManager events
     React.useEffect(() => {
         // event UserLoaded (e.g. initial load, silent renew success)
-        const handleUserLoaded = () => {
-            void (async () => {
-                const user = await userManager.getUser();
-                dispatch({ type: "USER_LOADED", user });
-            })();
+        const handleUserLoaded = (user: User) => {
+            dispatch({ type: "USER_LOADED", user });
         };
         userManager.events.addUserLoaded(handleUserLoaded);
 
