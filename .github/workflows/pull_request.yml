@@ -20,5 +20,5 @@ jobs:
           
     - run: npm install
     - run: npm run build
-#TODO    - run: npm run lint
+    - run: npm run lint
     - run: npm test

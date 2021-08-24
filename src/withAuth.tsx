@@ -1,7 +1,7 @@
-import React from "react"
+import React from "react";
 
-import { AuthContextProps } from "./AuthContext"
-import { useAuth } from "./useAuth"
+import { AuthContextProps } from "./AuthContext";
+import { useAuth } from "./useAuth";
 
 /**
  * A public higher-order component to access the imperative API
@@ -9,14 +9,14 @@ import { useAuth } from "./useAuth"
 export function withAuth<P extends AuthContextProps>(
     Component: React.ComponentType<P>,
 ): React.ComponentType<Omit<P, keyof AuthContextProps>> {
-    const displayName = `withAuth(${Component.displayName || Component.name})`
+    const displayName = `withAuth(${Component.displayName || Component.name})`;
     const C: React.FC<Omit<P, keyof AuthContextProps>> = (props) => {
-        const auth = useAuth()
+        const auth = useAuth();
 
-        return <Component {...(props as P)} {...auth} />
-    }
+        return <Component {...(props as P)} {...auth} />;
+    };
 
-    C.displayName = displayName
+    C.displayName = displayName;
 
-    return C
+    return C;
 }

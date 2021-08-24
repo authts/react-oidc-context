@@ -1,16 +1,16 @@
-import React from "react"
-import { UserManager, UserManagerSettings, User } from "oidc-client"
+import React from "react";
+import { UserManager, UserManagerSettings, User } from "oidc-client";
 
-import { AuthContext } from "./AuthContext"
-import { initialAuthState } from "./AuthState"
-import { reducer } from "./reducer"
-import { hasAuthParams, loginError } from "./utils"
+import { AuthContext } from "./AuthContext";
+import { initialAuthState } from "./AuthState";
+import { reducer } from "./reducer";
+import { hasAuthParams, loginError } from "./utils";
 
 export interface AuthProviderProps extends UserManagerSettings {
     /**
      * The child nodes your Provider has wrapped
      */
-    children?: React.ReactNode
+    children?: React.ReactNode;
 
     /**
      * On sign in callback hook. Can be a async function.
@@ -26,7 +26,7 @@ export interface AuthProviderProps extends UserManagerSettings {
      * }
      * ```
      */
-    onSigninCallback?: (user: User | null) => Promise<void> | void
+    onSigninCallback?: (user: User | null) => Promise<void> | void;
 
     /**
      * By default, if the page url has code/state params, this provider will call automatically the userManager.signinCallback.
@@ -39,12 +39,12 @@ export interface AuthProviderProps extends UserManagerSettings {
      * >
      * ```
      */
-    skipSigninCallback?: boolean
+    skipSigninCallback?: boolean;
 
     /**
      * On remove user hook. Can be a async function.
      */
-    onRemoveUser?: () => Promise<void> | void
+    onRemoveUser?: () => Promise<void> | void;
 
     /**
      * On sign out redirect hook. Can be a async function.
@@ -56,12 +56,12 @@ export interface AuthProviderProps extends UserManagerSettings {
      * }
      * ```
      */
-    onSignoutRedirect?: () => Promise<void> | void
+    onSignoutRedirect?: () => Promise<void> | void;
 
     /**
      * On sign out popup hook. Can be a async function.
      */
-    onSignoutPopup?: () => Promise<void> | void
+    onSignoutPopup?: () => Promise<void> | void;
 }
 
 /**
@@ -79,81 +79,78 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         onSignoutPopup,
 
         ...userManagerProps
-    } = props
+    } = props;
 
-    const [userManager] = React.useState<UserManager>(() => new UserManager(userManagerProps))
-    const [state, dispatch] = React.useReducer(reducer, initialAuthState)
+    const [userManager] = React.useState<UserManager>(() => new UserManager(userManagerProps));
+    const [state, dispatch] = React.useReducer(reducer, initialAuthState);
 
     React.useEffect(() => {
-        (async (): Promise<void> => {
+        void (async (): Promise<void> => {
             try {
                 // check if returning back from authority server
                 if (hasAuthParams() && !skipSigninCallback) {
-                    const user = await userManager.signinCallback()
-                    onSigninCallback && onSigninCallback(user)
+                    const user = await userManager.signinCallback();
+                    onSigninCallback && onSigninCallback(user);
                 }
-                const user = await userManager.getUser()
-                dispatch({ type: "INITIALISED", user })
+                const user = await userManager.getUser();
+                dispatch({ type: "INITIALISED", user });
             } catch (error) {
-                dispatch({ type: "ERROR", error: loginError(error) })
+                dispatch({ type: "ERROR", error: loginError(error) });
             }
         }
-        )()
-    }, [userManager, skipSigninCallback, onSigninCallback])
+        )();
+    }, [userManager, skipSigninCallback, onSigninCallback]);
 
     // register to userManager events
     React.useEffect(() => {
         // event UserLoaded (e.g. initial load, silent renew success)
-        const handleUserLoaded = () => {
-            (async () => {
-                const user = await userManager.getUser()
-                dispatch({ type: "USER_LOADED", user })
-            })()
-        }
-        userManager.events.addUserLoaded(handleUserLoaded)
+        const handleUserLoaded = (user: User) => {
+            dispatch({ type: "USER_LOADED", user });
+        };
+        userManager.events.addUserLoaded(handleUserLoaded);
 
         // event UserUnloaded (e.g. userManager.removeUser)
         const handleUserUnloaded = () => {
-            dispatch({ type: "USER_UNLOADED" })
-        }
-        userManager.events.addUserUnloaded(handleUserUnloaded)
+            dispatch({ type: "USER_UNLOADED" });
+        };
+        userManager.events.addUserUnloaded(handleUserUnloaded);
 
         // event SilentRenewError (silent renew error)
         const handleSilentRenewError = (error: Error) => {
-            dispatch({ type: "ERROR", error })
-        }
-        userManager.events.addSilentRenewError(handleSilentRenewError)
+            dispatch({ type: "ERROR", error });
+        };
+        userManager.events.addSilentRenewError(handleSilentRenewError);
 
         return () => {
-            userManager.events.removeUserLoaded(handleUserLoaded)
-            userManager.events.removeUserUnloaded(handleUserUnloaded)
-            userManager.events.removeSilentRenewError(handleSilentRenewError)
-        }
-    }, [userManager])
+            userManager.events.removeUserLoaded(handleUserLoaded);
+            userManager.events.removeUserUnloaded(handleUserUnloaded);
+            userManager.events.removeSilentRenewError(handleSilentRenewError);
+        };
+    }, [userManager]);
 
     const removeUser = React.useCallback(
         async (): Promise<void> => {
-            await userManager.removeUser()
-            onRemoveUser && onRemoveUser()
+            await userManager.removeUser();
+            onRemoveUser && onRemoveUser();
         },
         [userManager, onRemoveUser]
-    )
+    );
 
     const signoutRedirect = React.useCallback(
         async (args?: any): Promise<void> => {
-            await userManager.signoutRedirect(args)
-            onSignoutRedirect && onSignoutRedirect()
+            await userManager.signoutRedirect(args);
+            onSignoutRedirect && onSignoutRedirect();
         },
         [userManager, onSignoutRedirect]
-    )
+    );
 
     const signoutPopup = React.useCallback(
         async (args?: any): Promise<void> => {
-            await userManager.signoutPopup(args)
-            onSignoutPopup && onSignoutPopup()
+            await userManager.signoutPopup(args);
+            onSignoutPopup && onSignoutPopup();
         },
         [userManager, onSignoutPopup]
-    )
+    );
 
     return (
         <AuthContext.Provider
@@ -175,5 +172,5 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         >
             {children}
         </AuthContext.Provider>
-    )
-}
+    );
+};
