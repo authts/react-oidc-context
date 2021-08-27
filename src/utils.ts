@@ -6,9 +6,7 @@ export const hasAuthParams = (locationSearch = window.location.search): boolean 
     );
 };
 
-const normalizeErrorFn = (fallbackMessage: string) => (
-    error: Error | { error: string; error_description?: string }
-): Error => {
+const normalizeErrorFn = (fallbackMessage: string) => (error: Error | any): Error => {
     if (error instanceof Error) {
         return error;
     }
