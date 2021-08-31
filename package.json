@@ -30,7 +30,8 @@
     "lint": "eslint ./src/**/*.ts"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=16",
+    "oidc-client": "^1.11.5"
   },
   "dependencies": {
     "oidc-client": "^1.11.5"
