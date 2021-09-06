@@ -12,3 +12,23 @@ export const createWrapper = (opts?: AuthProviderProps) => ({
         {children}
     </AuthProvider>
 )
+
+export const createLocation = (search: string, hash: string) => {
+    const location: Location = {
+        search,
+        hash,
+
+        host: "www.example.com",
+        protocol: "https:",
+        ancestorOrigins: {} as DOMStringList,
+        href: "",
+        hostname: "",
+        origin: "",
+        pathname: "",
+        port: "80",
+        assign: () => {},
+        reload: () => {},
+        replace: () => {}
+    };
+    return location;
+}
