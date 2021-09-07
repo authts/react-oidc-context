@@ -16,7 +16,7 @@ export const hasAuthParams = (location = window.location): boolean => {
     return false;
 };
 
-const normalizeErrorFn = (fallbackMessage: string) => (error: Error | any): Error => {
+const normalizeErrorFn = (fallbackMessage: string) => (error: unknown): Error => {
     if (error instanceof Error) {
         return error;
     }
