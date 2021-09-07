@@ -24,8 +24,8 @@ tight coupled to that library.
 - [oidc-client](https://github.com/IdentityModel/oidc-client-js/wiki)
 
 The User and UserManager is hold in this context, which is accessible from the React application. Additionally it intercepts
-the auth redirects by looking at the query/fragment parameters and acts accordingly. You still need to setup a redirect_uri,
-which is inside your application, but you do not need to create that route.
+the auth redirects by looking at the query/fragment parameters and acts accordingly. You still need to setup a redirect uri,
+which must point to your application, but you do not need to create that route.
 
 
 ## Installation
