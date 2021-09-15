@@ -4,7 +4,7 @@
 ![Pipeline](https://github.com/authts/react-oidc-context/workflows/Release/badge.svg)
 
 
-Lightweight auth library using the [oidc-client](https://github.com/IdentityModel/oidc-client-js) library for React single page applications (SPA).
+Lightweight auth library using the [oidc-client-ts](https://github.com/authts/oidc-client-ts) library for React single page applications (SPA).
 Support for [hooks](https://reactjs.org/docs/hooks-intro.html) and [higher-order components (HOC)](https://reactjs.org/docs/higher-order-components.html).
 
 
@@ -18,10 +18,10 @@ Support for [hooks](https://reactjs.org/docs/hooks-intro.html) and [higher-order
 
 
 ## Documentation
-This library implements an auth context provider by making use of the `oidc-client` library. Its configuration is
+This library implements an auth context provider by making use of the `oidc-client-ts` library. Its configuration is
 tight coupled to that library.
 
-- [oidc-client](https://github.com/IdentityModel/oidc-client-js/wiki)
+- [oidc-client-ts](https://github.com/authts/oidc-client-ts)
 
 The User and UserManager is hold in this context, which is accessible from the React application. Additionally it intercepts
 the auth redirects by looking at the query/fragment parameters and acts accordingly. You still need to setup a redirect uri,
@@ -170,7 +170,7 @@ As **not** a child of `AuthProvider` (e.g. redux slice) when using local storage
 containing an access token:
 ```jsx
 // src/slice.js
-import { User } from "oidc-client"
+import { User } from "oidc-client-ts"
 
 function getUser() {
     const oidcStorage = localStorage.getItem(`oidc.user:<your authority>:<your client id>`)

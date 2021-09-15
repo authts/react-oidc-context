@@ -3,10 +3,12 @@ import { renderHook } from "@testing-library/react-hooks";
 import { useAuth } from "../src/useAuth";
 import { createWrapper } from "./helpers";
 
+const settingsStub = { authority: "authority", client_id: "client", redirect_uri: "redirect" };
+
 describe("useAuth", () => {
     it("should provide the auth context", async () => {
         // arrange
-        const wrapper = createWrapper();
+        const wrapper = createWrapper({ ...settingsStub });
         const { result, waitForNextUpdate } = renderHook(useAuth, { wrapper });
         await waitForNextUpdate();
 

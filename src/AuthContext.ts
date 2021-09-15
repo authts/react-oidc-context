@@ -1,5 +1,8 @@
 import React from "react";
-import type { UserManagerSettings, User, SessionStatus } from "oidc-client";
+import type {
+    UserManagerSettings, User, SessionStatus,
+    SigninPopupArgs, SigninSilentArgs, SigninRedirectArgs,
+    SignoutRedirectArgs, SignoutPopupArgs, QuerySessionStatusArgs } from "oidc-client-ts";
 
 import type { AuthState } from "./AuthState";
 
@@ -8,17 +11,17 @@ import type { AuthState } from "./AuthState";
  */
 export interface AuthContextProps extends AuthState {
     /**
-     * UserManager functions. See [UserManager](https://github.com/IdentityModel/oidc-client-js/wiki#usermanager) for more details.
+     * UserManager functions. See [UserManager](https://github.com/authts/oidc-client-ts) for more details.
      */
     readonly settings: UserManagerSettings;
     clearStaleState(): Promise<void>;
     removeUser(): Promise<void>;
-    signinPopup(args?: any): Promise<User>;
-    signinSilent(args?: any): Promise<User>;
-    signinRedirect(args?: any): Promise<void>;
-    signoutRedirect(args?: any): Promise<void>;
-    signoutPopup(args?: any): Promise<void>;
-    querySessionStatus(args?: any): Promise<SessionStatus>;
+    signinPopup(args?: SigninPopupArgs): Promise<User>;
+    signinSilent(args?: SigninSilentArgs): Promise<User | null>;
+    signinRedirect(args?: SigninRedirectArgs): Promise<void>;
+    signoutRedirect(args?: SignoutRedirectArgs): Promise<void>;
+    signoutPopup(args?: SignoutPopupArgs): Promise<void>;
+    querySessionStatus(args?: QuerySessionStatusArgs): Promise<SessionStatus | null>;
     revokeAccessToken(): Promise<void>;
     startSilentRenew(): void;
     stopSilentRenew(): void;

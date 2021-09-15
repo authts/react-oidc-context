@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { UserManager, User } from "oidc-client";
+import { UserManager, User } from "oidc-client-ts";
 import { renderHook } from "@testing-library/react-hooks";
 import { mocked } from "ts-jest/utils";
 
 import { useAuth } from "../src/useAuth";
 import { createWrapper } from "./helpers";
 
+const settingsStub = { authority: "authority", client_id: "client", redirect_uri: "redirect" };
 const user = { id_token: "__test_user__" } as User;
 
 describe("AuthProvider", () => {
     it("should signinRedirect when asked", async () => {
         // arrange
-        const wrapper = createWrapper();
+        const wrapper = createWrapper({ ...settingsStub });
         const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
             wrapper,
         });
@@ -38,7 +39,7 @@ describe("AuthProvider", () => {
             "https://www.example.com/?code=__test_code__&state=__test_state__"
         );
 
-        const wrapper = createWrapper({ onSigninCallback });
+        const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
 
         // act
         const { waitForNextUpdate } = renderHook(() => useAuth(), {
@@ -63,7 +64,7 @@ describe("AuthProvider", () => {
             "https://www.example.com/?error=__test_error__&state=__test_state__"
         );
 
-        const wrapper = createWrapper({ onSigninCallback });
+        const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
 
         // act
         const { waitForNextUpdate } = renderHook(() => useAuth(), {
@@ -80,7 +81,7 @@ describe("AuthProvider", () => {
         // arrange
         const onRemoveUser = jest.fn();
 
-        const wrapper = createWrapper({ onRemoveUser });
+        const wrapper = createWrapper({ ...settingsStub, onRemoveUser });
         const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
             wrapper,
         });
@@ -97,7 +98,7 @@ describe("AuthProvider", () => {
     it("should handle signoutRedirect and call onSignoutRedirect", async () => {
         // arrange
         const onSignoutRedirect = jest.fn();
-        const wrapper = createWrapper({ onSignoutRedirect });
+        const wrapper = createWrapper({ ...settingsStub, onSignoutRedirect });
         const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
             wrapper,
         });
@@ -114,7 +115,7 @@ describe("AuthProvider", () => {
     it("should handle signoutPopup and call onSignoutPopup", async () => {
         // arrange
         const onSignoutPopup = jest.fn();
-        const wrapper = createWrapper({ onSignoutPopup });
+        const wrapper = createWrapper({ ...settingsStub, onSignoutPopup });
         const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
             wrapper,
         });
@@ -131,7 +132,7 @@ describe("AuthProvider", () => {
     it("should get the user", async () => {
         // arrange
         mocked(UserManager.prototype).getUser.mockResolvedValueOnce(user);
-        const wrapper = createWrapper();
+        const wrapper = createWrapper({ ...settingsStub });
 
         // act
         const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
@@ -148,7 +149,7 @@ describe("AuthProvider", () => {
         class CustomUserManager extends UserManager { }
         mocked(CustomUserManager.prototype).signinRedirect = jest.fn();
 
-        const wrapper = createWrapper({ implementation: CustomUserManager });
+        const wrapper = createWrapper({ ...settingsStub, implementation: CustomUserManager });
         const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
             wrapper,
         });
@@ -165,7 +166,7 @@ describe("AuthProvider", () => {
 
     it("should should throw when no UserManager implementation exists", async () => {
         // arrange
-        const wrapper = createWrapper({ implementation: null });
+        const wrapper = createWrapper({ ...settingsStub, implementation: null });
         const { result } = renderHook(() => useAuth(), {
             wrapper,
         });
