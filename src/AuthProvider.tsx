@@ -64,6 +64,20 @@ export interface AuthProviderProps extends UserManagerSettings {
     onSignoutPopup?: () => Promise<void> | void;
 }
 
+const userManagerContextKeys = [
+    "clearStaleState",
+    "signinPopup",
+    "signinSilent",
+    "signinRedirect",
+    "querySessionStatus",
+    "revokeAccessToken",
+    "startSilentRenew",
+    "stopSilentRenew",
+] as const;
+const unsupportedEnvironment = (name: string) => () => {
+    throw new Error(`\`${name}()\` was called from an unsupported context`);
+};
+
 /**
  * Provides the AuthContext to its child components.
  */
@@ -81,10 +95,27 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         ...userManagerProps
     } = props;
 
-    const [userManager] = React.useState<UserManager>(() => new UserManager(userManagerProps));
+    const [userManager] = React.useState(() =>
+        typeof window === "undefined" ? null : new UserManager(userManagerProps)
+    );
     const [state, dispatch] = React.useReducer(reducer, initialAuthState);
+    const userManagerContext = React.useMemo(
+        () => ({
+            settings: userManager?.settings ?? {},
+            ...(Object.fromEntries(
+                userManagerContextKeys.map((key) => [
+                    key,
+                    userManager
+                        ? userManager[key].bind(userManager)
+                        : unsupportedEnvironment(key),
+                ])
+            ) as Pick<UserManager, typeof userManagerContextKeys[number]>),
+        }),
+        [userManager]
+    );
 
     React.useEffect(() => {
+        if (!userManager) return;
         void (async (): Promise<void> => {
             try {
                 // check if returning back from authority server
@@ -97,12 +128,12 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
             } catch (error) {
                 dispatch({ type: "ERROR", error: loginError(error) });
             }
-        }
-        )();
+        })();
     }, [userManager, skipSigninCallback, onSigninCallback]);
 
     // register to userManager events
     React.useEffect(() => {
+        if (!userManager) return;
         // event UserLoaded (e.g. initial load, silent renew success)
         const handleUserLoaded = (user: User) => {
             dispatch({ type: "USER_LOADED", user });
@@ -128,46 +159,41 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         };
     }, [userManager]);
 
-    const removeUser = React.useCallback(
-        async (): Promise<void> => {
+    const removeUser = React.useMemo(() => userManager
+        ? async (): Promise<void> => {
             await userManager.removeUser();
             onRemoveUser && onRemoveUser();
-        },
-        [userManager, onRemoveUser]
+        }
+        : unsupportedEnvironment("removeUser"),
+    [userManager, onRemoveUser]
     );
 
-    const signoutRedirect = React.useCallback(
-        async (args?: any): Promise<void> => {
+    const signoutRedirect = React.useMemo(() => userManager
+        ? async (args?: any): Promise<void> => {
             await userManager.signoutRedirect(args);
             onSignoutRedirect && onSignoutRedirect();
-        },
-        [userManager, onSignoutRedirect]
+        }
+        : unsupportedEnvironment("signoutRedirect"),
+    [userManager, onSignoutRedirect]
     );
 
-    const signoutPopup = React.useCallback(
-        async (args?: any): Promise<void> => {
+    const signoutPopup = React.useMemo(() => userManager
+        ? async (args?: any): Promise<void> => {
             await userManager.signoutPopup(args);
             onSignoutPopup && onSignoutPopup();
-        },
-        [userManager, onSignoutPopup]
+        }
+        : unsupportedEnvironment("signoutPopup"),
+    [userManager, onSignoutPopup]
     );
 
     return (
         <AuthContext.Provider
             value={{
                 ...state,
-                settings: userManager.settings,
-                clearStaleState: userManager.clearStaleState.bind(userManager),
+                ...userManagerContext,
                 removeUser,
-                signinPopup: userManager.signinPopup.bind(userManager),
-                signinSilent: userManager.signinSilent.bind(userManager),
-                signinRedirect: userManager.signinRedirect.bind(userManager),
                 signoutRedirect,
                 signoutPopup,
-                querySessionStatus: userManager.querySessionStatus.bind(userManager),
-                revokeAccessToken: userManager.revokeAccessToken.bind(userManager),
-                startSilentRenew: userManager.startSilentRenew.bind(userManager),
-                stopSilentRenew: userManager.stopSilentRenew.bind(userManager),
             }}
         >
             {children}
