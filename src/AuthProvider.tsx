@@ -62,6 +62,11 @@ export interface AuthProviderProps extends UserManagerSettings {
      * On sign out popup hook. Can be a async function.
      */
     onSignoutPopup?: () => Promise<void> | void;
+
+    /**
+     * Allow passing a custom UserManager implementation
+     */
+    implementation?: typeof UserManager;
 }
 
 const userManagerContextKeys = [
@@ -74,9 +79,10 @@ const userManagerContextKeys = [
     "startSilentRenew",
     "stopSilentRenew",
 ] as const;
-const unsupportedEnvironment = (name: string) => () => {
-    throw new Error(`\`${name}()\` was called from an unsupported context`);
+const unsupportedEnvironment = () => {
+    throw new Error("a UserManager method was called from an unsupported context. If this is a server-rendered page, defer this call with useEffect() or pass a custom UserManager implementation.");
 };
+const defaultUserManagerImpl = typeof window === "undefined" ? null : UserManager;
 
 /**
  * Provides the AuthContext to its child components.
@@ -92,12 +98,11 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         onSignoutRedirect,
         onSignoutPopup,
 
+        implementation: UserManagerImpl = defaultUserManagerImpl,
         ...userManagerProps
     } = props;
 
-    const [userManager] = React.useState(() =>
-        typeof window === "undefined" ? null : new UserManager(userManagerProps)
-    );
+    const [userManager] = React.useState(() => UserManagerImpl && new UserManagerImpl(userManagerProps));
     const [state, dispatch] = React.useReducer(reducer, initialAuthState);
     const userManagerContext = React.useMemo(
         () => ({
@@ -107,7 +112,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                     key,
                     userManager
                         ? userManager[key].bind(userManager)
-                        : unsupportedEnvironment(key),
+                        : unsupportedEnvironment,
                 ])
             ) as Pick<UserManager, typeof userManagerContextKeys[number]>),
         }),
@@ -159,31 +164,34 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         };
     }, [userManager]);
 
-    const removeUser = React.useMemo(() => userManager
-        ? async (): Promise<void> => {
-            await userManager.removeUser();
-            onRemoveUser && onRemoveUser();
-        }
-        : unsupportedEnvironment("removeUser"),
-    [userManager, onRemoveUser]
+    const removeUser = React.useMemo(
+        () => userManager
+            ? async (): Promise<void> => {
+                await userManager.removeUser();
+                onRemoveUser && onRemoveUser();
+            }
+            : unsupportedEnvironment,
+        [userManager, onRemoveUser]
     );
 
-    const signoutRedirect = React.useMemo(() => userManager
-        ? async (args?: any): Promise<void> => {
-            await userManager.signoutRedirect(args);
-            onSignoutRedirect && onSignoutRedirect();
-        }
-        : unsupportedEnvironment("signoutRedirect"),
-    [userManager, onSignoutRedirect]
+    const signoutRedirect = React.useMemo(
+        () => userManager
+            ? async (args?: any): Promise<void> => {
+                await userManager.signoutRedirect(args);
+                onSignoutRedirect && onSignoutRedirect();
+            }
+            : unsupportedEnvironment,
+        [userManager, onSignoutRedirect]
     );
 
-    const signoutPopup = React.useMemo(() => userManager
-        ? async (args?: any): Promise<void> => {
-            await userManager.signoutPopup(args);
-            onSignoutPopup && onSignoutPopup();
-        }
-        : unsupportedEnvironment("signoutPopup"),
-    [userManager, onSignoutPopup]
+    const signoutPopup = React.useMemo(
+        () => userManager
+            ? async (args?: any): Promise<void> => {
+                await userManager.signoutPopup(args);
+                onSignoutPopup && onSignoutPopup();
+            }
+            : unsupportedEnvironment,
+        [userManager, onSignoutPopup]
     );
 
     return (
