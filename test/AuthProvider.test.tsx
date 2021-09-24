@@ -172,4 +172,20 @@ describe("AuthProvider", () => {
         expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled()
         expect(CustomUserManager.prototype.signinRedirect).toHaveBeenCalled()
     })
+
+    it("should should throw when no UserManager implementation exists", async () => {
+        // arrange
+        const wrapper = createWrapper({ implementation: null })
+        const { result } = renderHook(() => useAuth(), {
+            wrapper,
+        })
+
+        // act
+        await expect(act(async () => {
+            result.current.signinRedirect()
+        })).rejects.toThrow()
+
+        // assert
+        expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled()
+    })
 })

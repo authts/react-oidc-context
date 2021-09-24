@@ -66,7 +66,7 @@ export interface AuthProviderProps extends UserManagerSettings {
     /**
      * Allow passing a custom UserManager implementation
      */
-    implementation?: typeof UserManager;
+    implementation?: typeof UserManager | null;
 }
 
 const userManagerContextKeys = [
