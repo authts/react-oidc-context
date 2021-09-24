@@ -79,8 +79,8 @@ const userManagerContextKeys = [
     "startSilentRenew",
     "stopSilentRenew",
 ] as const;
-const unsupportedEnvironment = () => {
-    throw new Error("a UserManager method was called from an unsupported context. If this is a server-rendered page, defer this call with useEffect() or pass a custom UserManager implementation.");
+const unsupportedEnvironment = (fnName: string) => () => {
+    throw new Error(`UserManager#${fnName} was called from an unsupported context. If this is a server-rendered page, defer this call with useEffect() or pass a custom UserManager implementation.`);
 };
 const defaultUserManagerImpl = typeof window === "undefined" ? null : UserManager;
 
@@ -112,7 +112,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                     key,
                     userManager
                         ? userManager[key].bind(userManager)
-                        : unsupportedEnvironment,
+                        : unsupportedEnvironment(key),
                 ])
             ) as Pick<UserManager, typeof userManagerContextKeys[number]>),
         }),
@@ -166,31 +166,22 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
 
     const removeUser = React.useMemo(
         () => userManager
-            ? async (): Promise<void> => {
-                await userManager.removeUser();
-                onRemoveUser && onRemoveUser();
-            }
-            : unsupportedEnvironment,
+            ? () => userManager.removeUser().then(onRemoveUser)
+            : unsupportedEnvironment("removeUser"),
         [userManager, onRemoveUser]
     );
 
     const signoutRedirect = React.useMemo(
         () => userManager
-            ? async (args?: any): Promise<void> => {
-                await userManager.signoutRedirect(args);
-                onSignoutRedirect && onSignoutRedirect();
-            }
-            : unsupportedEnvironment,
+            ? (args?: any) => userManager.signoutRedirect(args).then(onSignoutRedirect)
+            : unsupportedEnvironment("signoutRedirect"),
         [userManager, onSignoutRedirect]
     );
 
     const signoutPopup = React.useMemo(
         () => userManager
-            ? async (args?: any): Promise<void> => {
-                await userManager.signoutPopup(args);
-                onSignoutPopup && onSignoutPopup();
-            }
-            : unsupportedEnvironment,
+            ? (args?: any) => userManager.signoutPopup(args).then(onSignoutPopup)
+            : unsupportedEnvironment("signoutPopup"),
         [userManager, onSignoutPopup]
     );
 

@@ -1,70 +1,50 @@
-const clearStaleState = jest.fn()
-const getUser = jest.fn()
-const storeUser = jest.fn()
-const removeUser = jest.fn()
-const signinPopup = jest.fn()
-const signinPopupCallback = jest.fn()
-const signinSilent = jest.fn()
-const signinSilentCallback = jest.fn()
-const signinRedirect = jest.fn()
-const signinRedirectCallback = jest.fn()
-const signoutRedirect = jest.fn()
-const signoutRedirectCallback = jest.fn()
-const signoutPopup = jest.fn()
-const signoutPopupCallback = jest.fn()
-const signinCallback = jest.fn()
-const signoutCallback = jest.fn()
-const querySessionStatus = jest.fn()
-const revokeAccessToken = jest.fn()
-const startSilentRenew = jest.fn()
-const stopSilentRenew = jest.fn()
+import type { UserManager, UserManagerEvents } from 'oidc-client'
 
-const events = {
-    load: jest.fn(),
-    unload: jest.fn(),
+const MockUserManager: typeof UserManager = jest.fn(function (this: { events: Partial<UserManagerEvents>}) {
+    this.events = {
+        load: jest.fn(),
+        unload: jest.fn(),
 
-    addUserLoaded: jest.fn(),
-    removeUserLoaded: jest.fn(),
+        addUserLoaded: jest.fn(),
+        removeUserLoaded: jest.fn(),
 
-    addUserUnloaded: jest.fn(),
-    removeUserUnloaded: jest.fn(),
+        addUserUnloaded: jest.fn(),
+        removeUserUnloaded: jest.fn(),
 
-    addSilentRenewError: jest.fn(),
-    removeSilentRenewError: jest.fn(),
+        addSilentRenewError: jest.fn(),
+        removeSilentRenewError: jest.fn(),
 
-    addUserSignedIn: jest.fn(),
-    removeUserSignedIn: jest.fn(),
+        addUserSignedIn: jest.fn(),
+        removeUserSignedIn: jest.fn(),
 
-    addUserSignedOut: jest.fn(),
-    removeUserSignedOut: jest.fn(),
+        addUserSignedOut: jest.fn(),
+        removeUserSignedOut: jest.fn(),
 
-    addUserSessionChanged: jest.fn(),
-    removeUserSessionChanged: jest.fn(),
-}
-
-export const UserManager = jest.fn(() => {
-    return {
-        clearStaleState,
-        getUser,
-        storeUser,
-        removeUser,
-        signinPopup,
-        signinPopupCallback,
-        signinSilent,
-        signinSilentCallback,
-        signinRedirect,
-        signinRedirectCallback,
-        signoutRedirect,
-        signoutRedirectCallback,
-        signoutPopup,
-        signoutPopupCallback,
-        signinCallback,
-        signoutCallback,
-        querySessionStatus,
-        revokeAccessToken,
-        startSilentRenew,
-        stopSilentRenew,
-
-        events,
+        addUserSessionChanged: jest.fn(),
+        removeUserSessionChanged: jest.fn(),
     }
+
+    return this as UserManager
 })
+MockUserManager.prototype.clearStaleState = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.getUser = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.storeUser = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.removeUser = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.signinPopup = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.signinPopupCallback = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.signinSilent = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.signinSilentCallback = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.signinRedirect = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.signinRedirectCallback = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.signoutRedirect = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.signoutRedirectCallback = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.signoutPopup = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.signoutPopupCallback = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.signinCallback = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.signoutCallback = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.querySessionStatus = jest.fn().mockResolvedValue(undefined)
+MockUserManager.prototype.revokeAccessToken = jest.fn()
+MockUserManager.prototype.startSilentRenew = jest.fn()
+MockUserManager.prototype.stopSilentRenew = jest.fn()
+
+export { MockUserManager as UserManager }
