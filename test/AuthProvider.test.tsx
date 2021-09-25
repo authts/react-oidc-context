@@ -1,12 +1,11 @@
 import { UserManager, User } from "oidc-client"
-import { act} from "@testing-library/react"
+import { act } from "@testing-library/react"
 import { renderHook } from "@testing-library/react-hooks"
 import { mocked } from "ts-jest/utils"
 
 import { useAuth } from "../src/useAuth"
 import { createWrapper } from "./helpers"
 
-const userManagerMock = mocked(new UserManager({ client_id: "" }))
 const user = { id_token: "__test_user__" } as User
 
 describe("AuthProvider", () => {
@@ -25,8 +24,8 @@ describe("AuthProvider", () => {
         })
 
         // assert
-        expect(userManagerMock.signinRedirect).toHaveBeenCalled()
-        expect(userManagerMock.getUser).toHaveBeenCalled()
+        expect(UserManager.prototype.signinRedirect).toHaveBeenCalled()
+        expect(UserManager.prototype.getUser).toHaveBeenCalled()
     })
 
     it("should handle signinCallback success and call onSigninCallback", async () => {
@@ -50,7 +49,7 @@ describe("AuthProvider", () => {
         await waitForNextUpdate()
 
         // assert
-        expect(userManagerMock.signinCallback).toHaveBeenCalled()
+        expect(UserManager.prototype.signinCallback).toHaveBeenCalled()
         expect(onSigninCallback).toHaveBeenCalled()
     })
 
@@ -75,7 +74,7 @@ describe("AuthProvider", () => {
         await waitForNextUpdate()
 
         // assert
-        expect(userManagerMock.signinCallback).toHaveBeenCalled()
+        expect(UserManager.prototype.signinCallback).toHaveBeenCalled()
         expect(onSigninCallback).toHaveBeenCalled()
     })
 
@@ -95,7 +94,7 @@ describe("AuthProvider", () => {
         })
 
         // assert
-        expect(userManagerMock.removeUser).toHaveBeenCalled()
+        expect(UserManager.prototype.removeUser).toHaveBeenCalled()
         expect(onRemoveUser).toHaveBeenCalled()
     })
 
@@ -114,7 +113,7 @@ describe("AuthProvider", () => {
         })
 
         // assert
-        expect(userManagerMock.signoutRedirect).toHaveBeenCalled()
+        expect(UserManager.prototype.signoutRedirect).toHaveBeenCalled()
         expect(onSignoutRedirect).toHaveBeenCalled()
     })
 
@@ -133,13 +132,13 @@ describe("AuthProvider", () => {
         })
 
         // assert
-        expect(userManagerMock.signoutPopup).toHaveBeenCalled()
+        expect(UserManager.prototype.signoutPopup).toHaveBeenCalled()
         expect(onSignoutPopup).toHaveBeenCalled()
     })
 
     it("should get the user", async () => {
         // arrange
-        userManagerMock.getUser.mockResolvedValue(user)
+        mocked(UserManager.prototype).getUser.mockResolvedValueOnce(user)
         const wrapper = createWrapper()
 
         // act
@@ -150,5 +149,43 @@ describe("AuthProvider", () => {
 
         // assert
         expect(result.current.user).toBe(user)
-      })
+    })
+
+    it("should use a custom UserManager implementation", async () => {
+        // arrange
+        class CustomUserManager extends UserManager { }
+        mocked(CustomUserManager.prototype).signinRedirect = jest.fn();
+
+        const wrapper = createWrapper({ implementation: CustomUserManager })
+        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+            wrapper,
+        })
+        await waitForNextUpdate()
+        expect(result.current.user).toBeUndefined()
+
+        // act
+        await act(async () => {
+            result.current.signinRedirect()
+        })
+
+        // assert
+        expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled()
+        expect(CustomUserManager.prototype.signinRedirect).toHaveBeenCalled()
+    })
+
+    it("should should throw when no UserManager implementation exists", async () => {
+        // arrange
+        const wrapper = createWrapper({ implementation: null })
+        const { result } = renderHook(() => useAuth(), {
+            wrapper,
+        })
+
+        // act
+        await expect(act(async () => {
+            result.current.signinRedirect()
+        })).rejects.toThrow()
+
+        // assert
+        expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled()
+    })
 })
