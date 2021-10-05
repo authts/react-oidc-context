@@ -1,7 +1,7 @@
 # react-oidc-context
 
 [![Stable Release](https://img.shields.io/npm/v/react-oidc-context.svg)](https://npm.im/react-oidc-context)
-![Pipeline](https://github.com/pamapa/oidc-client-react/workflows/Release/badge.svg)
+![Pipeline](https://github.com/authts/oidc-client-react/workflows/Release/badge.svg)
 
 
 Lightweight auth library using the [oidc-client](https://github.com/IdentityModel/oidc-client-js) library for React single page applications (SPA).
@@ -202,8 +202,8 @@ We appreciate feedback and contribution to this repo!
 
 
 ## Influences
-This library is inspired by [oidc-react](https://github.com/bjerkio/oidc-react), which lacks error handling and [auth0-react](https://github.com/auth0/auth0-react), which is focued on auth0.
+This library is inspired by [oidc-react](https://github.com/bjerkio/oidc-react), which lacks error handling and [auth0-react](https://github.com/auth0/auth0-react), which is focused on auth0.
 
 
 ## License
-This project is licensed under the MIT license. See the [LICENSE](https://github.com/pamapa/oidc-client-react/blob/main/LICENSE) file for more info.
+This project is licensed under the MIT license. See the [LICENSE](https://github.com/authts/oidc-client-react/blob/main/LICENSE) file for more info.
