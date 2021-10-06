@@ -2,5 +2,6 @@
     "include": ["."],
     "compilerOptions": {
         "jsx": "react",
+        "esModuleInterop": true,
     }
 }
