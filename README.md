@@ -1,7 +1,7 @@
 # react-oidc-context
 
 [![Stable Release](https://img.shields.io/npm/v/react-oidc-context.svg)](https://npm.im/react-oidc-context)
-![Pipeline](https://github.com/authts/oidc-client-react/workflows/Release/badge.svg)
+![Pipeline](https://github.com/authts/react-oidc-context/workflows/Release/badge.svg)
 
 
 Lightweight auth library using the [oidc-client](https://github.com/IdentityModel/oidc-client-js) library for React single page applications (SPA).
