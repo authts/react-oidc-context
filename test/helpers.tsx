@@ -1,6 +1,6 @@
-import React from "react"
+import React from "react";
 
-import { AuthProvider, AuthProviderProps } from "../src/AuthProvider"
+import { AuthProvider, AuthProviderProps } from "../src/AuthProvider";
 
 export const createWrapper = (opts?: AuthProviderProps) => ({
     children,
@@ -11,7 +11,7 @@ export const createWrapper = (opts?: AuthProviderProps) => ({
     >
         {children}
     </AuthProvider>
-)
+);
 
 export const createLocation = (search: string, hash: string) => {
     const location: Location = {
@@ -31,4 +31,4 @@ export const createLocation = (search: string, hash: string) => {
         replace: () => {}
     };
     return location;
-}
+};

@@ -11,7 +11,7 @@ describe("utils hasAuthParams", () => {
         ["", "#code=1&foo=2"],
         ["", "#foo=1&code=2"],
         ["", "#code=1&foo=2"],
-    ])("should not recognise only the code param in location { search: '%s', hash: '%s' }", (search, hash) => {
+    ])("should not recognize only the code param in location { search: '%s', hash: '%s' }", (search, hash) => {
         // arrange
         const location = createLocation(search, hash);
 
@@ -33,7 +33,7 @@ describe("utils hasAuthParams", () => {
         ["", "#foo=1&state=2&code=3"],
         ["", "#code=1&foo=2&state=3"],
         ["", "#state=1&code=2&foo=3"]
-    ])("should recognise the code and state param in location { search: '%s', hash: '%s' }", (search, hash) => {
+    ])("should recognize the code and state param in location { search: '%s', hash: '%s' }", (search, hash) => {
         // arrange
         const location = createLocation(search, hash);
 
@@ -55,7 +55,7 @@ describe("utils hasAuthParams", () => {
         ["", "#foo=1&state=2&error=3"],
         ["", "#error=1&foo=2&state=3"],
         ["", "#state=1&error=2&foo=3"]
-    ])("should recognise the error and state param in location { search: '%s', hash: '%s' }", (search, hash) => {
+    ])("should recognize the error and state param in location { search: '%s', hash: '%s' }", (search, hash) => {
         // arrange
         const location = createLocation(search, hash);
 
