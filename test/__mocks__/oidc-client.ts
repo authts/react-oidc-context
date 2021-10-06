@@ -1,6 +1,6 @@
-import type { UserManager, UserManagerEvents } from 'oidc-client'
+import type { UserManager, UserManagerEvents } from "oidc-client";
 
-const MockUserManager: typeof UserManager = jest.fn(function (this: { events: Partial<UserManagerEvents>}) {
+const MockUserManager: typeof UserManager = jest.fn(function (this: { events: Partial<UserManagerEvents> }) {
     this.events = {
         load: jest.fn(),
         unload: jest.fn(),
@@ -22,29 +22,29 @@ const MockUserManager: typeof UserManager = jest.fn(function (this: { events: Pa
 
         addUserSessionChanged: jest.fn(),
         removeUserSessionChanged: jest.fn(),
-    }
+    };
 
-    return this as UserManager
-})
-MockUserManager.prototype.clearStaleState = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.getUser = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.storeUser = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.removeUser = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.signinPopup = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.signinPopupCallback = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.signinSilent = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.signinSilentCallback = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.signinRedirect = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.signinRedirectCallback = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.signoutRedirect = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.signoutRedirectCallback = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.signoutPopup = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.signoutPopupCallback = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.signinCallback = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.signoutCallback = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.querySessionStatus = jest.fn().mockResolvedValue(undefined)
-MockUserManager.prototype.revokeAccessToken = jest.fn()
-MockUserManager.prototype.startSilentRenew = jest.fn()
-MockUserManager.prototype.stopSilentRenew = jest.fn()
+    return this as UserManager;
+});
+MockUserManager.prototype.clearStaleState = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.getUser = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.storeUser = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.removeUser = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.signinPopup = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.signinPopupCallback = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.signinSilent = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.signinSilentCallback = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.signinRedirect = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.signinRedirectCallback = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.signoutRedirect = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.signoutRedirectCallback = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.signoutPopup = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.signoutPopupCallback = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.signinCallback = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.signoutCallback = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.querySessionStatus = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.revokeAccessToken = jest.fn();
+MockUserManager.prototype.startSilentRenew = jest.fn();
+MockUserManager.prototype.stopSilentRenew = jest.fn();
 
-export { MockUserManager as UserManager }
+export { MockUserManager as UserManager };

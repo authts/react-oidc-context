@@ -13,7 +13,7 @@ export const createWrapper = (opts?: AuthProviderProps) => ({
     </AuthProvider>
 );
 
-export const createLocation = (search: string, hash: string) => {
+export const createLocation = (search: string, hash: string): Location => {
     const location: Location = {
         search,
         hash,
@@ -26,9 +26,9 @@ export const createLocation = (search: string, hash: string) => {
         origin: "",
         pathname: "",
         port: "80",
-        assign: () => {},
-        reload: () => {},
-        replace: () => {}
+        assign: jest.fn(),
+        reload: jest.fn(),
+        replace: jest.fn()
     };
     return location;
 };

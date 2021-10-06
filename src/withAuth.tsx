@@ -1,10 +1,11 @@
 import React from "react";
 
-import { AuthContextProps } from "./AuthContext";
+import type { AuthContextProps } from "./AuthContext";
 import { useAuth } from "./useAuth";
 
 /**
  * A public higher-order component to access the imperative API
+ * @public
  */
 export function withAuth<P extends AuthContextProps>(
     Component: React.ComponentType<P>,

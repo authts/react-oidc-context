@@ -6,6 +6,9 @@ import { initialAuthState } from "./AuthState";
 import { reducer } from "./reducer";
 import { hasAuthParams, loginError } from "./utils";
 
+/**
+ * @public
+ */
 export interface AuthProviderProps extends UserManagerSettings {
     /**
      * The child nodes your Provider has wrapped
@@ -86,6 +89,7 @@ const defaultUserManagerImpl = typeof window === "undefined" ? null : UserManage
 
 /**
  * Provides the AuthContext to its child components.
+ * @public
  */
 export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     const {
@@ -138,7 +142,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
 
     // register to userManager events
     React.useEffect(() => {
-        if (!userManager) return;
+        if (!userManager) return undefined;
         // event UserLoaded (e.g. initial load, silent renew success)
         const handleUserLoaded = (user: User) => {
             dispatch({ type: "USER_LOADED", user });

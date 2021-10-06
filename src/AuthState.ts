@@ -1,4 +1,4 @@
-import { User } from "oidc-client";
+import type { User } from "oidc-client";
 
 /**
  * The auth state which, when combined with the auth methods, make up the return object of the `useAuth` hook.

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
 import { AuthContextProps, AuthProvider, withAuth } from "../src";
@@ -21,6 +21,6 @@ describe("withAuth", () => {
                 <WrappedComponent />
             </AuthProvider>
         );
-        await waitFor(() => expect(screen.getByText("hasAuth: true")).toBeInTheDocument());
+        await expect(screen.findByText("hasAuth: true")).resolves.toBeInTheDocument();
     });
 });
