@@ -24,9 +24,7 @@
     "react-component"
   ],
   "scripts": {
-    "build": "npm run build-esm && npm run build-node && npm run build-types",
-    "build-esm": "esbuild src/index.ts --bundle --outfile=dist/react-oidc-context.mjs --format=esm",
-    "build-node": "esbuild src/index.ts --bundle --outfile=dist/react-oidc-context.cjs --platform=node",
+    "build": "node scripts/build.js && npm run build-types",
     "build-types": "tsc --emitDeclarationOnly && api-extractor run",
     "prepack": "npm run build",
     "test": "tsc -p test/tsconfig.json && jest",
