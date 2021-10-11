@@ -1,3 +1,6 @@
+/**
+ * @public
+ */
 export const hasAuthParams = (location = window.location): boolean => {
     // response_mode: query
     let searchParams = new URLSearchParams(location.search);

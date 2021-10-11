@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { AuthProvider, useAuth } from "../.";
+import { AuthProvider, useAuth } from "../src/.";
 
 const oidcConfig = {
     authority: "<your authority>",

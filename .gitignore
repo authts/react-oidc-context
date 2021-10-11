@@ -1,5 +1,15 @@
+# build artifacts
+*.tsbuildinfo
+lib/
+dist/
+
+# caches
+.eslintcache
+.cache
+
+# dependencies
+node_modules/
+
 *.log
 .DS_Store
-node_modules
-.cache
-dist
+temp/

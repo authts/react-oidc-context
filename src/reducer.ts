@@ -1,14 +1,10 @@
-import { User } from "oidc-client";
+import type { User } from "oidc-client";
 
-import { AuthState } from "./AuthState";
+import type { AuthState } from "./AuthState";
 
 type Action =
-  | { type:
-        | "INITIALISED"
-        | "USER_LOADED";
-      user: User | null;
-    }
-  | { type: "USER_UNLOADED"}
+  | { type: | "INITIALISED" | "USER_LOADED"; user: User | null }
+  | { type: "USER_UNLOADED" }
   | { type: "ERROR"; error: Error };
 
 /**
@@ -36,6 +32,12 @@ export const reducer = (state: AuthState, action: Action): AuthState => {
                 ...state,
                 isLoading: false,
                 error: action.error,
+            };
+        default:
+            return {
+                ...state,
+                isLoading: false,
+                error: new Error(`unknown type ${action["type"] as string}`),
             };
     }
 };
