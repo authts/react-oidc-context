@@ -4,11 +4,17 @@
 
 ```ts
 
+import type { QuerySessionStatusArgs } from 'oidc-client-ts';
 import { default as React_2 } from 'react';
-import type { SessionStatus } from 'oidc-client';
-import { User } from 'oidc-client';
-import { UserManager } from 'oidc-client';
-import { UserManagerSettings } from 'oidc-client';
+import type { SessionStatus } from 'oidc-client-ts';
+import type { SigninPopupArgs } from 'oidc-client-ts';
+import type { SigninRedirectArgs } from 'oidc-client-ts';
+import type { SigninSilentArgs } from 'oidc-client-ts';
+import type { SignoutPopupArgs } from 'oidc-client-ts';
+import type { SignoutRedirectArgs } from 'oidc-client-ts';
+import { User } from 'oidc-client-ts';
+import { UserManager } from 'oidc-client-ts';
+import { UserManagerSettings } from 'oidc-client-ts';
 
 // @public (undocumented)
 export const AuthContext: React_2.Context<AuthContextProps>;
@@ -20,22 +26,22 @@ export interface AuthContextProps extends AuthState {
     // (undocumented)
     clearStaleState(): Promise<void>;
     // (undocumented)
-    querySessionStatus(args?: any): Promise<SessionStatus>;
+    querySessionStatus(args?: QuerySessionStatusArgs): Promise<SessionStatus | null>;
     // (undocumented)
     removeUser(): Promise<void>;
     // (undocumented)
     revokeAccessToken(): Promise<void>;
     readonly settings: UserManagerSettings;
     // (undocumented)
-    signinPopup(args?: any): Promise<User>;
+    signinPopup(args?: SigninPopupArgs): Promise<User>;
     // (undocumented)
-    signinRedirect(args?: any): Promise<void>;
+    signinRedirect(args?: SigninRedirectArgs): Promise<void>;
     // (undocumented)
-    signinSilent(args?: any): Promise<User>;
+    signinSilent(args?: SigninSilentArgs): Promise<User | null>;
     // (undocumented)
-    signoutPopup(args?: any): Promise<void>;
+    signoutPopup(args?: SignoutPopupArgs): Promise<void>;
     // (undocumented)
-    signoutRedirect(args?: any): Promise<void>;
+    signoutRedirect(args?: SignoutRedirectArgs): Promise<void>;
     // (undocumented)
     startSilentRenew(): void;
     // (undocumented)

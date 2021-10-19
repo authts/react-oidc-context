@@ -32,11 +32,8 @@
     "prepare": "husky install"
   },
   "peerDependencies": {
-    "react": ">=16",
-    "oidc-client": "^1.11.5"
-  },
-  "dependencies": {
-    "oidc-client": "^1.11.5"
+    "react": ">=16.8.0",
+    "oidc-client-ts": "^2.0.0-beta.2"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.18.10",
@@ -50,6 +47,7 @@
     "esbuild": "^0.13.2",
     "eslint": "^7.32.0",
     "eslint-plugin-testing-library": "^4.10.1",
+    "oidc-client-ts": "^2.0.0-beta.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",

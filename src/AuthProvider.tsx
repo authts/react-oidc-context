@@ -1,5 +1,6 @@
 import React from "react";
-import { UserManager, UserManagerSettings, User } from "oidc-client";
+import { UserManager, UserManagerSettings, User } from "oidc-client-ts";
+import type { SignoutRedirectArgs, SignoutPopupArgs } from "oidc-client-ts";
 
 import { AuthContext } from "./AuthContext";
 import { initialAuthState } from "./AuthState";
@@ -110,7 +111,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     const [state, dispatch] = React.useReducer(reducer, initialAuthState);
     const userManagerContext = React.useMemo(
         () => ({
-            settings: userManager?.settings ?? {},
+            settings: userManager?.settings ?? { ...userManagerProps },
             ...(Object.fromEntries(
                 userManagerContextKeys.map((key) => [
                     key,
@@ -177,14 +178,14 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
 
     const signoutRedirect = React.useMemo(
         () => userManager
-            ? (args?: any) => userManager.signoutRedirect(args).then(onSignoutRedirect)
+            ? (args?: SignoutRedirectArgs) => userManager.signoutRedirect(args).then(onSignoutRedirect)
             : unsupportedEnvironment("signoutRedirect"),
         [userManager, onSignoutRedirect]
     );
 
     const signoutPopup = React.useMemo(
         () => userManager
-            ? (args?: any) => userManager.signoutPopup(args).then(onSignoutPopup)
+            ? (args?: SignoutPopupArgs) => userManager.signoutPopup(args).then(onSignoutPopup)
             : unsupportedEnvironment("signoutPopup"),
         [userManager, onSignoutPopup]
     );

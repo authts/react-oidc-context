@@ -4,6 +4,8 @@ import "@testing-library/jest-dom/extend-expect";
 
 import { AuthContextProps, AuthProvider, withAuth } from "../src";
 
+const settingsStub = { authority: "authority", client_id: "client", redirect_uri: "redirect" };
+
 describe("withAuth", () => {
     it("should wrap a class component", async () => {
         // arrange
@@ -17,7 +19,7 @@ describe("withAuth", () => {
         // act
         const WrappedComponent = withAuth(MyComponent);
         render(
-            <AuthProvider>
+            <AuthProvider {...settingsStub}>
                 <WrappedComponent />
             </AuthProvider>
         );
