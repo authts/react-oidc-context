@@ -33,7 +33,7 @@
   },
   "peerDependencies": {
     "react": ">=16.8.0",
-    "oidc-client-ts": "^2.0.0-beta.2"
+    "oidc-client-ts": "^2.0.0-beta.3"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.18.10",
@@ -47,7 +47,6 @@
     "esbuild": "^0.13.2",
     "eslint": "^7.32.0",
     "eslint-plugin-testing-library": "^5.0.0",
-    "oidc-client-ts": "^2.0.0-beta.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
