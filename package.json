@@ -9,7 +9,7 @@
   "homepage": "https://github.com/authts/react-oidc-context#readme",
   "license": "MIT",
   "main": "dist/react-oidc-context.cjs",
-  "module": "dist/react-oidc-context.mjs",
+  "module": "dist/react-oidc-context.esm.js",
   "types": "dist/react-oidc-context.d.ts",
   "files": [
     "dist"
