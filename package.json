@@ -8,9 +8,15 @@
   },
   "homepage": "https://github.com/authts/react-oidc-context#readme",
   "license": "MIT",
-  "main": "dist/react-oidc-context.cjs",
-  "module": "dist/react-oidc-context.esm.js",
-  "types": "dist/react-oidc-context.d.ts",
+  "main": "dist/umd/react-oidc-context.js",
+  "types": "dist/types/react-oidc-context.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/react-oidc-context.js",
+      "require": "./dist/umd/react-oidc-context.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist"
   ],
@@ -26,6 +32,7 @@
   "scripts": {
     "build": "node scripts/build.js && npm run build-types",
     "build-types": "tsc --emitDeclarationOnly && api-extractor run",
+    "clean": "git clean -fdX dist",
     "prepack": "npm run build",
     "test": "tsc -p test/tsconfig.json && jest",
     "lint": "eslint --max-warnings=0 --cache .",
