@@ -28,7 +28,7 @@
     "build-types": "tsc --emitDeclarationOnly && api-extractor run",
     "prepack": "npm run build",
     "test": "tsc -p test/tsconfig.json && jest",
-    "lint": "eslint --cache .",
+    "lint": "eslint --max-warnings=0 --cache .",
     "prepare": "husky install"
   },
   "peerDependencies": {
