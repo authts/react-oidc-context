@@ -1,7 +1,10 @@
 # build artifacts
 *.tsbuildinfo
 lib/
-dist/
+
+**/dist/*
+/dist/esm/*
+!/dist/esm/package.json
 
 # caches
 .eslintcache

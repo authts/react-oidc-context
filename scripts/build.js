@@ -17,13 +17,13 @@ try {
     buildSync({
         ...opts,
         platform: "neutral",
-        outfile: "dist/react-oidc-context.esm.js",
-    }); 
+        outfile: "dist/esm/react-oidc-context.js",
+    });
     // node
     buildSync({
         ...opts,
         platform: "node",
-        outfile: "dist/react-oidc-context.cjs",
+        outfile: "dist/umd/react-oidc-context.js",
     });
 } catch (err) {
     // esbuild handles error reporting
