@@ -2,7 +2,7 @@
 
 [![Stable Release](https://img.shields.io/npm/v/react-oidc-context.svg)](https://npm.im/react-oidc-context)
 ![Pipeline](https://github.com/authts/react-oidc-context/workflows/Release/badge.svg)
-
+[![Codecov](https://img.shields.io/codecov/c/github/authts/react-oidc-context)](https://app.codecov.io/gh/authts/react-oidc-context)
 
 Lightweight auth library using the [oidc-client-ts](https://github.com/authts/oidc-client-ts) library for React single page applications (SPA).
 Support for [hooks](https://reactjs.org/docs/hooks-intro.html) and [higher-order components (HOC)](https://reactjs.org/docs/higher-order-components.html).
