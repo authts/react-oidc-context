@@ -1,6 +1,7 @@
 # build artifacts
 *.tsbuildinfo
 lib/
+/coverage/
 
 **/dist/*
 /dist/esm/*
