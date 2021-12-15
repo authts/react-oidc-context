@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react-hooks";
+import { mocked } from "jest-mock";
 import { UserManager, User } from "oidc-client-ts";
 import { act } from "react-test-renderer";
-import { mocked } from "ts-jest/utils";
 
 import { useAuth } from "../src/useAuth";
 import { createWrapper } from "./helpers";
