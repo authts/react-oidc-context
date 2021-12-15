@@ -17,7 +17,7 @@ import { UserManager } from 'oidc-client-ts';
 import { UserManagerSettings } from 'oidc-client-ts';
 
 // @public (undocumented)
-export const AuthContext: React_2.Context<AuthContextProps>;
+export const AuthContext: React_2.Context<AuthContextProps | undefined>;
 
 // Warning: (ae-forgotten-export) The symbol "AuthState" needs to be exported by the entry point index.d.ts
 //

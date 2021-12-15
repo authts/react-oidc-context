@@ -5,22 +5,27 @@ import type { User } from "oidc-client-ts";
  */
 export interface AuthState {
     /**
-     * See [User](https://github.com/IdentityModel/oidc-client-js/wiki#user) for more details.
+     * See [User](https://authts.github.io/oidc-client-ts/classes/User.html) for more details.
      */
     user?: User | null;
 
     /**
-     * True until the library has been initialized.
+     * True when the library has been initialized and no navigator request is in progress.
      */
     isLoading: boolean;
 
     /**
-     * True, if we have a valid access token.
+     * True while the user has a valid access token.
      */
     isAuthenticated: boolean;
 
     /**
-     * Was there a sigIn or silent renew error?
+     * Tracks the status of most recent signin/signout request method.
+     */
+    activeNavigator?: "signinRedirect" | "signinPopup" | "signinSilent" | "signoutRedirect" | "signoutPopup";
+
+    /**
+     * Was there a signin or silent renew error?
      */
     error?: Error;
 }

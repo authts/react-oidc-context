@@ -118,10 +118,10 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                     userManager
                         ? userManager[key].bind(userManager)
                         : unsupportedEnvironment(key),
-                ])
+                ]),
             ) as Pick<UserManager, typeof userManagerContextKeys[number]>),
         }),
-        [userManager]
+        [userManager],
     );
 
     useEffect(() => {
@@ -173,21 +173,21 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         userManager
             ? () => userManager.removeUser().then(onRemoveUser)
             : unsupportedEnvironment("removeUser"),
-        [userManager, onRemoveUser]
+        [userManager, onRemoveUser],
     );
 
     const signoutRedirect = useCallback(
         userManager
             ? (args?: SignoutRedirectArgs) => userManager.signoutRedirect(args).then(onSignoutRedirect)
             : unsupportedEnvironment("signoutRedirect"),
-        [userManager, onSignoutRedirect]
+        [userManager, onSignoutRedirect],
     );
 
     const signoutPopup = useCallback(
         userManager
             ? (args?: SignoutPopupArgs) => userManager.signoutPopup(args).then(onSignoutPopup)
             : unsupportedEnvironment("signoutPopup"),
-        [userManager, onSignoutPopup]
+        [userManager, onSignoutPopup],
     );
 
     return (

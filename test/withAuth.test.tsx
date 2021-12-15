@@ -11,8 +11,7 @@ describe("withAuth", () => {
         // arrange
         class MyComponent extends Component<AuthContextProps> {
             render(): JSX.Element {
-                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                return <>hasAuth: {`${!!this.props.signinRedirect}`}</>;
+                return <>hasAuth: {(!!this.props.signinRedirect).toString()}</>;
             }
         }
 
@@ -21,7 +20,7 @@ describe("withAuth", () => {
         render(
             <AuthProvider {...settingsStub}>
                 <WrappedComponent />
-            </AuthProvider>
+            </AuthProvider>,
         );
         await expect(screen.findByText("hasAuth: true")).resolves.toBeInTheDocument();
     });

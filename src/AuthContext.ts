@@ -30,5 +30,5 @@ export interface AuthContextProps extends AuthState {
 /**
  * @public
  */
-export const AuthContext = React.createContext<AuthContextProps>(undefined as any);
+export const AuthContext = React.createContext<AuthContextProps | undefined>(undefined);
 AuthContext.displayName = "AuthContext";

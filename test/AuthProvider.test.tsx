@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 import { renderHook } from "@testing-library/react-hooks";
 import { UserManager, User } from "oidc-client-ts";
 import { act } from "react-test-renderer";
@@ -34,10 +33,10 @@ describe("AuthProvider", () => {
         window.history.pushState(
             {},
             document.title,
-            "/?code=__test_code__&state=__test_state__"
+            "/?code=__test_code__&state=__test_state__",
         );
         expect(window.location.href).toBe(
-            "https://www.example.com/?code=__test_code__&state=__test_state__"
+            "https://www.example.com/?code=__test_code__&state=__test_state__",
         );
 
         const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
@@ -59,10 +58,10 @@ describe("AuthProvider", () => {
         window.history.pushState(
             {},
             document.title,
-            "/?error=__test_error__&state=__test_state__"
+            "/?error=__test_error__&state=__test_state__",
         );
         expect(window.location.href).toBe(
-            "https://www.example.com/?error=__test_error__&state=__test_state__"
+            "https://www.example.com/?error=__test_error__&state=__test_state__",
         );
 
         const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
