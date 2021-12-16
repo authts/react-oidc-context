@@ -19,8 +19,6 @@ import { UserManagerSettings } from 'oidc-client-ts';
 // @public (undocumented)
 export const AuthContext: React_2.Context<AuthContextProps | undefined>;
 
-// Warning: (ae-forgotten-export) The symbol "AuthState" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export interface AuthContextProps extends AuthState {
     // (undocumented)
@@ -60,6 +58,15 @@ export interface AuthProviderProps extends UserManagerSettings {
     onSignoutPopup?: () => Promise<void> | void;
     onSignoutRedirect?: () => Promise<void> | void;
     skipSigninCallback?: boolean;
+}
+
+// @public
+export interface AuthState {
+    activeNavigator?: "signinRedirect" | "signinPopup" | "signinSilent" | "signoutRedirect" | "signoutPopup";
+    error?: Error;
+    isAuthenticated: boolean;
+    isLoading: boolean;
+    user?: User | null;
 }
 
 // @public (undocumented)
