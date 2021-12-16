@@ -177,4 +177,72 @@ describe("AuthProvider", () => {
             .toThrow(Error);
         expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
     });
+
+    it("should set isLoading to false after initializing", async () => {
+        // arrange
+        const wrapper = createWrapper({ ...settingsStub });
+        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+            wrapper,
+        });
+        expect(result.current.isLoading).toBe(true);
+
+        // act
+        await waitForNextUpdate();
+
+        // assert
+        expect(result.current.isLoading).toBe(false);
+    });
+
+    it("should set isLoading to true during a navigation", async () => {
+        // arrange
+        let resolve: (value: User) => void;
+        mocked(UserManager.prototype).signinPopup.mockReturnValue(new Promise((_resolve) => {
+            resolve = _resolve;
+        }));
+        const wrapper = createWrapper({ ...settingsStub });
+        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+            wrapper,
+        });
+        await waitForNextUpdate();
+        expect(result.current.isLoading).toBe(false);
+
+        // act
+        void act(() => void result.current.signinPopup());
+
+        // assert
+        expect(result.current.isLoading).toBe(true);
+
+        // act
+        void act(() => resolve({} as User));
+        await waitForNextUpdate();
+
+        // assert
+        expect(result.current.isLoading).toBe(false);
+    });
+
+    it("should set activeNavigator based on the most recent navigation", async () => {
+        // arrange
+        let resolve: (value: User) => void;
+        mocked(UserManager.prototype).signinPopup.mockReturnValue(new Promise((_resolve) => {
+            resolve = _resolve;
+        }));
+        const wrapper = createWrapper({ ...settingsStub });
+        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+            wrapper,
+        });
+        expect(result.current.activeNavigator).toBe(undefined);
+
+        // act
+        void act(() => void result.current.signinPopup());
+
+        // assert
+        expect(result.current.activeNavigator).toBe("signinPopup");
+
+        // act
+        void act(() => resolve({} as User));
+        await waitForNextUpdate();
+
+        // assert
+        expect(result.current.activeNavigator).toBe(undefined);
+    });
 });
