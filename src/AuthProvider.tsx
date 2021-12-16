@@ -75,13 +75,17 @@ export interface AuthProviderProps extends UserManagerSettings {
 
 const userManagerContextKeys = [
     "clearStaleState",
-    "signinPopup",
-    "signinSilent",
-    "signinRedirect",
     "querySessionStatus",
     "revokeAccessToken",
     "startSilentRenew",
     "stopSilentRenew",
+] as const;
+const navigatorKeys = [
+    "signinPopup",
+    "signinSilent",
+    "signinRedirect",
+    "signoutPopup",
+    "signoutRedirect",
 ] as const;
 const unsupportedEnvironment = (fnName: string) => () => {
     throw new Error(`UserManager#${fnName} was called from an unsupported context. If this is a server-rendered page, defer this call with useEffect() or pass a custom UserManager implementation.`);
@@ -104,23 +108,39 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         onSignoutPopup,
 
         implementation: UserManagerImpl = defaultUserManagerImpl,
-        ...userManagerProps
+        ...userManagerSettings
     } = props;
 
-    const [userManager] = useState(() => UserManagerImpl && new UserManagerImpl(userManagerProps));
+    const [userManager] = useState(() => UserManagerImpl
+        ? new UserManagerImpl(userManagerSettings)
+        : { settings: userManagerSettings } as UserManager,
+    );
     const [state, dispatch] = useReducer(reducer, initialAuthState);
     const userManagerContext = useMemo(
-        () => ({
-            settings: userManager?.settings ?? { ...userManagerProps },
-            ...(Object.fromEntries(
+        () => Object.assign(
+            { settings: userManager.settings },
+            Object.fromEntries(
                 userManagerContextKeys.map((key) => [
                     key,
-                    userManager
-                        ? userManager[key].bind(userManager)
+                    userManager[key]?.bind(userManager) ?? unsupportedEnvironment(key),
+                ]),
+            ) as Pick<UserManager, typeof userManagerContextKeys[number]>,
+            Object.fromEntries(
+                navigatorKeys.map((key) => [
+                    key,
+                    userManager[key]
+                        ? async (...args: never[]) => {
+                            dispatch({ type: "NAVIGATOR_INIT", method: key });
+                            try {
+                                return await userManager[key](...args);
+                            } finally {
+                                dispatch({ type: "NAVIGATOR_CLOSE" });
+                            }
+                        }
                         : unsupportedEnvironment(key),
                 ]),
-            ) as Pick<UserManager, typeof userManagerContextKeys[number]>),
-        }),
+            ) as Pick<UserManager, typeof navigatorKeys[number]>,
+        ),
         [userManager],
     );
 
@@ -177,17 +197,13 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     );
 
     const signoutRedirect = useCallback(
-        userManager
-            ? (args?: SignoutRedirectArgs) => userManager.signoutRedirect(args).then(onSignoutRedirect)
-            : unsupportedEnvironment("signoutRedirect"),
-        [userManager, onSignoutRedirect],
+        (args?: SignoutRedirectArgs) => userManagerContext.signoutRedirect(args).then(onSignoutRedirect),
+        [userManagerContext.signoutRedirect, onSignoutRedirect],
     );
 
     const signoutPopup = useCallback(
-        userManager
-            ? (args?: SignoutPopupArgs) => userManager.signoutPopup(args).then(onSignoutPopup)
-            : unsupportedEnvironment("signoutPopup"),
-        [userManager, onSignoutPopup],
+        (args?: SignoutPopupArgs) => userManagerContext.signoutPopup(args).then(onSignoutPopup),
+        [userManagerContext.signoutPopup, onSignoutPopup],
     );
 
     return (
