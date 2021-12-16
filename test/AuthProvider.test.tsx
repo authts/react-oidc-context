@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-import { UserManager, User } from "oidc-client-ts";
 import { renderHook } from "@testing-library/react-hooks";
-import { mocked } from "ts-jest/utils";
+import { mocked } from "jest-mock";
+import { UserManager, User } from "oidc-client-ts";
+import { act } from "react-test-renderer";
 
 import { useAuth } from "../src/useAuth";
 import { createWrapper } from "./helpers";
@@ -20,7 +20,7 @@ describe("AuthProvider", () => {
         expect(result.current.user).toBeUndefined();
 
         // act
-        await result.current.signinRedirect();
+        await act(() => result.current.signinRedirect());
 
         // assert
         expect(UserManager.prototype.signinRedirect).toHaveBeenCalled();
@@ -33,10 +33,10 @@ describe("AuthProvider", () => {
         window.history.pushState(
             {},
             document.title,
-            "/?code=__test_code__&state=__test_state__"
+            "/?code=__test_code__&state=__test_state__",
         );
         expect(window.location.href).toBe(
-            "https://www.example.com/?code=__test_code__&state=__test_state__"
+            "https://www.example.com/?code=__test_code__&state=__test_state__",
         );
 
         const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
@@ -58,10 +58,10 @@ describe("AuthProvider", () => {
         window.history.pushState(
             {},
             document.title,
-            "/?error=__test_error__&state=__test_state__"
+            "/?error=__test_error__&state=__test_state__",
         );
         expect(window.location.href).toBe(
-            "https://www.example.com/?error=__test_error__&state=__test_state__"
+            "https://www.example.com/?error=__test_error__&state=__test_state__",
         );
 
         const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
@@ -88,7 +88,7 @@ describe("AuthProvider", () => {
         await waitForNextUpdate();
 
         // act
-        await result.current.removeUser();
+        await act(() => result.current.removeUser());
 
         // assert
         expect(UserManager.prototype.removeUser).toHaveBeenCalled();
@@ -105,7 +105,7 @@ describe("AuthProvider", () => {
         await waitForNextUpdate();
 
         // act
-        await result.current.signoutRedirect();
+        await act(() => result.current.signoutRedirect());
 
         // assert
         expect(UserManager.prototype.signoutRedirect).toHaveBeenCalled();
@@ -122,7 +122,7 @@ describe("AuthProvider", () => {
         await waitForNextUpdate();
 
         // act
-        await result.current.signoutPopup();
+        await act(() => result.current.signoutPopup());
 
         // assert
         expect(UserManager.prototype.signoutPopup).toHaveBeenCalled();
@@ -147,7 +147,7 @@ describe("AuthProvider", () => {
     it("should use a custom UserManager implementation", async () => {
         // arrange
         class CustomUserManager extends UserManager { }
-        mocked(CustomUserManager.prototype).signinRedirect = jest.fn();
+        CustomUserManager.prototype.signinRedirect = jest.fn().mockResolvedValue(undefined);
 
         const wrapper = createWrapper({ ...settingsStub, implementation: CustomUserManager });
         const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
@@ -157,7 +157,7 @@ describe("AuthProvider", () => {
         expect(result.current.user).toBeUndefined();
 
         // act
-        await result.current.signinRedirect();
+        await act(() => result.current.signinRedirect());
 
         // assert
         expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
@@ -172,15 +172,9 @@ describe("AuthProvider", () => {
         });
 
         // act
-        try {
-            await result.current.signinRedirect();
-            fail("should not come here");
-        }
-        catch (err) {
-            expect(err).toBeInstanceOf(Error);
-        }
-
+        expect(() => result.current.signinRedirect())
         // assert
+            .toThrow(Error);
         expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
     });
 });

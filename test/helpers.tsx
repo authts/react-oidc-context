@@ -27,7 +27,7 @@ export const createLocation = (search: string, hash: string): Location => {
         port: "80",
         assign: jest.fn(),
         reload: jest.fn(),
-        replace: jest.fn()
+        replace: jest.fn(),
     };
     return location;
 };

@@ -38,5 +38,5 @@ ReactDOM.render(
     <AuthProvider {...oidcConfig}>
         <App />
     </AuthProvider>,
-    document.getElementById("root")
+    document.getElementById("root"),
 );
