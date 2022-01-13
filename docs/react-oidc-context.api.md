@@ -6,6 +6,7 @@
 
 import type { QuerySessionStatusArgs } from 'oidc-client-ts';
 import { default as React_2 } from 'react';
+import type { RevokeTokensTypes } from 'oidc-client-ts';
 import type { SessionStatus } from 'oidc-client-ts';
 import type { SigninPopupArgs } from 'oidc-client-ts';
 import type { SigninRedirectArgs } from 'oidc-client-ts';
@@ -28,7 +29,7 @@ export interface AuthContextProps extends AuthState {
     // (undocumented)
     removeUser(): Promise<void>;
     // (undocumented)
-    revokeAccessToken(): Promise<void>;
+    revokeTokens(types?: RevokeTokensTypes): Promise<void>;
     readonly settings: UserManagerSettings;
     // (undocumented)
     signinPopup(args?: SigninPopupArgs): Promise<User>;
@@ -54,7 +55,7 @@ export interface AuthProviderProps extends UserManagerSettings {
     children?: React_2.ReactNode;
     implementation?: typeof UserManager | null;
     onRemoveUser?: () => Promise<void> | void;
-    onSigninCallback?: (user: User | null) => Promise<void> | void;
+    onSigninCallback?: (user: User | void) => Promise<void> | void;
     onSignoutPopup?: () => Promise<void> | void;
     onSignoutRedirect?: () => Promise<void> | void;
     skipSigninCallback?: boolean;

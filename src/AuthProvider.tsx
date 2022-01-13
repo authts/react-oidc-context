@@ -21,7 +21,7 @@ export interface AuthProviderProps extends UserManagerSettings {
      * Here you can remove the code and state parameters from the url when you are redirected from the authorize page.
      *
      * ```jsx
-     * const onSigninCallback = (_user: User | null): void => {
+     * const onSigninCallback = (_user: User | void): void => {
      *     window.history.replaceState(
      *         {},
      *         document.title,
@@ -30,7 +30,7 @@ export interface AuthProviderProps extends UserManagerSettings {
      * }
      * ```
      */
-    onSigninCallback?: (user: User | null) => Promise<void> | void;
+    onSigninCallback?: (user: User | void) => Promise<void> | void;
 
     /**
      * By default, if the page url has code/state params, this provider will call automatically the userManager.signinCallback.
@@ -76,7 +76,7 @@ export interface AuthProviderProps extends UserManagerSettings {
 const userManagerContextKeys = [
     "clearStaleState",
     "querySessionStatus",
-    "revokeAccessToken",
+    "revokeTokens",
     "startSilentRenew",
     "stopSilentRenew",
 ] as const;

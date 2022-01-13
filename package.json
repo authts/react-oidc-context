@@ -39,7 +39,7 @@
     "prepare": "husky install"
   },
   "peerDependencies": {
-    "oidc-client-ts": "^2.0.0-beta.3",
+    "oidc-client-ts": "^2.0.0-rc.4",
     "react": ">=16.8.0"
   },
   "devDependencies": {
