@@ -43,7 +43,7 @@ MockUserManager.prototype.signoutPopupCallback = jest.fn().mockResolvedValue(und
 MockUserManager.prototype.signinCallback = jest.fn().mockResolvedValue(undefined);
 MockUserManager.prototype.signoutCallback = jest.fn().mockResolvedValue(undefined);
 MockUserManager.prototype.querySessionStatus = jest.fn().mockResolvedValue(undefined);
-MockUserManager.prototype.revokeAccessToken = jest.fn();
+MockUserManager.prototype.revokeTokens = jest.fn();
 MockUserManager.prototype.startSilentRenew = jest.fn();
 MockUserManager.prototype.stopSilentRenew = jest.fn();
 
