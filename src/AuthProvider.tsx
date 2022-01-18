@@ -148,13 +148,18 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         if (!userManager) return;
         void (async (): Promise<void> => {
             try {
+                let initialUser: User | null;
+
                 // check if returning back from authority server
                 if (hasAuthParams() && !skipSigninCallback) {
                     const user = await userManager.signinCallback();
                     onSigninCallback && onSigninCallback(user);
+                    initialUser = user ? user : null;
+                } else {
+                    initialUser = await userManager.getUser();
                 }
-                const user = await userManager.getUser();
-                dispatch({ type: "INITIALISED", user });
+
+                dispatch({ type: "INITIALISED", user: initialUser });
             } catch (error) {
                 dispatch({ type: "ERROR", error: loginError(error) });
             }
