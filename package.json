@@ -1,6 +1,6 @@
 {
   "name": "react-oidc-context",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.0",
   "description": "OpenID Connect & OAuth2 authentication using react context api as state management",
   "repository": {
     "type": "git",
