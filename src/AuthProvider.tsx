@@ -118,7 +118,10 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     const [state, dispatch] = useReducer(reducer, initialAuthState);
     const userManagerContext = useMemo(
         () => Object.assign(
-            { settings: userManager.settings },
+            {
+                settings: userManager.settings,
+                events: userManager.events,
+            },
             Object.fromEntries(
                 userManagerContextKeys.map((key) => [
                     key,
