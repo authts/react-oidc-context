@@ -59,7 +59,9 @@ export interface AuthProviderProps extends UserManagerSettings {
     implementation?: typeof UserManager | null;
     onRemoveUser?: () => Promise<void> | void;
     onSigninCallback?: (user: User | void) => Promise<void> | void;
+    // @deprecated (undocumented)
     onSignoutPopup?: () => Promise<void> | void;
+    // @deprecated (undocumented)
     onSignoutRedirect?: () => Promise<void> | void;
     skipSigninCallback?: boolean;
 }
