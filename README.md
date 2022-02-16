@@ -37,7 +37,7 @@ create that route.
 Using [npm](https://npmjs.org/)
 
 ```bash
-npm install react-oidc-context
+npm install oidc-client-ts react-oidc-context --save
 ```
 
 ## Getting Started
