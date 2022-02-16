@@ -205,6 +205,33 @@ export const getPosts = createAsyncThunk(
 )
 ```
 
+### Adding event listeners
+
+The underlying [`UserManagerEvents`](https://authts.github.io/oidc-client-ts/classes/UserManagerEvents.html) instance can be imperatively managed with the `useAuth` hook.
+
+```jsx
+// src/App.jsx
+import React from "react";
+import { useAuth } from "react-oidc-context";
+
+function App() {
+    const auth = useAuth();
+
+    React.useEffect(() => {
+      // the `return` is important - addAccessTokenExpiring() returns a cleanup function
+      return auth.events.addAccessTokenExpiring(() => {
+        if (alert("You're about to be signed out due to inactivity. Press continue to stay signed in.")) {
+          auth.signinSilent()
+        }
+      })
+    }, [auth.events, auth.signinSilent])
+
+    return <button onClick={auth.signinRedirect}>Log in</button>;
+}
+
+export default App;
+```
+
 ## Contributing
 
 We appreciate feedback and contribution to this repo!

@@ -1,9 +1,10 @@
 import React from "react";
 import type {
-    UserManagerSettings, User, SessionStatus,
+    UserManagerSettings, UserManagerEvents, User, SessionStatus,
     SigninPopupArgs, SigninSilentArgs, SigninRedirectArgs,
     SignoutRedirectArgs, SignoutPopupArgs, QuerySessionStatusArgs,
-    RevokeTokensTypes } from "oidc-client-ts";
+    RevokeTokensTypes,
+} from "oidc-client-ts";
 
 import type { AuthState } from "./AuthState";
 
@@ -15,6 +16,7 @@ export interface AuthContextProps extends AuthState {
      * UserManager functions. See [UserManager](https://github.com/authts/oidc-client-ts) for more details.
      */
     readonly settings: UserManagerSettings;
+    readonly events: UserManagerEvents;
     clearStaleState(): Promise<void>;
     removeUser(): Promise<void>;
     signinPopup(args?: SigninPopupArgs): Promise<User>;

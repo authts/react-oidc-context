@@ -47,23 +47,24 @@ export interface AuthProviderProps extends UserManagerSettings {
 
     /**
      * On remove user hook. Can be a async function.
-     */
-    onRemoveUser?: () => Promise<void> | void;
-
-    /**
-     * On sign out redirect hook. Can be a async function.
-     * Here you can change the url after the logout.
+     * Here you can change the url after the user is removed.
+     *
      * ```jsx
-     * const onSignOutRedirect = (): void => {
+     * const onRemoveUser = (): void => {
      *     // go to home after logout
      *     window.location.pathname = ""
      * }
      * ```
      */
+    onRemoveUser?: () => Promise<void> | void;
+
+    /**
+     * @deprecated On sign out redirect hook. Can be a async function.
+     */
     onSignoutRedirect?: () => Promise<void> | void;
 
     /**
-     * On sign out popup hook. Can be a async function.
+     * @deprecated On sign out popup hook. Can be a async function.
      */
     onSignoutPopup?: () => Promise<void> | void;
 
@@ -118,7 +119,10 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     const [state, dispatch] = useReducer(reducer, initialAuthState);
     const userManagerContext = useMemo(
         () => Object.assign(
-            { settings: userManager.settings },
+            {
+                settings: userManager.settings,
+                events: userManager.events,
+            },
             Object.fromEntries(
                 userManagerContextKeys.map((key) => [
                     key,

@@ -15,6 +15,7 @@ import type { SignoutPopupArgs } from 'oidc-client-ts';
 import type { SignoutRedirectArgs } from 'oidc-client-ts';
 import { User } from 'oidc-client-ts';
 import { UserManager } from 'oidc-client-ts';
+import type { UserManagerEvents } from 'oidc-client-ts';
 import { UserManagerSettings } from 'oidc-client-ts';
 
 // @public (undocumented)
@@ -24,6 +25,8 @@ export const AuthContext: React_2.Context<AuthContextProps | undefined>;
 export interface AuthContextProps extends AuthState {
     // (undocumented)
     clearStaleState(): Promise<void>;
+    // (undocumented)
+    readonly events: UserManagerEvents;
     // (undocumented)
     querySessionStatus(args?: QuerySessionStatusArgs): Promise<SessionStatus | null>;
     // (undocumented)
@@ -56,7 +59,9 @@ export interface AuthProviderProps extends UserManagerSettings {
     implementation?: typeof UserManager | null;
     onRemoveUser?: () => Promise<void> | void;
     onSigninCallback?: (user: User | void) => Promise<void> | void;
+    // @deprecated (undocumented)
     onSignoutPopup?: () => Promise<void> | void;
+    // @deprecated (undocumented)
     onSignoutRedirect?: () => Promise<void> | void;
     skipSigninCallback?: boolean;
 }
