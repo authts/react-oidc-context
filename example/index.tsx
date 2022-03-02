@@ -24,14 +24,14 @@ function App() {
         return (
             <div>
                 Hello {auth.user?.profile.sub}{" "}
-                <button onClick={() => auth.removeUser()}>
+                <button onClick={() => void auth.removeUser()}>
                     Log out
                 </button>
             </div>
         );
     }
 
-    return <button onClick={() => auth.signinRedirect()}>Log in</button>;
+    return <button onClick={() => void auth.signinRedirect()}>Log in</button>;
 }
 
 ReactDOM.render(

@@ -97,12 +97,12 @@ function App() {
         return (
         <div>
             Hello {auth.user?.profile.sub}{" "}
-            <button onClick={auth.removeUser}>Log out</button>
+            <button onClick={() => void auth.removeUser()}>Log out</button>
         </div>
         );
     }
 
-    return <button onClick={auth.signinRedirect}>Log in</button>;
+    return <button onClick={() => void auth.signinRedirect()}>Log in</button>;
 }
 
 export default App;
@@ -226,7 +226,7 @@ function App() {
       })
     }, [auth.events, auth.signinSilent])
 
-    return <button onClick={auth.signinRedirect}>Log in</button>;
+    return <button onClick={() => void auth.signinRedirect()}>Log in</button>;
 }
 
 export default App;
