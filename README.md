@@ -26,11 +26,19 @@ This library implements an auth context provider by making use of the
 
 - [oidc-client-ts](https://github.com/authts/oidc-client-ts)
 
-The User and UserManager is hold in this context, which is accessible from the
+The
+[`User`](https://authts.github.io/oidc-client-ts/classes/User.html)
+and
+[`UserManager`](https://authts.github.io/oidc-client-ts/classes/UserManager.html)
+is hold in this context, which is accessible from the
 React application. Additionally it intercepts the auth redirects by looking at
 the query/fragment parameters and acts accordingly. You still need to setup a
 redirect uri, which must point to your application, but you do not need to
 create that route.
+
+To renew the access token, the
+[automatic silent renew](https://authts.github.io/oidc-client-ts/interfaces/UserManagerSettings.html#automaticSilentRenew)
+feature of `oidc-client-ts` can be used.
 
 ## Installation
 
@@ -144,17 +152,17 @@ const Posts = () => {
 
     React.useEffect(() => {
         (async () => {
-        try {
-            const token = auth.user?.access_token;
-            const response = await fetch("https://api.example.com/posts", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            });
-            setPosts(await response.json());
-        } catch (e) {
-            console.error(e);
-        }
+            try {
+                const token = auth.user?.access_token;
+                const response = await fetch("https://api.example.com/posts", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setPosts(await response.json());
+            } catch (e) {
+                console.error(e);
+            }
         })();
     }, [auth]);
 
@@ -193,8 +201,8 @@ function getUser() {
 export const getPosts = createAsyncThunk(
     "store/getPosts",
     async () => {
-        const user = getUser()
-        const token = user?.access_token
+        const user = getUser();
+        const token = user?.access_token;
         return fetch("https://api.example.com/posts", {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -218,12 +226,12 @@ function App() {
     const auth = useAuth();
 
     React.useEffect(() => {
-      // the `return` is important - addAccessTokenExpiring() returns a cleanup function
-      return auth.events.addAccessTokenExpiring(() => {
-        if (alert("You're about to be signed out due to inactivity. Press continue to stay signed in.")) {
-          auth.signinSilent()
-        }
-      })
+        // the `return` is important - addAccessTokenExpiring() returns a cleanup function
+        return auth.events.addAccessTokenExpiring(() => {
+            if (alert("You're about to be signed out due to inactivity. Press continue to stay signed in.")) {
+                auth.signinSilent();
+            }
+        })
     }, [auth.events, auth.signinSilent])
 
     return <button onClick={() => void auth.signinRedirect()}>Log in</button>;
