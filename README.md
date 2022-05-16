@@ -116,6 +116,11 @@ function App() {
 export default App;
 ```
 
+You **must** provide an implementation of `onSigninCallback` to `oidcConfig` to remove the payload from the URL upon successful login. Otherwise if you refresh the page and the payload is still there, `signinSilent` - which handles renewing your token - won't work. 
+
+A working implementation is already in the code [here](https://github.com/authts/react-oidc-context/blob/f175dcba6ab09871b027d6a2f2224a17712b67c5/src/AuthProvider.tsx#L20-L30).
+
+
 ### Use with a Class Component
 
 Use the `withAuth` higher-order component to add the `auth` property to class
