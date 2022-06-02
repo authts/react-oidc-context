@@ -49,6 +49,7 @@
     "@testing-library/react-hooks": "^8.0.0",
     "@types/react": "^18.0.6",
     "@types/react-dom": "^18.0.2",
+    "@types/react-test-renderer": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "@typescript-eslint/parser": "^5.7.0",
     "esbuild": "^0.14.1",
