@@ -46,7 +46,7 @@
     "@microsoft/api-extractor": "^7.18.10",
     "@testing-library/jest-dom": "^5.5.0",
     "@testing-library/react": "^13.1.1",
-    "@testing-library/react-hooks": "^8.0.0",
+    "@testing-library/react-hooks": "^7.0.2",
     "@types/react": "^18.0.6",
     "@types/react-dom": "^18.0.2",
     "@types/react-test-renderer": "^18.0.0",
