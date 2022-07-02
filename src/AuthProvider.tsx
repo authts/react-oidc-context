@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from "react";
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useReducer,
+    useState,
+} from "react";
 import { UserManager, UserManagerSettings, User } from "oidc-client-ts";
 import type { SignoutRedirectArgs, SignoutPopupArgs } from "oidc-client-ts";
 
@@ -89,9 +95,12 @@ const navigatorKeys = [
     "signoutRedirect",
 ] as const;
 const unsupportedEnvironment = (fnName: string) => () => {
-    throw new Error(`UserManager#${fnName} was called from an unsupported context. If this is a server-rendered page, defer this call with useEffect() or pass a custom UserManager implementation.`);
+    throw new Error(
+        `UserManager#${fnName} was called from an unsupported context. If this is a server-rendered page, defer this call with useEffect() or pass a custom UserManager implementation.`
+    );
 };
-const defaultUserManagerImpl = typeof window === "undefined" ? null : UserManager;
+const defaultUserManagerImpl =
+    typeof window === "undefined" ? null : UserManager;
 
 /**
  * Provides the AuthContext to its child components.
@@ -112,40 +121,46 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         ...userManagerSettings
     } = props;
 
-    const [userManager] = useState(() => UserManagerImpl
-        ? new UserManagerImpl(userManagerSettings)
-        : { settings: userManagerSettings } as UserManager,
+    const [userManager] = useState(() =>
+        UserManagerImpl
+            ? new UserManagerImpl(userManagerSettings)
+            : ({ settings: userManagerSettings } as UserManager)
     );
     const [state, dispatch] = useReducer(reducer, initialAuthState);
     const userManagerContext = useMemo(
-        () => Object.assign(
-            {
-                settings: userManager.settings,
-                events: userManager.events,
-            },
-            Object.fromEntries(
-                userManagerContextKeys.map((key) => [
-                    key,
-                    userManager[key]?.bind(userManager) ?? unsupportedEnvironment(key),
-                ]),
-            ) as Pick<UserManager, typeof userManagerContextKeys[number]>,
-            Object.fromEntries(
-                navigatorKeys.map((key) => [
-                    key,
-                    userManager[key]
-                        ? async (...args: never[]) => {
-                            dispatch({ type: "NAVIGATOR_INIT", method: key });
-                            try {
-                                return await userManager[key](...args);
-                            } finally {
-                                dispatch({ type: "NAVIGATOR_CLOSE" });
-                            }
-                        }
-                        : unsupportedEnvironment(key),
-                ]),
-            ) as Pick<UserManager, typeof navigatorKeys[number]>,
-        ),
-        [userManager],
+        () =>
+            Object.assign(
+                {
+                    settings: userManager.settings,
+                    events: userManager.events,
+                },
+                Object.fromEntries(
+                    userManagerContextKeys.map((key) => [
+                        key,
+                        userManager[key]?.bind(userManager) ??
+                            unsupportedEnvironment(key),
+                    ])
+                ) as Pick<UserManager, typeof userManagerContextKeys[number]>,
+                Object.fromEntries(
+                    navigatorKeys.map((key) => [
+                        key,
+                        userManager[key]
+                            ? async (...args: never[]) => {
+                                  dispatch({
+                                      type: "NAVIGATOR_INIT",
+                                      method: key,
+                                  });
+                                  try {
+                                      return await userManager[key](...args);
+                                  } finally {
+                                      dispatch({ type: "NAVIGATOR_CLOSE" });
+                                  }
+                              }
+                            : unsupportedEnvironment(key),
+                    ])
+                ) as Pick<UserManager, typeof navigatorKeys[number]>
+            ),
+        [userManager]
     );
 
     useEffect(() => {
@@ -167,7 +182,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
 
     // register to userManager events
     useEffect(() => {
-        if (!userManager) return undefined;
+        if (!userManager || !userManager.events) return undefined;
         // event UserLoaded (e.g. initial load, silent renew success)
         const handleUserLoaded = (user: User) => {
             dispatch({ type: "USER_LOADED", user });
@@ -197,17 +212,19 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         userManager
             ? () => userManager.removeUser().then(onRemoveUser)
             : unsupportedEnvironment("removeUser"),
-        [userManager, onRemoveUser],
+        [userManager, onRemoveUser]
     );
 
     const signoutRedirect = useCallback(
-        (args?: SignoutRedirectArgs) => userManagerContext.signoutRedirect(args).then(onSignoutRedirect),
-        [userManagerContext.signoutRedirect, onSignoutRedirect],
+        (args?: SignoutRedirectArgs) =>
+            userManagerContext.signoutRedirect(args).then(onSignoutRedirect),
+        [userManagerContext.signoutRedirect, onSignoutRedirect]
     );
 
     const signoutPopup = useCallback(
-        (args?: SignoutPopupArgs) => userManagerContext.signoutPopup(args).then(onSignoutPopup),
-        [userManagerContext.signoutPopup, onSignoutPopup],
+        (args?: SignoutPopupArgs) =>
+            userManagerContext.signoutPopup(args).then(onSignoutPopup),
+        [userManagerContext.signoutPopup, onSignoutPopup]
     );
 
     return (
