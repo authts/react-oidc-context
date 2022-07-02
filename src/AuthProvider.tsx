@@ -167,7 +167,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
 
     // register to userManager events
     useEffect(() => {
-        if (!userManager) return undefined;
+        if (!userManager || !userManager.events) return undefined;
         // event UserLoaded (e.g. initial load, silent renew success)
         const handleUserLoaded = (user: User) => {
             dispatch({ type: "USER_LOADED", user });
