@@ -1,4 +1,5 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
+import { mocked } from "jest-mock";
 import { useAuth } from "../src/useAuth";
 import { createWrapper } from "./helpers";
 
@@ -19,10 +20,12 @@ describe("useAuth", () => {
     });
 
     it("should throw with no provider", async () => {
+        // We want to show the error message on the screen since we already are doing an assert for it
+        mocked(global.console).error.mockImplementation(() => {});
+
         // act
         try {
-            const { result } = renderHook(() => useAuth());
-            fail("should not come here");
+            renderHook(() => useAuth());
         } catch (err) {
             //assert
             expect(err).toBeInstanceOf(Error);
