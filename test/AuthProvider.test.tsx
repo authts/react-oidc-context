@@ -141,7 +141,7 @@ describe("AuthProvider", () => {
     });
 
     it("should get the user", async () => {
-        mocked(UserManager.prototype).getUser.mockImplementation(() => {
+        const mockGetUser = mocked(UserManager.prototype).getUser.mockImplementation(() => {
             return new Promise((resolve) => {
                 resolve(user);
             });
@@ -160,6 +160,8 @@ describe("AuthProvider", () => {
             expect(UserManager.prototype.getUser).toHaveBeenCalled();
             expect(result.current.user).toBe(user);
         });
+
+        mockGetUser.mockRestore()
     });
 
     it("should use a custom UserManager implementation", async () => {
@@ -220,7 +222,7 @@ describe("AuthProvider", () => {
     it("should set isLoading to true during a navigation", async () => {
         // arrange
         let resolve: (value: User) => void;
-        mocked(UserManager.prototype).signinPopup.mockReturnValue(
+        const mockSigninPopup = mocked(UserManager.prototype).signinPopup.mockReturnValue(
             new Promise((_resolve) => {
                 resolve = _resolve;
             })
@@ -245,12 +247,14 @@ describe("AuthProvider", () => {
         await waitFor(() => {
             expect(result.current.isLoading).toBe(false);
         });
+
+        mockSigninPopup.mockRestore()
     });
 
     it("should set activeNavigator based on the most recent navigation", async () => {
         // arrange
         let resolve: (value: User) => void;
-        mocked(UserManager.prototype).signinPopup.mockReturnValue(
+        const mockSigninPopup = mocked(UserManager.prototype).signinPopup.mockReturnValue(
             new Promise((_resolve) => {
                 resolve = _resolve;
             })
@@ -277,5 +281,7 @@ describe("AuthProvider", () => {
         await waitFor(() =>
             expect(result.current.activeNavigator).toBe(undefined)
         );
+
+        mockSigninPopup.mockRestore()
     });
 });
