@@ -1,4 +1,5 @@
 import { renderHook } from "@testing-library/react-hooks";
+import { renderHook as renderHook2, waitFor } from "@testing-library/react";
 import { mocked } from "jest-mock";
 import { UserManager, User } from "oidc-client-ts";
 import { act } from "react-test-renderer";
@@ -50,6 +51,34 @@ describe("AuthProvider", () => {
         // assert
         expect(UserManager.prototype.signinCallback).toHaveBeenCalled();
         expect(onSigninCallback).toHaveBeenCalled();
+    });
+
+    it("should run onSigninCallback only once in StrictMode", async () => {
+        // arrange
+        const onSigninCallback = jest.fn();
+        window.history.pushState(
+            {},
+            document.title,
+            "/?code=__test_code__&state=__test_state__",
+        );
+        expect(window.location.href).toBe(
+            "https://www.example.com/?code=__test_code__&state=__test_state__",
+        );
+
+        const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
+
+        // act
+        renderHook2(() => useAuth(), {
+            wrapper,
+        });
+
+        // assert
+        await waitFor(() => expect(onSigninCallback).toBeCalledTimes(1));
+        await waitFor(() =>
+            expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(
+                1,
+            ),
+        );
     });
 
     it("should handle signinCallback errors and call onSigninCallback", async () => {

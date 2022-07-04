@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { UserManager, UserManagerSettings, User } from "oidc-client-ts";
 import type { SignoutRedirectArgs, SignoutPopupArgs } from "oidc-client-ts";
 
@@ -147,9 +147,14 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         ),
         [userManager],
     );
+    const didInitialize = useRef(false);
 
     useEffect(() => {
-        if (!userManager) return;
+        if (!userManager || didInitialize.current) {
+            return;
+        }
+        didInitialize.current = true;
+
         void (async (): Promise<void> => {
             try {
                 // check if returning back from authority server
