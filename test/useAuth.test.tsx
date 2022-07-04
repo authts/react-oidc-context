@@ -26,7 +26,7 @@ describe("useAuth", () => {
             //assert
             expect(err).toBeInstanceOf(Error);
             expect((err as Error).message).toContain(
-                "AuthProvider context is undefined, please verify you are calling useAuth() as child of a <AuthProvider> component."
+                "AuthProvider context is undefined, please verify you are calling useAuth() as child of a <AuthProvider> component.",
             );
         }
     });

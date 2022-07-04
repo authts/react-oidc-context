@@ -36,10 +36,10 @@ describe("AuthProvider", () => {
         window.history.pushState(
             {},
             document.title,
-            "/?code=__test_code__&state=__test_state__"
+            "/?code=__test_code__&state=__test_state__",
         );
         expect(window.location.href).toBe(
-            "https://www.example.com/?code=__test_code__&state=__test_state__"
+            "https://www.example.com/?code=__test_code__&state=__test_state__",
         );
 
         const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
@@ -49,12 +49,8 @@ describe("AuthProvider", () => {
         });
 
         // assert
-        await waitFor(() => {
-            expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(
-                2
-            );
-            expect(onSigninCallback).toHaveBeenCalledTimes(2);
-        });
+        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(2);
+        await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(2));
     });
 
     it("should handle signinCallback errors and call onSigninCallback", async () => {
@@ -63,10 +59,10 @@ describe("AuthProvider", () => {
         window.history.pushState(
             {},
             document.title,
-            "/?error=__test_error__&state=__test_state__"
+            "/?error=__test_error__&state=__test_state__",
         );
         expect(window.location.href).toBe(
-            "https://www.example.com/?error=__test_error__&state=__test_state__"
+            "https://www.example.com/?error=__test_error__&state=__test_state__",
         );
 
         const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
@@ -77,12 +73,8 @@ describe("AuthProvider", () => {
         });
 
         // assert
-        await waitFor(() => {
-            expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(
-                2
-            );
-            expect(onSigninCallback).toHaveBeenCalledTimes(2);
-        });
+        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(2);
+        await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(2));
     });
 
     it("should handle removeUser and call onRemoveUser", async () => {
@@ -98,10 +90,9 @@ describe("AuthProvider", () => {
         await act(() => result.current.removeUser());
 
         // assert
-        await waitFor(() => {
-            expect(UserManager.prototype.removeUser).toHaveBeenCalled();
-            expect(onRemoveUser).toHaveBeenCalled();
-        });
+        expect(UserManager.prototype.removeUser).toHaveBeenCalled();
+
+        await waitFor(() => expect(onRemoveUser).toHaveBeenCalled());
     });
 
     it("should handle signoutRedirect and call onSignoutRedirect", async () => {
@@ -116,10 +107,9 @@ describe("AuthProvider", () => {
         await act(() => result.current.signoutRedirect());
 
         // assert
-        await waitFor(() => {
-            expect(UserManager.prototype.signoutRedirect).toHaveBeenCalled();
-            expect(onSignoutRedirect).toHaveBeenCalled();
-        });
+        expect(UserManager.prototype.signoutRedirect).toHaveBeenCalled();
+
+        await waitFor(() => expect(onSignoutRedirect).toHaveBeenCalled());
     });
 
     it("should handle signoutPopup and call onSignoutPopup", async () => {
@@ -134,15 +124,14 @@ describe("AuthProvider", () => {
         await act(() => result.current.signoutPopup());
 
         // assert
-        await waitFor(() => {
-            expect(UserManager.prototype.signoutPopup).toHaveBeenCalled();
-            expect(onSignoutPopup).toHaveBeenCalled();
-        });
+        expect(UserManager.prototype.signoutPopup).toHaveBeenCalled();
+
+        await waitFor(() => expect(onSignoutPopup).toHaveBeenCalled());
     });
 
     it("should get the user", async () => {
         const mockGetUser = mocked(
-            UserManager.prototype
+            UserManager.prototype,
         ).getUser.mockImplementation(() => {
             return new Promise((resolve) => {
                 resolve(user);
@@ -158,10 +147,11 @@ describe("AuthProvider", () => {
         });
 
         // assert
-        await waitFor(() => {
-            expect(UserManager.prototype.getUser).toHaveBeenCalled();
-            expect(result.current.user).toBe(user);
-        });
+        await waitFor(() =>
+            expect(UserManager.prototype.getUser).toHaveBeenCalled(),
+        );
+
+        await waitFor(() => expect(result.current.user).toBe(user));
 
         mockGetUser.mockRestore();
     });
@@ -225,11 +215,11 @@ describe("AuthProvider", () => {
         // arrange
         let resolve: (value: User) => void;
         const mockSigninPopup = mocked(
-            UserManager.prototype
+            UserManager.prototype,
         ).signinPopup.mockReturnValue(
             new Promise((_resolve) => {
                 resolve = _resolve;
-            })
+            }),
         );
         const wrapper = createWrapper({ ...settingsStub });
         const { result } = renderHook(() => useAuth(), {
@@ -259,11 +249,11 @@ describe("AuthProvider", () => {
         // arrange
         let resolve: (value: User) => void;
         const mockSigninPopup = mocked(
-            UserManager.prototype
+            UserManager.prototype,
         ).signinPopup.mockReturnValue(
             new Promise((_resolve) => {
                 resolve = _resolve;
-            })
+            }),
         );
         const wrapper = createWrapper({ ...settingsStub });
         const { result } = renderHook(() => useAuth(), {
@@ -277,7 +267,7 @@ describe("AuthProvider", () => {
 
         // assert
         await waitFor(() =>
-            expect(result.current.activeNavigator).toBe("signinPopup")
+            expect(result.current.activeNavigator).toBe("signinPopup"),
         );
 
         // act
@@ -285,7 +275,7 @@ describe("AuthProvider", () => {
 
         // assert
         await waitFor(() =>
-            expect(result.current.activeNavigator).toBe(undefined)
+            expect(result.current.activeNavigator).toBe(undefined),
         );
 
         mockSigninPopup.mockRestore();
