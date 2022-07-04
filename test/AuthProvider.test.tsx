@@ -49,8 +49,36 @@ describe("AuthProvider", () => {
         });
 
         // assert
-        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(2);
-        await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(2));
+        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1);
+        await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(1));
+    });
+
+    it("should run onSigninCallback only once in StrictMode", async () => {
+        // arrange
+        const onSigninCallback = jest.fn();
+        window.history.pushState(
+            {},
+            document.title,
+            "/?code=__test_code__&state=__test_state__",
+        );
+        expect(window.location.href).toBe(
+            "https://www.example.com/?code=__test_code__&state=__test_state__",
+        );
+
+        const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
+
+        // act
+        renderHook(() => useAuth(), {
+            wrapper,
+        });
+
+        // assert
+        await waitFor(() => expect(onSigninCallback).toBeCalledTimes(1));
+        await waitFor(() =>
+            expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(
+                1,
+            ),
+        );
     });
 
     it("should handle signinCallback errors and call onSigninCallback", async () => {
@@ -73,8 +101,8 @@ describe("AuthProvider", () => {
         });
 
         // assert
-        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(2);
-        await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(2));
+        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1);
+        await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(1));
     });
 
     it("should handle removeUser and call onRemoveUser", async () => {
