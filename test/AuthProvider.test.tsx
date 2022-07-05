@@ -1,26 +1,28 @@
-import { renderHook } from "@testing-library/react-hooks";
-import { renderHook as renderHook2, waitFor } from "@testing-library/react";
+import { renderHook, waitFor, act } from "@testing-library/react";
 import { mocked } from "jest-mock";
 import { UserManager, User } from "oidc-client-ts";
-import { act } from "react-test-renderer";
-
 import { useAuth } from "../src/useAuth";
 import { createWrapper } from "./helpers";
 
-const settingsStub = { authority: "authority", client_id: "client", redirect_uri: "redirect" };
+const settingsStub = {
+    authority: "authority",
+    client_id: "client",
+    redirect_uri: "redirect",
+};
 const user = { id_token: "__test_user__" } as User;
 
 describe("AuthProvider", () => {
     it("should signinRedirect when asked", async () => {
         // arrange
         const wrapper = createWrapper({ ...settingsStub });
-        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+
+        const { result } = renderHook(() => useAuth(), {
             wrapper,
         });
-        await waitForNextUpdate();
-        expect(result.current.user).toBeUndefined();
 
-        // act
+        await waitFor(() => expect(result.current.user).toBeUndefined());
+
+        //act
         await act(() => result.current.signinRedirect());
 
         // assert
@@ -42,15 +44,13 @@ describe("AuthProvider", () => {
 
         const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
 
-        // act
-        const { waitForNextUpdate } = renderHook(() => useAuth(), {
+        renderHook(() => useAuth(), {
             wrapper,
         });
-        await waitForNextUpdate();
 
         // assert
-        expect(UserManager.prototype.signinCallback).toHaveBeenCalled();
-        expect(onSigninCallback).toHaveBeenCalled();
+        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1);
+        await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(1));
     });
 
     it("should run onSigninCallback only once in StrictMode", async () => {
@@ -68,7 +68,7 @@ describe("AuthProvider", () => {
         const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
 
         // act
-        renderHook2(() => useAuth(), {
+        renderHook(() => useAuth(), {
             wrapper,
         });
 
@@ -96,14 +96,13 @@ describe("AuthProvider", () => {
         const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
 
         // act
-        const { waitForNextUpdate } = renderHook(() => useAuth(), {
+        renderHook(() => useAuth(), {
             wrapper,
         });
-        await waitForNextUpdate();
 
         // assert
-        expect(UserManager.prototype.signinCallback).toHaveBeenCalled();
-        expect(onSigninCallback).toHaveBeenCalled();
+        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1);
+        await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(1));
     });
 
     it("should handle removeUser and call onRemoveUser", async () => {
@@ -111,79 +110,98 @@ describe("AuthProvider", () => {
         const onRemoveUser = jest.fn();
 
         const wrapper = createWrapper({ ...settingsStub, onRemoveUser });
-        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+        const { result } = renderHook(() => useAuth(), {
             wrapper,
         });
-        await waitForNextUpdate();
 
         // act
         await act(() => result.current.removeUser());
 
         // assert
         expect(UserManager.prototype.removeUser).toHaveBeenCalled();
-        expect(onRemoveUser).toHaveBeenCalled();
+
+        await waitFor(() => expect(onRemoveUser).toHaveBeenCalled());
     });
 
     it("should handle signoutRedirect and call onSignoutRedirect", async () => {
         // arrange
         const onSignoutRedirect = jest.fn();
         const wrapper = createWrapper({ ...settingsStub, onSignoutRedirect });
-        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+        const { result } = renderHook(() => useAuth(), {
             wrapper,
         });
-        await waitForNextUpdate();
 
         // act
         await act(() => result.current.signoutRedirect());
 
         // assert
         expect(UserManager.prototype.signoutRedirect).toHaveBeenCalled();
-        expect(onSignoutRedirect).toHaveBeenCalled();
+
+        await waitFor(() => expect(onSignoutRedirect).toHaveBeenCalled());
     });
 
     it("should handle signoutPopup and call onSignoutPopup", async () => {
         // arrange
         const onSignoutPopup = jest.fn();
         const wrapper = createWrapper({ ...settingsStub, onSignoutPopup });
-        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+        const { result } = renderHook(() => useAuth(), {
             wrapper,
         });
-        await waitForNextUpdate();
 
         // act
         await act(() => result.current.signoutPopup());
 
         // assert
         expect(UserManager.prototype.signoutPopup).toHaveBeenCalled();
-        expect(onSignoutPopup).toHaveBeenCalled();
+
+        await waitFor(() => expect(onSignoutPopup).toHaveBeenCalled());
     });
 
     it("should get the user", async () => {
+        const mockGetUser = mocked(
+            UserManager.prototype,
+        ).getUser.mockImplementation(() => {
+            return new Promise((resolve) => {
+                resolve(user);
+            });
+        });
+
         // arrange
-        mocked(UserManager.prototype).getUser.mockResolvedValueOnce(user);
         const wrapper = createWrapper({ ...settingsStub });
 
         // act
-        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+        const { result } = renderHook(() => useAuth(), {
             wrapper,
         });
-        await waitForNextUpdate();
 
         // assert
-        expect(result.current.user).toBe(user);
+        await waitFor(() =>
+            expect(UserManager.prototype.getUser).toHaveBeenCalled(),
+        );
+
+        await waitFor(() => expect(result.current.user).toBe(user));
+
+        mockGetUser.mockRestore();
     });
 
     it("should use a custom UserManager implementation", async () => {
         // arrange
-        class CustomUserManager extends UserManager { }
-        CustomUserManager.prototype.signinRedirect = jest.fn().mockResolvedValue(undefined);
+        class CustomUserManager extends UserManager {}
+        CustomUserManager.prototype.signinRedirect = jest
+            .fn()
+            .mockResolvedValue(undefined);
 
-        const wrapper = createWrapper({ ...settingsStub, implementation: CustomUserManager });
-        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+        const wrapper = createWrapper({
+            ...settingsStub,
+            implementation: CustomUserManager,
+        });
+        const { result } = renderHook(() => useAuth(), {
             wrapper,
         });
-        await waitForNextUpdate();
-        expect(result.current.user).toBeUndefined();
+
+        await waitFor(() => {
+            expect(result.current.user).toBeUndefined();
+        });
 
         // act
         await act(() => result.current.signinRedirect());
@@ -195,83 +213,99 @@ describe("AuthProvider", () => {
 
     it("should should throw when no UserManager implementation exists", async () => {
         // arrange
-        const wrapper = createWrapper({ ...settingsStub, implementation: null });
-        const { result } = renderHook(() => useAuth(), {
-            wrapper,
+        const wrapper = createWrapper({
+            ...settingsStub,
+            implementation: null,
         });
 
-        // act
-        expect(() => result.current.signinRedirect())
-        // assert
-            .toThrow(Error);
-        expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
+        try {
+            renderHook(() => useAuth(), {
+                wrapper,
+            });
+        } catch (err) {
+            expect(err).toBeInstanceOf(Error);
+        }
     });
 
     it("should set isLoading to false after initializing", async () => {
         // arrange
         const wrapper = createWrapper({ ...settingsStub });
-        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+        const { result } = renderHook(() => useAuth(), {
             wrapper,
         });
         expect(result.current.isLoading).toBe(true);
 
-        // act
-        await waitForNextUpdate();
-
-        // assert
-        expect(result.current.isLoading).toBe(false);
+        // act & assert
+        await waitFor(() => expect(result.current.isLoading).toBe(false));
     });
 
     it("should set isLoading to true during a navigation", async () => {
         // arrange
         let resolve: (value: User) => void;
-        mocked(UserManager.prototype).signinPopup.mockReturnValue(new Promise((_resolve) => {
-            resolve = _resolve;
-        }));
+        const mockSigninPopup = mocked(
+            UserManager.prototype,
+        ).signinPopup.mockReturnValue(
+            new Promise((_resolve) => {
+                resolve = _resolve;
+            }),
+        );
         const wrapper = createWrapper({ ...settingsStub });
-        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+        const { result } = renderHook(() => useAuth(), {
             wrapper,
         });
-        await waitForNextUpdate();
-        expect(result.current.isLoading).toBe(false);
+
+        await waitFor(() => expect(result.current.isLoading).toBe(false));
 
         // act
         void act(() => void result.current.signinPopup());
 
         // assert
-        expect(result.current.isLoading).toBe(true);
+        await waitFor(() => expect(result.current.isLoading).toBe(true));
 
         // act
         void act(() => resolve({} as User));
-        await waitForNextUpdate();
 
         // assert
-        expect(result.current.isLoading).toBe(false);
+        await waitFor(() => {
+            expect(result.current.isLoading).toBe(false);
+        });
+
+        mockSigninPopup.mockRestore();
     });
 
     it("should set activeNavigator based on the most recent navigation", async () => {
         // arrange
         let resolve: (value: User) => void;
-        mocked(UserManager.prototype).signinPopup.mockReturnValue(new Promise((_resolve) => {
-            resolve = _resolve;
-        }));
+        const mockSigninPopup = mocked(
+            UserManager.prototype,
+        ).signinPopup.mockReturnValue(
+            new Promise((_resolve) => {
+                resolve = _resolve;
+            }),
+        );
         const wrapper = createWrapper({ ...settingsStub });
-        const { waitForNextUpdate, result } = renderHook(() => useAuth(), {
+        const { result } = renderHook(() => useAuth(), {
             wrapper,
         });
+
         expect(result.current.activeNavigator).toBe(undefined);
 
         // act
         void act(() => void result.current.signinPopup());
 
         // assert
-        expect(result.current.activeNavigator).toBe("signinPopup");
+        await waitFor(() =>
+            expect(result.current.activeNavigator).toBe("signinPopup"),
+        );
 
         // act
         void act(() => resolve({} as User));
-        await waitForNextUpdate();
 
         // assert
-        expect(result.current.activeNavigator).toBe(undefined);
+        await waitFor(() =>
+            expect(result.current.activeNavigator).toBe(undefined),
+        );
+
+        mockSigninPopup.mockRestore();
     });
 });

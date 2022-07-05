@@ -3,16 +3,14 @@ import React from "react";
 import { AuthProvider, AuthProviderProps } from "../src/AuthProvider";
 
 export const createWrapper =
-    (opts: AuthProviderProps, strictMode=true) =>
+    (opts: AuthProviderProps, strictMode = true) =>
         ({ children }: React.PropsWithChildren): JSX.Element => {
             const provider = <AuthProvider {...opts}>{children}</AuthProvider>;
             if (!strictMode) {
                 return provider;
             }
 
-            return (
-                <React.StrictMode>{provider}</React.StrictMode>
-            );
+            return <React.StrictMode>{provider}</React.StrictMode>;
         };
 
 export const createLocation = (search: string, hash: string): Location => {
