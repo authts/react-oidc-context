@@ -84,6 +84,9 @@ export const useAuth: () => AuthContextProps;
 // @public
 export function withAuth<P extends AuthContextProps>(Component: React_2.ComponentType<P>): React_2.ComponentType<Omit<P, keyof AuthContextProps>>;
 
+// @public
+export function getUserManager(): UserManager | undefined;
+
 // (No @packageDocumentation comment for this package)
 
 ```

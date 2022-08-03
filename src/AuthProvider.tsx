@@ -13,6 +13,7 @@ import { AuthContext } from "./AuthContext";
 import { initialAuthState } from "./AuthState";
 import { reducer } from "./reducer";
 import { hasAuthParams, loginError } from "./utils";
+import { getUserManager, setUserManager } from "./userManager";
 
 /**
  * @public
@@ -170,6 +171,11 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
             return;
         }
         didInitialize.current = true;
+
+        // set in-memory copy of user manager
+        if (!getUserManager()) {
+            setUserManager(userManager);
+        }
 
         void (async (): Promise<void> => {
             try {

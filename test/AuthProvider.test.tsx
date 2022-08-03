@@ -2,6 +2,7 @@ import { renderHook, waitFor, act } from "@testing-library/react";
 import { mocked } from "jest-mock";
 import { UserManager, User } from "oidc-client-ts";
 import { useAuth } from "../src/useAuth";
+import * as userManager from "../src/userManager";
 import { createWrapper } from "./helpers";
 
 const settingsStub = {
@@ -307,5 +308,22 @@ describe("AuthProvider", () => {
         );
 
         mockSigninPopup.mockRestore();
+    });
+
+    it("should set usermanager in memory on initialization", async () => {
+        // arrange
+        jest.spyOn(userManager, "getUserManager").mockImplementationOnce(() => undefined);
+
+        const spy = jest.spyOn(userManager, "setUserManager");
+
+        // act        
+        const wrapper = createWrapper({ ...settingsStub });
+        renderHook(() => useAuth(), {
+            wrapper,
+        });
+
+        // assert
+        expect(spy).toHaveBeenCalled();
+        expect(userManager.getUserManager()).toBeDefined();
     });
 });
