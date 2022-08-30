@@ -116,7 +116,7 @@ function App() {
 export default App;
 ```
 
-You **must** provide an implementation of `onSigninCallback` to `oidcConfig` to remove the payload from the URL upon successful login. Otherwise if you refresh the page and the payload is still there, `signinSilent` - which handles renewing your token - won't work. 
+You **must** provide an implementation of `onSigninCallback` to `oidcConfig` to remove the payload from the URL upon successful login. Otherwise if you refresh the page and the payload is still there, `signinSilent` - which handles renewing your token - won't work.
 
 A working implementation is already in the code [here](https://github.com/authts/react-oidc-context/blob/f175dcba6ab09871b027d6a2f2224a17712b67c5/src/AuthProvider.tsx#L20-L30).
 
@@ -237,9 +237,42 @@ function App() {
                 auth.signinSilent();
             }
         })
-    }, [auth.events, auth.signinSilent])
+    }, [auth.events, auth.signinSilent]);
 
     return <button onClick={() => void auth.signinRedirect()}>Log in</button>;
+}
+
+export default App;
+```
+
+### Automatic sign-in
+
+Automatically sign-in and silently reestablish your previous session, if you close the tab and reopen the application.
+
+```jsx
+// src/App.jsx
+import React from "react";
+import { useAuth, hasAuthParams } from "react-oidc-context";
+
+function App() {
+    const auth = useAuth();
+
+    // automatically sign-in
+    React.useEffect(() => {
+        if (!hasAuthParams() &&
+            !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
+            auth.signinRedirect();
+        }
+    }, [auth.isAuthenticated, auth.activeNavigator, auth.isLoading, auth.signinRedirect]);
+
+    if (auth.activeNavigator) {
+        return <div>Signing you in/out...</div>;
+    }
+    if (!auth.isAuthenticated) {
+        return <div>Unable to log in</div>;
+    }
+
+    return <button onClick={() => void auth.removeUser()}>Log out</button>;
 }
 
 export default App;
