@@ -56,7 +56,9 @@ export const AuthProvider: (props: AuthProviderProps) => JSX.Element;
 // @public (undocumented)
 export interface AuthProviderProps extends UserManagerSettings {
     children?: React_2.ReactNode;
+    // @deprecated (undocumented)
     implementation?: typeof UserManager | null;
+    userManager?: UserManager;
     onRemoveUser?: () => Promise<void> | void;
     onSigninCallback?: (user: User | void) => Promise<void> | void;
     // @deprecated (undocumented)
@@ -83,9 +85,6 @@ export const useAuth: () => AuthContextProps;
 
 // @public
 export function withAuth<P extends AuthContextProps>(Component: React_2.ComponentType<P>): React_2.ComponentType<Omit<P, keyof AuthContextProps>>;
-
-// @public
-export function getUserManager(): UserManager | undefined;
 
 // (No @packageDocumentation comment for this package)
 

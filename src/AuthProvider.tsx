@@ -13,74 +13,7 @@ import { AuthContext } from "./AuthContext";
 import { initialAuthState } from "./AuthState";
 import { reducer } from "./reducer";
 import { hasAuthParams, loginError } from "./utils";
-import { getUserManager, setUserManager } from "./userManager";
-
-/**
- * @public
- */
-export interface AuthProviderProps extends UserManagerSettings {
-    /**
-     * The child nodes your Provider has wrapped
-     */
-    children?: React.ReactNode;
-
-    /**
-     * On sign in callback hook. Can be a async function.
-     * Here you can remove the code and state parameters from the url when you are redirected from the authorize page.
-     *
-     * ```jsx
-     * const onSigninCallback = (_user: User | void): void => {
-     *     window.history.replaceState(
-     *         {},
-     *         document.title,
-     *         window.location.pathname
-     *     )
-     * }
-     * ```
-     */
-    onSigninCallback?: (user: User | void) => Promise<void> | void;
-
-    /**
-     * By default, if the page url has code/state params, this provider will call automatically the userManager.signinCallback.
-     * In some cases the code might be for something else (another OAuth SDK perhaps). In these
-     * instances you can instruct the client to ignore them.
-     *
-     * ```jsx
-     * <AuthProvider
-     *   skipSigninCallback={window.location.pathname === '/stripe-oauth-callback'}
-     * >
-     * ```
-     */
-    skipSigninCallback?: boolean;
-
-    /**
-     * On remove user hook. Can be a async function.
-     * Here you can change the url after the user is removed.
-     *
-     * ```jsx
-     * const onRemoveUser = (): void => {
-     *     // go to home after logout
-     *     window.location.pathname = ""
-     * }
-     * ```
-     */
-    onRemoveUser?: () => Promise<void> | void;
-
-    /**
-     * @deprecated On sign out redirect hook. Can be a async function.
-     */
-    onSignoutRedirect?: () => Promise<void> | void;
-
-    /**
-     * @deprecated On sign out popup hook. Can be a async function.
-     */
-    onSignoutPopup?: () => Promise<void> | void;
-
-    /**
-     * Allow passing a custom UserManager implementation
-     */
-    implementation?: typeof UserManager | null;
-}
+import type { AuthProviderProps } from "./AuthProps";
 
 const userManagerContextKeys = [
     "clearStaleState",
@@ -120,14 +53,20 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         onSignoutPopup,
 
         implementation: UserManagerImpl = defaultUserManagerImpl,
+        userManager: userManagerProp,
         ...userManagerSettings
     } = props;
 
-    const [userManager] = useState(() =>
-        UserManagerImpl
-            ? new UserManagerImpl(userManagerSettings)
-            : ({ settings: userManagerSettings } as UserManager),
-    );
+    const [userManager] = useState(() => {
+        if (userManagerProp) {
+            return userManagerProp;
+        }
+
+        return UserManagerImpl
+            ? new UserManagerImpl(userManagerSettings as UserManagerSettings)
+            : ({ settings: userManagerSettings } as UserManager);
+    });
+
     const [state, dispatch] = useReducer(reducer, initialAuthState);
     const userManagerContext = useMemo(
         () =>
@@ -171,11 +110,6 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
             return;
         }
         didInitialize.current = true;
-
-        // set in-memory copy of user manager
-        if (!getUserManager()) {
-            setUserManager(userManager);
-        }
 
         void (async (): Promise<void> => {
             try {
