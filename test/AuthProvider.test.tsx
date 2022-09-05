@@ -1,7 +1,6 @@
 import { renderHook, waitFor, act } from "@testing-library/react";
 import { mocked } from "jest-mock";
-import { UserManager, User, UserManagerSettings } from "oidc-client-ts";
-import type { AuthProviderProps } from "../src";
+import { UserManager, User } from "oidc-client-ts";
 import { useAuth } from "../src/useAuth";
 import { createWrapper } from "./helpers";
 

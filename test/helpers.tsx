@@ -1,7 +1,6 @@
 import React from "react";
-import type { AuthProviderProps } from "../src/AuthProps";
 
-import { AuthProvider } from "../src/AuthProvider";
+import { AuthProvider, AuthProviderProps } from "../src/AuthProvider";
 
 export const createWrapper =
     (opts: AuthProviderProps, strictMode = true) =>
