@@ -14,7 +14,7 @@ import { initialAuthState } from "./AuthState";
 import { reducer } from "./reducer";
 import { hasAuthParams, loginError } from "./utils";
 
-export interface AuthProviderPropsBase extends UserManagerSettings {
+interface AuthProviderPropsBase extends UserManagerSettings {
     /**
      * The child nodes your Provider has wrapped
      */
@@ -73,7 +73,7 @@ export interface AuthProviderPropsBase extends UserManagerSettings {
     onSignoutPopup?: () => Promise<void> | void;
 
     /**
-     * Allow passing a custom UserManager
+     * Allow passing a custom UserManager.
      */
     userManager?: UserManager;
 
@@ -83,13 +83,13 @@ export interface AuthProviderPropsBase extends UserManagerSettings {
     implementation?: typeof UserManager | null;
 }
 
-export interface AuthProviderUserManagerProps extends Omit<AuthProviderPropsBase, "redirect_uri" | "client_id" | "authority"> {
+interface AuthProviderUserManagerProps extends Omit<AuthProviderPropsBase, "redirect_uri" | "client_id" | "authority"> {
     redirect_uri?: never;
     client_id?: never;
     authority?: never;
 }
 
-export interface AuthProviderNoUserManagerProps extends AuthProviderPropsBase {
+interface AuthProviderNoUserManagerProps extends AuthProviderPropsBase {
     userManager?: never;
 }
 
@@ -141,13 +141,10 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     } = props;
 
     const [userManager] = useState(() => {
-        if (userManagerProp) {
-            return userManagerProp;
-        }
-
-        return UserManagerImpl
-            ? new UserManagerImpl(userManagerSettings as UserManagerSettings)
-            : ({ settings: userManagerSettings } as UserManager);
+        return userManagerProp ?? 
+            (UserManagerImpl
+                ? new UserManagerImpl(userManagerSettings as UserManagerSettings)
+                : ({ settings: userManagerSettings } as UserManager));
     });
 
     const [state, dispatch] = useReducer(reducer, initialAuthState);
