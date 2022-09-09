@@ -10,6 +10,7 @@ lib/
 # caches
 .eslintcache
 .cache
+example/.parcel-cache
 
 # dependencies
 node_modules/

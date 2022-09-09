@@ -30,6 +30,12 @@ jobs:
       - run: npm ci
       - run: npm pack --dry-run
 
+      - name: Example/Parcel builds
+        run: |
+          npm ci
+          npm run build
+        working-directory: example
+
   test:
     runs-on: ubuntu-latest
 
