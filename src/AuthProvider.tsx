@@ -14,7 +14,7 @@ import { initialAuthState } from "./AuthState";
 import { reducer } from "./reducer";
 import { hasAuthParams, loginError } from "./utils";
 
-interface AuthProviderPropsBase extends UserManagerSettings {
+export interface AuthProviderPropsBase extends UserManagerSettings {
     /**
      * The child nodes your Provider has wrapped
      */
@@ -83,13 +83,13 @@ interface AuthProviderPropsBase extends UserManagerSettings {
     implementation?: typeof UserManager | null;
 }
 
-interface AuthProviderUserManagerProps extends Omit<AuthProviderPropsBase, "redirect_uri" | "client_id" | "authority"> {
+export interface AuthProviderUserManagerProps extends Omit<AuthProviderPropsBase, "redirect_uri" | "client_id" | "authority"> {
     redirect_uri?: never;
     client_id?: never;
     authority?: never;
 }
 
-interface AuthProviderNoUserManagerProps extends AuthProviderPropsBase {
+export interface AuthProviderNoUserManagerProps extends AuthProviderPropsBase {
     userManager?: never;
 }
 
