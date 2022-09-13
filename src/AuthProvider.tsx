@@ -17,7 +17,7 @@ import { hasAuthParams, loginError } from "./utils";
 /**
  * @public
  */
-export interface AuthProviderProps extends UserManagerSettings {
+export interface AuthProviderPropsBase extends UserManagerSettings {
     /**
      * The child nodes your Provider has wrapped
      */
@@ -76,10 +76,36 @@ export interface AuthProviderProps extends UserManagerSettings {
     onSignoutPopup?: () => Promise<void> | void;
 
     /**
-     * Allow passing a custom UserManager implementation
+     * Allow passing a custom UserManager.
+     */
+    userManager?: UserManager;
+
+    /**
+     * @deprecated Allow passing a custom UserManager implementation
      */
     implementation?: typeof UserManager | null;
 }
+
+/**
+ * @public
+ */
+export interface AuthProviderUserManagerProps extends Omit<AuthProviderPropsBase, "redirect_uri" | "client_id" | "authority"> {
+    redirect_uri?: never;
+    client_id?: never;
+    authority?: never;
+}
+
+/**
+ * @public
+ */
+export interface AuthProviderNoUserManagerProps extends AuthProviderPropsBase {
+    userManager?: never;
+}
+
+/**
+ * @public
+ */
+export type AuthProviderProps = AuthProviderNoUserManagerProps | AuthProviderUserManagerProps;
 
 const userManagerContextKeys = [
     "clearStaleState",
@@ -119,14 +145,17 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         onSignoutPopup,
 
         implementation: UserManagerImpl = defaultUserManagerImpl,
+        userManager: userManagerProp,
         ...userManagerSettings
     } = props;
 
-    const [userManager] = useState(() =>
-        UserManagerImpl
-            ? new UserManagerImpl(userManagerSettings)
-            : ({ settings: userManagerSettings } as UserManager),
-    );
+    const [userManager] = useState(() => {
+        return userManagerProp ?? 
+            (UserManagerImpl
+                ? new UserManagerImpl(userManagerSettings as UserManagerSettings)
+                : ({ settings: userManagerSettings } as UserManager));
+    });
+
     const [state, dispatch] = useReducer(reducer, initialAuthState);
     const userManagerContext = useMemo(
         () =>

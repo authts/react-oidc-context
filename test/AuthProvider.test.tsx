@@ -211,6 +211,47 @@ describe("AuthProvider", () => {
         expect(CustomUserManager.prototype.signinRedirect).toHaveBeenCalled();
     });
 
+    it("should allow passing a custom UserManager", async () => {
+        // arrange
+        const CustomUserManager = new UserManager({ ...settingsStub });
+        CustomUserManager.signinRedirect = jest
+            .fn()
+            .mockResolvedValue(undefined);
+
+        const wrapper = createWrapper({
+            userManager: CustomUserManager,
+        });
+
+        const { result } = renderHook(() => useAuth(), {
+            wrapper,
+        });
+
+        await waitFor(() => {
+            expect(result.current.user).toBeUndefined();
+        });
+
+        // act
+        await act(() => result.current.signinRedirect());
+
+        // assert
+        expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
+        expect(CustomUserManager.signinRedirect).toHaveBeenCalled();
+    });
+
+    it("should throw an error if user manager and custom settings are passed in", async () => {
+        // arrange
+        const CustomUserManager = new UserManager({ ...settingsStub });
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        const wrapper = createWrapper({
+            ...settingsStub,
+            userManager: CustomUserManager,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any);
+
+        expect(wrapper).toThrow(TypeError);
+    });
+
     it("should should throw when no UserManager implementation exists", async () => {
         // arrange
         const wrapper = createWrapper({
@@ -308,4 +349,5 @@ describe("AuthProvider", () => {
 
         mockSigninPopup.mockRestore();
     });
+
 });

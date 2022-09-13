@@ -54,8 +54,18 @@ export interface AuthContextProps extends AuthState {
 export const AuthProvider: (props: AuthProviderProps) => JSX.Element;
 
 // @public (undocumented)
-export interface AuthProviderProps extends UserManagerSettings {
+export interface AuthProviderNoUserManagerProps extends AuthProviderPropsBase {
+    // (undocumented)
+    userManager?: never;
+}
+
+// @public (undocumented)
+export type AuthProviderProps = AuthProviderNoUserManagerProps | AuthProviderUserManagerProps;
+
+// @public (undocumented)
+export interface AuthProviderPropsBase extends UserManagerSettings {
     children?: React_2.ReactNode;
+    // @deprecated (undocumented)
     implementation?: typeof UserManager | null;
     onRemoveUser?: () => Promise<void> | void;
     onSigninCallback?: (user: User | void) => Promise<void> | void;
@@ -64,6 +74,17 @@ export interface AuthProviderProps extends UserManagerSettings {
     // @deprecated (undocumented)
     onSignoutRedirect?: () => Promise<void> | void;
     skipSigninCallback?: boolean;
+    userManager?: UserManager;
+}
+
+// @public (undocumented)
+export interface AuthProviderUserManagerProps extends Omit<AuthProviderPropsBase, "redirect_uri" | "client_id" | "authority"> {
+    // (undocumented)
+    authority?: never;
+    // (undocumented)
+    client_id?: never;
+    // (undocumented)
+    redirect_uri?: never;
 }
 
 // @public
