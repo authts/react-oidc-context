@@ -22,7 +22,7 @@ import { hasAuthParams, loginError } from "./utils";
 /**
  * @public
  */
-export interface AuthProviderPropsBase extends UserManagerSettings {
+export interface AuthProviderBaseProps {
     /**
      * The child nodes your Provider has wrapped
      */
@@ -79,32 +79,42 @@ export interface AuthProviderPropsBase extends UserManagerSettings {
      * @deprecated On sign out popup hook. Can be a async function.
      */
     onSignoutPopup?: () => Promise<void> | void;
+}
 
-    /**
-     * Allow passing a custom UserManager.
-     */
-    userManager?: UserManager;
-
+/**
+ * This interface (default) is used to pass `UserManagerSettings` together with `AuthProvider` properties to the provider.
+ *
+ * @public
+ */
+export interface AuthProviderNoUserManagerProps extends AuthProviderBaseProps, UserManagerSettings
+{
     /**
      * @deprecated Allow passing a custom UserManager implementation
      */
     implementation?: typeof UserManager | null;
-}
 
-/**
- * @public
- */
-export interface AuthProviderUserManagerProps extends Omit<AuthProviderPropsBase, "redirect_uri" | "client_id" | "authority"> {
-    redirect_uri?: never;
-    client_id?: never;
-    authority?: never;
-}
-
-/**
- * @public
- */
-export interface AuthProviderNoUserManagerProps extends AuthProviderPropsBase {
+    /**
+     * Prevent this property.
+     */
     userManager?: never;
+}
+
+/**
+ * This interface is used to pass directly a `UserManager` instance together with `AuthProvider` properties to the provider.
+ *
+ * @public
+ */
+export interface AuthProviderUserManagerProps extends AuthProviderBaseProps
+{
+    /**
+     * Allow passing a custom UserManager instance.
+     */
+    userManager?: UserManager;
+
+    /**
+     * Prevent this property.
+     */
+    implementation?: never;
 }
 
 /**
@@ -138,6 +148,7 @@ const defaultUserManagerImpl =
 
 /**
  * Provides the AuthContext to its child components.
+ *
  * @public
  */
 export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
@@ -152,7 +163,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         onSignoutPopup,
 
         implementation: UserManagerImpl = defaultUserManagerImpl,
-        userManager: userManagerProp,
+        userManager: userManagerProp = null,
         ...userManagerSettings
     } = props;
 
