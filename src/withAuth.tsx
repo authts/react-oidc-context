@@ -14,7 +14,7 @@ export function withAuth<P extends AuthContextProps>(
     const C: React.FC<Omit<P, keyof AuthContextProps>> = (props) => {
         const auth = useAuth();
 
-        return <Component {...(props as P)} {...auth} />;
+        return <Component {...(props as P)} auth={auth} />;
     };
 
     C.displayName = displayName;
