@@ -30,4 +30,22 @@ describe("withAuth", () => {
         await expect(screen.findByText(/auth/)).resolves.toBeInTheDocument();
         await expect(screen.findByText(/signinRedirect/)).resolves.toBeInTheDocument();
     });
+
+    it("should pass through wrapped component props", async () => {
+        // arrange
+        class MyPropsComponent extends Component<{ originalProp: string }> {
+            render(): JSX.Element {
+                return <>originalPropValue: {this.props.originalProp}</>;
+            }
+        }
+
+        // act
+        const WrappedComponent = withAuth(MyPropsComponent);
+        render(
+            <AuthProvider {...settingsStub}>
+                <WrappedComponent originalProp="myvalue" />
+            </AuthProvider>,
+        );
+        await expect(screen.findByText("originalPropValue: myvalue")).resolves.toBeInTheDocument();
+    });
 });
