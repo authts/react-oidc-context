@@ -12,11 +12,11 @@ describe("withAuth", () => {
         class MyComponent extends Component {
             render(): JSX.Element {
                 for (const [k, v] of Object.entries(this.props)) {
-                    if(k === "auth") {
-                        return <>{k}: {Object.keys(v as Object)}</>
+                    if (k === "auth") {
+                        return <>{k}: {Object.keys(v as Map<string, unknown>)}</>;
                     }
                 }
-                return <></>
+                return <></>;
             }
         }
 
