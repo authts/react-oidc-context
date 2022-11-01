@@ -103,7 +103,7 @@ export const hasAuthParams: (location?: Location) => boolean;
 export const useAuth: () => AuthContextProps;
 
 // @public
-export function withAuth<P extends AuthContextProps>(Component: React_2.ComponentType<P>): React_2.ComponentType<Omit<P, keyof AuthContextProps>>;
+export function withAuth<P>(Component: React_2.ComponentType<P>): React_2.ComponentType<Omit<P, keyof AuthContextProps>>;
 
 // (No @packageDocumentation comment for this package)
 
