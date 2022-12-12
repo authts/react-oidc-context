@@ -208,7 +208,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                     const userCallback = await userManager.signinCallback();
                     onSigninCallback && onSigninCallback(userCallback);
                     if (userCallback) {
-                        user = userCallback;
+                        user = userCallback; //preserve user.state in INITIALISED event, in case it becomes undefined
                     }
                 }
                 dispatch({ type: "INITIALISED", user });
