@@ -49,7 +49,7 @@ describe("AuthProvider", () => {
         });
 
         // assert
-        await waitFor(() => expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1));
+        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1);
         await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(1));
     });
 
@@ -101,7 +101,7 @@ describe("AuthProvider", () => {
         });
 
         // assert
-        await waitFor(() => expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1));
+        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1);
         await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(1));
     });
 
