@@ -12,6 +12,7 @@
   "types": "dist/types/react-oidc-context.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/react-oidc-context.d.ts",
       "import": "./dist/esm/react-oidc-context.js",
       "require": "./dist/umd/react-oidc-context.js"
     },
