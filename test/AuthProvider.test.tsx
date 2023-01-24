@@ -157,6 +157,20 @@ describe("AuthProvider", () => {
         await waitFor(() => expect(onSignoutPopup).toHaveBeenCalled());
     });
 
+    it("should handle signoutSilent", async () => {
+        // arrange
+        const wrapper = createWrapper({ ...settingsStub });
+        const { result } = renderHook(() => useAuth(), {
+            wrapper,
+        });
+
+        // act
+        await act(() => result.current.signoutSilent());
+
+        // assert
+        expect(UserManager.prototype.signoutSilent).toHaveBeenCalled();
+    });
+
     it("should get the user", async () => {
         const mockGetUser = mocked(
             UserManager.prototype,
