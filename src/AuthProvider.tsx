@@ -7,7 +7,11 @@ import React, {
     useState,
 } from "react";
 import { UserManager, UserManagerSettings, User } from "oidc-client-ts";
-import type { SignoutRedirectArgs, SignoutPopupArgs } from "oidc-client-ts";
+import type {
+    SignoutRedirectArgs,
+    SignoutPopupArgs,
+    SignoutSilentArgs,
+} from "oidc-client-ts";
 
 import { AuthContext } from "./AuthContext";
 import { initialAuthState } from "./AuthState";
@@ -120,6 +124,7 @@ const navigatorKeys = [
     "signinRedirect",
     "signoutPopup",
     "signoutRedirect",
+    "signoutSilent",
 ] as const;
 const unsupportedEnvironment = (fnName: string) => () => {
     throw new Error(
@@ -263,6 +268,12 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         [userManagerContext.signoutPopup, onSignoutPopup],
     );
 
+    const signoutSilent = useCallback(
+        (args?: SignoutSilentArgs) =>
+            userManagerContext.signoutSilent(args),
+        [userManagerContext.signoutSilent],
+    );
+
     return (
         <AuthContext.Provider
             value={{
@@ -271,6 +282,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                 removeUser,
                 signoutRedirect,
                 signoutPopup,
+                signoutSilent,
             }}
         >
             {children}
