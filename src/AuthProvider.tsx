@@ -6,7 +6,7 @@ import React, {
     useRef,
     useState,
 } from "react";
-import { UserManager, UserManagerSettings, User } from "oidc-client-ts";
+import { UserManager, type UserManagerSettings, User } from "oidc-client-ts";
 import type {
     SignoutRedirectArgs,
     SignoutPopupArgs,
@@ -155,7 +155,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     } = props;
 
     const [userManager] = useState(() => {
-        return userManagerProp ?? 
+        return userManagerProp ??
             (UserManagerImpl
                 ? new UserManagerImpl(userManagerSettings as UserManagerSettings)
                 : ({ settings: userManagerSettings } as UserManager));
