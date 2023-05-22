@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AuthContext, AuthContextProps } from "./AuthContext";
+import { AuthContext, type AuthContextProps } from "./AuthContext";
 
 /**
  * @public
