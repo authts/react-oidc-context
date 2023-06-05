@@ -211,7 +211,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                 // check if returning back from authority server
                 if (hasAuthParams() && !skipSigninCallback) {
                     user = await userManager.signinCallback();
-                    onSigninCallback && onSigninCallback(user);
+                    onSigninCallback && await onSigninCallback(user);
                 }
                 user = !user ? await userManager.getUser() : user;
                 dispatch({ type: "INITIALISED", user });
