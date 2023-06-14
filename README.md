@@ -171,7 +171,7 @@ const Posts = () => {
         })();
     }, [auth]);
 
-    if (!posts) {
+    if (!posts.length) {
         return <div>Loading...</div>;
     }
 
