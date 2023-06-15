@@ -153,7 +153,7 @@ import { useAuth } from "react-oidc-context";
 
 const Posts = () => {
     const auth = useAuth();
-    const [posts, setPosts] = useState(null);
+    const [posts, setPosts] = React.useState(Array);
 
     React.useEffect(() => {
         (async () => {
@@ -171,7 +171,7 @@ const Posts = () => {
         })();
     }, [auth]);
 
-    if (!posts) {
+    if (!posts.length) {
         return <div>Loading...</div>;
     }
 
