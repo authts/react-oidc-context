@@ -187,8 +187,9 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                                 });
                                 try {
                                     return await userManager[key](...args);
-                                } catch(error) {
+                                } catch (error) {
                                     dispatch({ type: "ERROR", error: error as Error });
+                                    return null;
                                 } finally {
                                     dispatch({ type: "NAVIGATOR_CLOSE" });
                                 }
