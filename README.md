@@ -250,6 +250,14 @@ export default App;
 Automatically sign-in and silently reestablish your previous session, if you close the tab and reopen the application.
 
 ```jsx
+// index.jsx
+const oidcConfig: AuthProviderProps = {
+    ...
+    userStore: new WebStorageStateStore({ store: window.localStorage }),
+};
+```
+
+```jsx
 // src/App.jsx
 import React from "react";
 import { useAuth, hasAuthParams } from "react-oidc-context";
