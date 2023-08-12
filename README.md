@@ -269,9 +269,10 @@ function App() {
         }
     }, [auth, hasTriedSignin]);
 
-    if (auth.activeNavigator) {
+    if (auth.isLoading) {
         return <div>Signing you in/out...</div>;
     }
+
     if (!auth.isAuthenticated) {
         return <div>Unable to log in</div>;
     }
