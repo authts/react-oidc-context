@@ -250,24 +250,37 @@ export default App;
 Automatically sign-in and silently reestablish your previous session, if you close the tab and reopen the application.
 
 ```jsx
+// index.jsx
+const oidcConfig: AuthProviderProps = {
+    ...
+    userStore: new WebStorageStateStore({ store: window.localStorage }),
+};
+```
+
+```jsx
 // src/App.jsx
 import React from "react";
 import { useAuth, hasAuthParams } from "react-oidc-context";
 
 function App() {
     const auth = useAuth();
+    const [hasTriedSignin, setHasTriedSignin] = useState(false);
 
     // automatically sign-in
     React.useEffect(() => {
         if (!hasAuthParams() &&
-            !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
+            !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading &&
+            !hasTriedSignin
+        ) {
             auth.signinRedirect();
+            setHasTriedSignin(true);
         }
-    }, [auth.isAuthenticated, auth.activeNavigator, auth.isLoading, auth.signinRedirect]);
+    }, [auth, hasTriedSignin]);
 
-    if (auth.activeNavigator) {
+    if (auth.isLoading) {
         return <div>Signing you in/out...</div>;
     }
+
     if (!auth.isAuthenticated) {
         return <div>Unable to log in</div>;
     }
