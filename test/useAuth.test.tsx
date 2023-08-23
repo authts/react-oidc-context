@@ -18,16 +18,8 @@ describe("useAuth", () => {
         await waitFor(() => expect(result.current).toBeDefined());
     });
 
-    it("should throw with no provider", async () => {
-        // act
-        try {
-            renderHook(() => useAuth());
-        } catch (err) {
-            //assert
-            expect(err).toBeInstanceOf(Error);
-            expect((err as Error).message).toContain(
-                "AuthProvider context is undefined, please verify you are calling useAuth() as child of a <AuthProvider> component.",
-            );
-        }
+    it("should return undefined with no provider", async () => {
+        const { result } = renderHook(() => useAuth());
+        expect(result.current).toBeUndefined();
     });
 });
