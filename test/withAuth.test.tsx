@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom"; // extend expect() with toBeInTheDocument
 
 import { AuthProvider, withAuth } from "../src";
 
@@ -27,8 +27,8 @@ describe("withAuth", () => {
                 <WrappedComponent />
             </AuthProvider>,
         );
-        await expect(screen.findByText(/auth/)).resolves.toBeInTheDocument();
-        await expect(screen.findByText(/signinRedirect/)).resolves.toBeInTheDocument();
+        expect(await screen.findByText(/auth/)).toBeInTheDocument();
+        expect(await screen.findByText(/signinRedirect/)).toBeInTheDocument();
     });
 
     it("should pass through wrapped component props", async () => {
@@ -46,6 +46,6 @@ describe("withAuth", () => {
                 <WrappedComponent originalProp="myvalue" />
             </AuthProvider>,
         );
-        await expect(screen.findByText("originalPropValue: myvalue")).resolves.toBeInTheDocument();
+        expect(await screen.findByText("originalPropValue: myvalue")).toBeInTheDocument();
     });
 });
