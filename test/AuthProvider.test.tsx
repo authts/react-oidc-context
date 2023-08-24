@@ -213,12 +213,16 @@ describe("AuthProvider", () => {
             wrapper,
         });
 
-        await waitFor(() => {
-            expect(result.current.user).toBeUndefined();
+        await act(async () => {
+            await waitFor(() => {
+                expect(result.current.user).toBeUndefined();
+            });
         });
 
         // act
-        await act(() => result.current.signinRedirect());
+        await act(async () => {
+            await result.current.signinRedirect();
+        });
 
         // assert
         expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
@@ -227,46 +231,50 @@ describe("AuthProvider", () => {
 
     it("should allow passing a custom UserManager", async () => {
         // arrange
-        const CustomUserManager = new UserManager({ ...settingsStub });
-        CustomUserManager.signinRedirect = jest
+        const customUserManager = new UserManager({ ...settingsStub });
+        customUserManager.signinRedirect = jest
             .fn()
             .mockResolvedValue(undefined);
 
         const wrapper = createWrapper({
-            userManager: CustomUserManager,
+            userManager: customUserManager,
         });
 
         const { result } = renderHook(() => useAuth(), {
             wrapper,
         });
 
-        await waitFor(() => {
-            expect(result.current.user).toBeUndefined();
+        await act(async () => {
+            await waitFor(() => {
+                expect(result.current.user).toBeUndefined();
+            });
         });
 
         // act
-        await act(() => result.current.signinRedirect());
+        await act(async () => {
+            await result.current.signinRedirect();
+        });
 
         // assert
         expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
-        expect(CustomUserManager.signinRedirect).toHaveBeenCalled();
+        expect(customUserManager.signinRedirect).toHaveBeenCalled();
     });
 
     it("should throw an error if user manager and custom settings are passed in", async () => {
         // arrange
-        const CustomUserManager = new UserManager({ ...settingsStub });
+        const customUserManager = new UserManager({ ...settingsStub });
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const wrapper = createWrapper({
             ...settingsStub,
-            userManager: CustomUserManager,
+            userManager: customUserManager,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any);
 
         expect(wrapper).toThrow(TypeError);
     });
 
-    it("should should throw when no UserManager implementation exists", async () => {
+    it("should throw when no UserManager implementation exists", async () => {
         // arrange
         const wrapper = createWrapper({
             ...settingsStub,
@@ -343,7 +351,11 @@ describe("AuthProvider", () => {
             wrapper,
         });
 
-        expect(result.current.activeNavigator).toBe(undefined);
+        await act(async () => {
+            await waitFor(() =>
+                expect(result.current.activeNavigator).toBe(undefined),
+            );
+        });
 
         // act
         void act(() => void result.current.signinPopup());
