@@ -11,6 +11,12 @@ import type {
     SignoutRedirectArgs,
     SignoutPopupArgs,
     SignoutSilentArgs,
+    ExtraSigninRequestArgs,
+    ExtraSignoutRequestArgs,
+    IFrameWindowParams,
+    PopupWindowParams,
+    ProcessResourceOwnerPasswordCredentialsArgs,
+    RedirectParams,
 } from "oidc-client-ts";
 
 import { AuthContext } from "./AuthContext";
@@ -122,6 +128,7 @@ const navigatorKeys = [
     "signinPopup",
     "signinSilent",
     "signinRedirect",
+    "signinResourceOwnerCredentials",
     "signoutPopup",
     "signoutRedirect",
     "signoutSilent",
@@ -133,6 +140,14 @@ const unsupportedEnvironment = (fnName: string) => () => {
 };
 const defaultUserManagerImpl =
     typeof window === "undefined" ? null : UserManager;
+
+type NavigatorArgTypes =
+    ExtraSigninRequestArgs &
+    ExtraSignoutRequestArgs &
+    IFrameWindowParams &
+    PopupWindowParams &
+    ProcessResourceOwnerPasswordCredentialsArgs &
+    RedirectParams;
 
 /**
  * Provides the AuthContext to its child components.
@@ -180,13 +195,13 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                     navigatorKeys.map((key) => [
                         key,
                         userManager[key]
-                            ? async (...args: never[]) => {
+                            ? async (args: NavigatorArgTypes) => {
                                 dispatch({
                                     type: "NAVIGATOR_INIT",
                                     method: key,
                                 });
                                 try {
-                                    return await userManager[key](...args);
+                                    return await userManager[key](args);
                                 } catch (error) {
                                     dispatch({ type: "ERROR", error: error as Error });
                                     return null;

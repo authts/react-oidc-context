@@ -105,6 +105,28 @@ describe("AuthProvider", () => {
         await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(1));
     });
 
+    it("should signinResourceOwnerCredentials when asked", async () => {
+        // arrange
+        const wrapper = createWrapper({ ...settingsStub });
+
+        const { result } = renderHook(() => useAuth(), {
+            wrapper,
+        });
+
+        await waitFor(() => expect(result.current.user).toBeUndefined());
+
+        //act
+        await act(() => result.current.signinResourceOwnerCredentials({
+            username: "username",
+            password: "password",
+            skipUserInfo: false,
+        }));
+
+        // assert
+        expect(UserManager.prototype.signinResourceOwnerCredentials).toHaveBeenCalled();
+        expect(UserManager.prototype.getUser).toHaveBeenCalled();
+    });
+
     it("should handle removeUser and call onRemoveUser", async () => {
         // arrange
         const onRemoveUser = jest.fn();
