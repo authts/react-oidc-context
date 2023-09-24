@@ -3,7 +3,7 @@ import type {
     UserManagerSettings, UserManagerEvents, User, SessionStatus,
     SigninPopupArgs, SigninSilentArgs, SigninRedirectArgs,
     SignoutRedirectArgs, SignoutPopupArgs, QuerySessionStatusArgs,
-    RevokeTokensTypes, SignoutSilentArgs,
+    RevokeTokensTypes, SignoutSilentArgs, SigninResourceOwnerCredentialsArgs,
 } from "oidc-client-ts";
 
 import type { AuthState } from "./AuthState";
@@ -22,6 +22,7 @@ export interface AuthContextProps extends AuthState {
     signinPopup(args?: SigninPopupArgs): Promise<User>;
     signinSilent(args?: SigninSilentArgs): Promise<User | null>;
     signinRedirect(args?: SigninRedirectArgs): Promise<void>;
+    signinResourceOwnerCredentials(args: SigninResourceOwnerCredentialsArgs): Promise<User>;
     signoutRedirect(args?: SignoutRedirectArgs): Promise<void>;
     signoutPopup(args?: SignoutPopupArgs): Promise<void>;
     signoutSilent(args?: SignoutSilentArgs): Promise<void>;

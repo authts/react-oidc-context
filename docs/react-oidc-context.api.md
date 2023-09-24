@@ -10,6 +10,7 @@ import type { RevokeTokensTypes } from 'oidc-client-ts';
 import type { SessionStatus } from 'oidc-client-ts';
 import type { SigninPopupArgs } from 'oidc-client-ts';
 import type { SigninRedirectArgs } from 'oidc-client-ts';
+import type { SigninResourceOwnerCredentialsArgs } from 'oidc-client-ts';
 import type { SigninSilentArgs } from 'oidc-client-ts';
 import type { SignoutPopupArgs } from 'oidc-client-ts';
 import type { SignoutRedirectArgs } from 'oidc-client-ts';
@@ -39,6 +40,8 @@ export interface AuthContextProps extends AuthState {
     signinPopup(args?: SigninPopupArgs): Promise<User>;
     // (undocumented)
     signinRedirect(args?: SigninRedirectArgs): Promise<void>;
+    // (undocumented)
+    signinResourceOwnerCredentials(args: SigninResourceOwnerCredentialsArgs): Promise<User>;
     // (undocumented)
     signinSilent(args?: SigninSilentArgs): Promise<User | null>;
     // (undocumented)
@@ -92,7 +95,7 @@ export interface AuthProviderUserManagerProps extends Omit<AuthProviderPropsBase
 
 // @public
 export interface AuthState {
-    activeNavigator?: "signinRedirect" | "signinPopup" | "signinSilent" | "signoutRedirect" | "signoutPopup" | "signoutSilent";
+    activeNavigator?: "signinRedirect" | "signinResourceOwnerCredentials" | "signinPopup" | "signinSilent" | "signoutRedirect" | "signoutPopup" | "signoutSilent";
     error?: Error;
     isAuthenticated: boolean;
     isLoading: boolean;
