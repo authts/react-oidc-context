@@ -304,5 +304,5 @@ which lacks error handling and
 ## License
 
 This project is licensed under the MIT license. See the
-[LICENSE](https://github.com/authts/oidc-client-react/blob/main/LICENSE) file
+[LICENSE](https://github.com/authts/react-oidc-context/blob/main/LICENSE) file
 for more info.
