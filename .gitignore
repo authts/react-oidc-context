@@ -5,7 +5,6 @@ lib/
 
 **/dist/*
 /dist/esm/*
-!/dist/esm/package.json
 
 # caches
 .eslintcache
