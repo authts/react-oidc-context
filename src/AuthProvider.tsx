@@ -11,12 +11,7 @@ import type {
     SignoutRedirectArgs,
     SignoutPopupArgs,
     SignoutSilentArgs,
-    ExtraSigninRequestArgs,
-    ExtraSignoutRequestArgs,
-    IFrameWindowParams,
-    PopupWindowParams,
     ProcessResourceOwnerPasswordCredentialsArgs,
-    RedirectParams,
 } from "oidc-client-ts";
 
 import { AuthContext } from "./AuthContext";
@@ -141,14 +136,6 @@ const unsupportedEnvironment = (fnName: string) => () => {
 const defaultUserManagerImpl =
     typeof window === "undefined" ? null : UserManager;
 
-type NavigatorArgTypes =
-    ExtraSigninRequestArgs &
-    ExtraSignoutRequestArgs &
-    IFrameWindowParams &
-    PopupWindowParams &
-    ProcessResourceOwnerPasswordCredentialsArgs &
-    RedirectParams;
-
 /**
  * Provides the AuthContext to its child components.
  * @public
@@ -195,7 +182,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                     navigatorKeys.map((key) => [
                         key,
                         userManager[key]
-                            ? async (args: NavigatorArgTypes) => {
+                            ? async (args: ProcessResourceOwnerPasswordCredentialsArgs & never[]) => {
                                 dispatch({
                                     type: "NAVIGATOR_INIT",
                                     method: key,
