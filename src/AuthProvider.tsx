@@ -11,6 +11,7 @@ import type {
     SignoutRedirectArgs,
     SignoutPopupArgs,
     SignoutSilentArgs,
+    ProcessResourceOwnerPasswordCredentialsArgs,
 } from "oidc-client-ts";
 
 import { AuthContext } from "./AuthContext";
@@ -122,6 +123,7 @@ const navigatorKeys = [
     "signinPopup",
     "signinSilent",
     "signinRedirect",
+    "signinResourceOwnerCredentials",
     "signoutPopup",
     "signoutRedirect",
     "signoutSilent",
@@ -180,13 +182,13 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                     navigatorKeys.map((key) => [
                         key,
                         userManager[key]
-                            ? async (...args: never[]) => {
+                            ? async (args: ProcessResourceOwnerPasswordCredentialsArgs & never[]) => {
                                 dispatch({
                                     type: "NAVIGATOR_INIT",
                                     method: key,
                                 });
                                 try {
-                                    return await userManager[key](...args);
+                                    return await userManager[key](args);
                                 } catch (error) {
                                     dispatch({ type: "ERROR", error: error as Error });
                                     return null;

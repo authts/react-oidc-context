@@ -36,6 +36,7 @@ MockUserManager.prototype.signinSilent = jest.fn().mockResolvedValue(undefined);
 MockUserManager.prototype.signinSilentCallback = jest.fn().mockResolvedValue(undefined);
 MockUserManager.prototype.signinRedirect = jest.fn().mockResolvedValue(undefined);
 MockUserManager.prototype.signinRedirectCallback = jest.fn().mockResolvedValue(undefined);
+MockUserManager.prototype.signinResourceOwnerCredentials = jest.fn().mockResolvedValue(undefined);
 MockUserManager.prototype.signoutRedirect = jest.fn().mockResolvedValue(undefined);
 MockUserManager.prototype.signoutRedirectCallback = jest.fn().mockResolvedValue(undefined);
 MockUserManager.prototype.signoutPopup = jest.fn().mockResolvedValue(undefined);

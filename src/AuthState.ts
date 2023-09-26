@@ -24,7 +24,7 @@ export interface AuthState {
     /**
      * Tracks the status of most recent signin/signout request method.
      */
-    activeNavigator?: "signinRedirect" | "signinPopup" | "signinSilent" | "signoutRedirect" | "signoutPopup" | "signoutSilent";
+    activeNavigator?: "signinRedirect" | "signinResourceOwnerCredentials" | "signinPopup" | "signinSilent" | "signoutRedirect" | "signoutPopup" | "signoutSilent";
 
     /**
      * Was there a signin or silent renew error?
