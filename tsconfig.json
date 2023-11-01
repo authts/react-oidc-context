@@ -1,6 +1,5 @@
 {
   // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
-  "include": ["src", "types"],
   "compilerOptions": {
     "target": "ES2019",
     "module": "ESNext",
@@ -27,6 +26,7 @@
     // prevent the use features that do not work with isolated transpilation
     "isolatedModules": true,
     // transpile JSX to React.createElement
-    "jsx": "react",
-  }
+    "jsx": "react"
+  },
+  "include": ["src", "types"]
 }
