@@ -8,8 +8,6 @@ import React, {
 } from "react";
 import { UserManager, type UserManagerSettings, User } from "oidc-client-ts";
 import type {
-    SignoutRedirectArgs,
-    SignoutPopupArgs,
     SignoutSilentArgs,
     ProcessResourceOwnerPasswordCredentialsArgs,
 } from "oidc-client-ts";
@@ -69,16 +67,6 @@ export interface AuthProviderBaseProps {
      * ```
      */
     onRemoveUser?: () => Promise<void> | void;
-
-    /**
-     * @deprecated On sign out redirect hook. Can be a async function.
-     */
-    onSignoutRedirect?: () => Promise<void> | void;
-
-    /**
-     * @deprecated On sign out popup hook. Can be a async function.
-     */
-    onSignoutPopup?: () => Promise<void> | void;
 }
 
 /**
@@ -86,13 +74,7 @@ export interface AuthProviderBaseProps {
  *
  * @public
  */
-export interface AuthProviderNoUserManagerProps extends AuthProviderBaseProps, UserManagerSettings
-{
-    /**
-     * @deprecated Allow passing a custom UserManager implementation
-     */
-    implementation?: typeof UserManager | null;
-
+export interface AuthProviderNoUserManagerProps extends AuthProviderBaseProps, UserManagerSettings {
     /**
      * Prevent this property.
      */
@@ -104,17 +86,11 @@ export interface AuthProviderNoUserManagerProps extends AuthProviderBaseProps, U
  *
  * @public
  */
-export interface AuthProviderUserManagerProps extends AuthProviderBaseProps
-{
+export interface AuthProviderUserManagerProps extends AuthProviderBaseProps {
     /**
      * Allow passing a custom UserManager instance.
      */
     userManager?: UserManager;
-
-    /**
-     * Prevent this property.
-     */
-    implementation?: never;
 }
 
 /**
@@ -143,7 +119,7 @@ const unsupportedEnvironment = (fnName: string) => () => {
         `UserManager#${fnName} was called from an unsupported context. If this is a server-rendered page, defer this call with useEffect() or pass a custom UserManager implementation.`,
     );
 };
-const defaultUserManagerImpl =
+const UserManagerImpl =
     typeof window === "undefined" ? null : UserManager;
 
 /**
@@ -159,10 +135,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         skipSigninCallback,
 
         onRemoveUser,
-        onSignoutRedirect,
-        onSignoutPopup,
 
-        implementation: UserManagerImpl = defaultUserManagerImpl,
         userManager: userManagerProp = null,
         ...userManagerSettings
     } = props;
@@ -272,18 +245,6 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         [userManager, onRemoveUser],
     );
 
-    const signoutRedirect = useCallback(
-        (args?: SignoutRedirectArgs) =>
-            userManagerContext.signoutRedirect(args).then(onSignoutRedirect),
-        [userManagerContext.signoutRedirect, onSignoutRedirect],
-    );
-
-    const signoutPopup = useCallback(
-        (args?: SignoutPopupArgs) =>
-            userManagerContext.signoutPopup(args).then(onSignoutPopup),
-        [userManagerContext.signoutPopup, onSignoutPopup],
-    );
-
     const signoutSilent = useCallback(
         (args?: SignoutSilentArgs) =>
             userManagerContext.signoutSilent(args),
@@ -296,8 +257,6 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                 ...state,
                 ...userManagerContext,
                 removeUser,
-                signoutRedirect,
-                signoutPopup,
                 signoutSilent,
             }}
         >
