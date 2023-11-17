@@ -145,40 +145,6 @@ describe("AuthProvider", () => {
         await waitFor(() => expect(onRemoveUser).toHaveBeenCalled());
     });
 
-    it("should handle signoutRedirect and call onSignoutRedirect", async () => {
-        // arrange
-        const onSignoutRedirect = jest.fn();
-        const wrapper = createWrapper({ ...settingsStub, onSignoutRedirect });
-        const { result } = renderHook(() => useAuth(), {
-            wrapper,
-        });
-
-        // act
-        await act(() => result.current.signoutRedirect());
-
-        // assert
-        expect(UserManager.prototype.signoutRedirect).toHaveBeenCalled();
-
-        await waitFor(() => expect(onSignoutRedirect).toHaveBeenCalled());
-    });
-
-    it("should handle signoutPopup and call onSignoutPopup", async () => {
-        // arrange
-        const onSignoutPopup = jest.fn();
-        const wrapper = createWrapper({ ...settingsStub, onSignoutPopup });
-        const { result } = renderHook(() => useAuth(), {
-            wrapper,
-        });
-
-        // act
-        await act(() => result.current.signoutPopup());
-
-        // assert
-        expect(UserManager.prototype.signoutPopup).toHaveBeenCalled();
-
-        await waitFor(() => expect(onSignoutPopup).toHaveBeenCalled());
-    });
-
     it("should handle signoutSilent", async () => {
         // arrange
         const wrapper = createWrapper({ ...settingsStub });
@@ -218,37 +184,6 @@ describe("AuthProvider", () => {
         await waitFor(() => expect(result.current.user).toBe(user));
 
         mockGetUser.mockRestore();
-    });
-
-    it("should use a custom UserManager implementation", async () => {
-        // arrange
-        class CustomUserManager extends UserManager {}
-        CustomUserManager.prototype.signinRedirect = jest
-            .fn()
-            .mockResolvedValue(undefined);
-
-        const wrapper = createWrapper({
-            ...settingsStub,
-            implementation: CustomUserManager,
-        });
-        const { result } = renderHook(() => useAuth(), {
-            wrapper,
-        });
-
-        await act(async () => {
-            await waitFor(() => {
-                expect(result.current.user).toBeUndefined();
-            });
-        });
-
-        // act
-        await act(async () => {
-            await result.current.signinRedirect();
-        });
-
-        // assert
-        expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
-        expect(CustomUserManager.prototype.signinRedirect).toHaveBeenCalled();
     });
 
     it("should allow passing a custom UserManager", async () => {
@@ -294,22 +229,6 @@ describe("AuthProvider", () => {
         } as any);
 
         expect(wrapper).toThrow(TypeError);
-    });
-
-    it("should throw when no UserManager implementation exists", async () => {
-        // arrange
-        const wrapper = createWrapper({
-            ...settingsStub,
-            implementation: null,
-        });
-
-        try {
-            renderHook(() => useAuth(), {
-                wrapper,
-            });
-        } catch (err) {
-            expect(err).toBeInstanceOf(Error);
-        }
     });
 
     it("should set isLoading to false after initializing", async () => {

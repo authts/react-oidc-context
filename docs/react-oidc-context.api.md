@@ -64,17 +64,11 @@ export interface AuthProviderBaseProps {
     children?: React_2.ReactNode;
     onRemoveUser?: () => Promise<void> | void;
     onSigninCallback?: (user: User | void) => Promise<void> | void;
-    // @deprecated (undocumented)
-    onSignoutPopup?: () => Promise<void> | void;
-    // @deprecated (undocumented)
-    onSignoutRedirect?: () => Promise<void> | void;
     skipSigninCallback?: boolean;
 }
 
 // @public
 export interface AuthProviderNoUserManagerProps extends AuthProviderBaseProps, UserManagerSettings {
-    // @deprecated (undocumented)
-    implementation?: typeof UserManager | null;
     userManager?: never;
 }
 
@@ -83,7 +77,6 @@ export type AuthProviderProps = AuthProviderNoUserManagerProps | AuthProviderUse
 
 // @public
 export interface AuthProviderUserManagerProps extends AuthProviderBaseProps {
-    implementation?: never;
     userManager?: UserManager;
 }
 
