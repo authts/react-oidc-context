@@ -264,7 +264,7 @@ import { useAuth, hasAuthParams } from "react-oidc-context";
 
 function App() {
     const auth = useAuth();
-    const [hasTriedSignin, setHasTriedSignin] = useState(false);
+    const [hasTriedSignin, setHasTriedSignin] = React.useState(false);
 
     // automatically sign-in
     React.useEffect(() => {
