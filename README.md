@@ -48,6 +48,12 @@ Using [npm](https://npmjs.org/)
 npm install oidc-client-ts react-oidc-context --save
 ```
 
+Using [yarn](https://yarnpkg.com/)
+
+```bash
+yarn add oidc-client-ts react-oidc-context
+```
+
 ## Getting Started
 
 Configure the library by wrapping your application in `AuthProvider`:
