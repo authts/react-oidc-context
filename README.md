@@ -218,6 +218,21 @@ export const getPosts = createAsyncThunk(
 )
 ```
 
+### Protect a route
+
+Secure a route component by using the withAuthenticationRequired higher-order component. If a user attempts to access this route without authentication, they will be redirected to the login page.
+
+```jsx
+import React from 'react';
+import { withAuthenticationRequired } from "react-oidc-context";
+
+const PrivateRoute = () => (<div>Private</div>);
+
+export default withAuthenticationRequired(PrivateRoute, {
+  onRedirecting: () => (<div>Redirecting to the login page...</div>)
+});
+```
+
 ### Adding event listeners
 
 The underlying [`UserManagerEvents`](https://authts.github.io/oidc-client-ts/classes/UserManagerEvents.html) instance can be imperatively managed with the `useAuth` hook.
