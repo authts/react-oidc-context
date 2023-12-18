@@ -98,6 +98,16 @@ export const useAuth: () => AuthContextProps;
 // @public
 export function withAuth<P>(Component: React_2.ComponentType<P>): React_2.ComponentType<Omit<P, keyof AuthContextProps>>;
 
+// @public
+export const withAuthenticationRequired: <P extends object>(Component: React_2.ComponentType<P>, options?: WithAuthenticationRequiredProps) => React_2.FC<P>;
+
+// @public (undocumented)
+export interface WithAuthenticationRequiredProps {
+    onBeforeSignin?: () => Promise<void> | void;
+    OnRedirecting?: () => JSX.Element;
+    signinRedirectArgs?: SigninRedirectArgs;
+}
+
 // (No @packageDocumentation comment for this package)
 
 ```
