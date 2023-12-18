@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import { UserManager, type UserManagerSettings, User } from "oidc-client-ts";
 import type {
-    SignoutSilentArgs,
     ProcessResourceOwnerPasswordCredentialsArgs,
 } from "oidc-client-ts";
 
@@ -245,19 +244,12 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         [userManager, onRemoveUser],
     );
 
-    const signoutSilent = useCallback(
-        (args?: SignoutSilentArgs) =>
-            userManagerContext.signoutSilent(args),
-        [userManagerContext.signoutSilent],
-    );
-
     return (
         <AuthContext.Provider
             value={{
                 ...state,
                 ...userManagerContext,
                 removeUser,
-                signoutSilent,
             }}
         >
             {children}
