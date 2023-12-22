@@ -226,7 +226,8 @@ export const getPosts = createAsyncThunk(
 
 ### Protect a route
 
-Secure a route component by using the withAuthenticationRequired higher-order component. If a user attempts to access this route without authentication, they will be redirected to the login page.
+Secure a route component by using the `withAuthenticationRequired` higher-order component. If a user attempts
+to access this route without authentication, they will be redirected to the login page.
 
 ```jsx
 import React from 'react';
