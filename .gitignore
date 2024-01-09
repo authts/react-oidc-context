@@ -1,3 +1,5 @@
+.idea
+
 # build artifacts
 *.tsbuildinfo
 lib/
