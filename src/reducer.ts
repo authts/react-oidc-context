@@ -5,6 +5,7 @@ import type { AuthState } from "./AuthState";
 type Action =
     | { type: "INITIALISED" | "USER_LOADED"; user: User | null }
     | { type: "USER_UNLOADED" }
+    | { type: "USER_SIGNED_OUT" }
     | { type: "NAVIGATOR_INIT"; method: NonNullable<AuthState["activeNavigator"]> }
     | { type: "NAVIGATOR_CLOSE" }
     | { type: "ERROR"; error: Error };
@@ -23,6 +24,7 @@ export const reducer = (state: AuthState, action: Action): AuthState => {
                 isAuthenticated: action.user ? !action.user.expired : false,
                 error: undefined,
             };
+        case "USER_SIGNED_OUT":
         case "USER_UNLOADED":
             return {
                 ...state,
