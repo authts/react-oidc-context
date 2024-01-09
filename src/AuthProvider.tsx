@@ -239,6 +239,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         return () => {
             userManager.events.removeUserLoaded(handleUserLoaded);
             userManager.events.removeUserUnloaded(handleUserUnloaded);
+            userManager.events.removeUserSignedOut(handleUserSignedOut);
             userManager.events.removeSilentRenewError(handleSilentRenewError);
         };
     }, [userManager]);
