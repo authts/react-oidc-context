@@ -291,7 +291,10 @@ function App() {
     // automatically sign-in
     React.useEffect(() => {
         if (!hasAuthParams() &&
-            !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading &&
+            !auth.isAuthenticated &&
+            !auth.activeNavigator && 
+            !auth.isLoading &&
+            !auth.error &&
             !hasTriedSignin
         ) {
             auth.signinRedirect();
@@ -301,6 +304,10 @@ function App() {
 
     if (auth.isLoading) {
         return <div>Signing you in/out...</div>;
+    }
+
+    if (auth.error) {
+        return <div>Oops... {auth.error.message}</div>;
     }
 
     if (!auth.isAuthenticated) {
