@@ -108,6 +108,37 @@ describe("AuthProvider", () => {
         expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1);
     });
 
+    it("should handle signoutCallback success and call onSignoutCallback", async () => {
+        // arrange
+        const onSignoutCallback = jest.fn();
+        window.history.pushState(
+            {},
+            document.title,
+            "/signout-callback",
+        );
+        expect(window.location.pathname).toBe(
+            "/signout-callback",
+        );
+
+        const wrapper = createWrapper({
+            ...settingsStub,
+            post_logout_redirect_uri: "https://www.example.com/signout-callback",
+            matchSignoutCallback: () => window.location.pathname === "/signout-callback",
+            onSignoutCallback,
+        });
+
+        // act
+        act(() => {
+            renderHook(() => useAuth(), {
+                wrapper,
+            });
+        });
+
+        // assert
+        await waitFor(() => expect(onSignoutCallback).toHaveBeenCalledTimes(1));
+        expect(UserManager.prototype.signoutCallback).toHaveBeenCalledTimes(1);
+    });
+
     it("should signinResourceOwnerCredentials when asked", async () => {
         // arrange
         const wrapper = createWrapper({ ...settingsStub });
