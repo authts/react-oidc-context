@@ -26,4 +26,4 @@ const normalizeErrorFn = (fallbackMessage: string) => (error: unknown): Error =>
     return new Error(fallbackMessage);
 };
 
-export const loginError = normalizeErrorFn("Login failed");
+export const signinError = normalizeErrorFn("Sign-in failed");
