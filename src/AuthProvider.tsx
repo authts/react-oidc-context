@@ -14,7 +14,7 @@ import type {
 import { AuthContext } from "./AuthContext";
 import { initialAuthState } from "./AuthState";
 import { reducer } from "./reducer";
-import { hasAuthParams, loginError } from "./utils";
+import { hasAuthParams, signinError } from "./utils";
 
 /**
  * @public
@@ -42,13 +42,13 @@ export interface AuthProviderBaseProps {
     onSigninCallback?: (user: User | void) => Promise<void> | void;
 
     /**
-     * By default, if the page url has code/state params, this provider will call automatically the userManager.signinCallback.
+     * By default, if the page url has code/state params, this provider will call automatically the `userManager.signinCallback`.
      * In some cases the code might be for something else (another OAuth SDK perhaps). In these
      * instances you can instruct the client to ignore them.
      *
      * ```jsx
      * <AuthProvider
-     *   skipSigninCallback={window.location.pathname === '/stripe-oauth-callback'}
+     *   skipSigninCallback={window.location.pathname === "/stripe-oauth-callback"}
      * >
      * ```
      */
@@ -204,7 +204,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
                 user = !user ? await userManager.getUser() : user;
                 dispatch({ type: "INITIALISED", user });
             } catch (error) {
-                dispatch({ type: "ERROR", error: loginError(error) });
+                dispatch({ type: "ERROR", error: signinError(error) });
             }
         })();
     }, [userManager, skipSigninCallback, onSigninCallback]);

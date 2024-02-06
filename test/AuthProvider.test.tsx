@@ -44,13 +44,16 @@ describe("AuthProvider", () => {
 
         const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
 
-        renderHook(() => useAuth(), {
-            wrapper,
+        // act
+        act(() => {
+            renderHook(() => useAuth(), {
+                wrapper,
+            });
         });
 
         // assert
-        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1);
         await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(1));
+        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1);
     });
 
     it("should run onSigninCallback only once in StrictMode", async () => {
@@ -68,17 +71,15 @@ describe("AuthProvider", () => {
         const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
 
         // act
-        renderHook(() => useAuth(), {
-            wrapper,
+        act(() => {
+            renderHook(() => useAuth(), {
+                wrapper,
+            });
         });
 
         // assert
-        await waitFor(() => expect(onSigninCallback).toBeCalledTimes(1));
-        await waitFor(() =>
-            expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(
-                1,
-            ),
-        );
+        await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(1));
+        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1);
     });
 
     it("should handle signinCallback errors and call onSigninCallback", async () => {
@@ -96,13 +97,15 @@ describe("AuthProvider", () => {
         const wrapper = createWrapper({ ...settingsStub, onSigninCallback });
 
         // act
-        renderHook(() => useAuth(), {
-            wrapper,
+        act(() => {
+            renderHook(() => useAuth(), {
+                wrapper,
+            });
         });
 
         // assert
-        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1);
         await waitFor(() => expect(onSigninCallback).toHaveBeenCalledTimes(1));
+        expect(UserManager.prototype.signinCallback).toHaveBeenCalledTimes(1);
     });
 
     it("should signinResourceOwnerCredentials when asked", async () => {
@@ -140,9 +143,8 @@ describe("AuthProvider", () => {
         await act(() => result.current.removeUser());
 
         // assert
-        expect(UserManager.prototype.removeUser).toHaveBeenCalled();
-
         await waitFor(() => expect(onRemoveUser).toHaveBeenCalled());
+        expect(UserManager.prototype.removeUser).toHaveBeenCalled();
     });
 
     it("should handle signoutSilent", async () => {
@@ -197,8 +199,11 @@ describe("AuthProvider", () => {
             userManager: customUserManager,
         });
 
-        const { result } = renderHook(() => useAuth(), {
-            wrapper,
+        const result = await act(async () => {
+            const { result } = renderHook(() => useAuth(), {
+                wrapper,
+            });
+            return result;
         });
 
         await act(async () => {
@@ -288,8 +293,12 @@ describe("AuthProvider", () => {
             }),
         );
         const wrapper = createWrapper({ ...settingsStub });
-        const { result } = renderHook(() => useAuth(), {
-            wrapper,
+
+        const result = await act(async () => {
+            const { result } = renderHook(() => useAuth(), {
+                wrapper,
+            });
+            return result;
         });
 
         await act(async () => {
@@ -316,5 +325,4 @@ describe("AuthProvider", () => {
 
         mockSigninPopup.mockRestore();
     });
-
 });
