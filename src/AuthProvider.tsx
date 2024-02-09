@@ -14,7 +14,7 @@ import type {
 import { AuthContext } from "./AuthContext";
 import { initialAuthState } from "./AuthState";
 import { reducer } from "./reducer";
-import { hasAuthParams, signinError } from "./utils";
+import { hasAuthParams, signinError, signoutError } from "./utils";
 
 /**
  * @public
@@ -53,6 +53,38 @@ export interface AuthProviderBaseProps {
      * ```
      */
     skipSigninCallback?: boolean;
+
+    /**
+      * Match the redirect uri used for logout (e.g. `post_logout_redirect_uri`)
+      * This provider will then call automatically the `userManager.signoutCallback`.
+      *
+      * HINT:
+      * Do not call `userManager.signoutRedirect()` within a `React.useEffect`, otherwise the
+      * logout might be unsuccessful.
+      *
+      * ```jsx
+      * <AuthProvider
+      *   matchSignoutCallback={(args) => {
+      *     window &&
+      *     (window.location.href === args.post_logout_redirect_uri);
+      *   }}
+      * ```
+      */
+    matchSignoutCallback?: (args: UserManagerSettings) => boolean;
+
+    /**
+     * On sign out callback hook. Can be a async function.
+     * Here you can change the url after the user is signed out.
+     * When using this, specifying `matchSignoutCallback` is required.
+     *
+     * ```jsx
+     * const onSignoutCallback = (): void => {
+     *     // go to home after logout
+     *     window.location.pathname = ""
+     * }
+     * ```
+     */
+    onSignoutCallback?: () => Promise<void> | void;
 
     /**
      * On remove user hook. Can be a async function.
@@ -133,6 +165,9 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         onSigninCallback,
         skipSigninCallback,
 
+        matchSignoutCallback,
+        onSignoutCallback,
+
         onRemoveUser,
 
         userManager: userManagerProp = null,
@@ -194,6 +229,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         didInitialize.current = true;
 
         void (async (): Promise<void> => {
+            // sign-in
             let user: User | void | null = null;
             try {
                 // check if returning back from authority server
@@ -206,8 +242,18 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
             } catch (error) {
                 dispatch({ type: "ERROR", error: signinError(error) });
             }
+
+            // sign-out
+            try {
+                if (matchSignoutCallback && matchSignoutCallback(userManager.settings)) {
+                    await userManager.signoutCallback();
+                    onSignoutCallback && (await onSignoutCallback());
+                }
+            } catch (error) {
+                dispatch({ type: "ERROR", error: signoutError(error) });
+            }
         })();
-    }, [userManager, skipSigninCallback, onSigninCallback]);
+    }, [userManager, skipSigninCallback, onSigninCallback, onSignoutCallback, matchSignoutCallback]);
 
     // register to userManager events
     useEffect(() => {

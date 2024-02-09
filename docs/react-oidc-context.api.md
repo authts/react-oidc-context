@@ -62,8 +62,10 @@ export const AuthProvider: (props: AuthProviderProps) => JSX.Element;
 // @public (undocumented)
 export interface AuthProviderBaseProps {
     children?: React_2.ReactNode;
+    matchSignoutCallback?: (args: UserManagerSettings) => boolean;
     onRemoveUser?: () => Promise<void> | void;
     onSigninCallback?: (user: User | void) => Promise<void> | void;
+    onSignoutCallback?: () => Promise<void> | void;
     skipSigninCallback?: boolean;
 }
 
