@@ -2,16 +2,17 @@ import React from "react";
 
 import { AuthProvider, type AuthProviderProps } from "../src/AuthProvider";
 
-export const createWrapper =
-    (opts: AuthProviderProps, strictMode = true) =>
-        ({ children }: React.PropsWithChildren): JSX.Element => {
-            const provider = <AuthProvider {...opts}>{children}</AuthProvider>;
-            if (!strictMode) {
-                return provider;
-            }
+export const createWrapper = (opts: AuthProviderProps, strictMode = true) => {
+    const AllProviders = ({ children }: React.PropsWithChildren): JSX.Element => {
+        const provider = <AuthProvider {...opts}>{children}</AuthProvider>;
+        if (!strictMode) {
+            return provider;
+        }
 
-            return <React.StrictMode>{provider}</React.StrictMode>;
-        };
+        return <React.StrictMode>{provider}</React.StrictMode>;
+    };
+    return AllProviders;
+};
 
 export const createLocation = (search: string, hash: string): Location => {
     const location: Location = {

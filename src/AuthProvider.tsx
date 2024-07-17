@@ -290,12 +290,11 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         };
     }, [userManager]);
 
-    const removeUser = useCallback(
-        userManager
-            ? () => userManager.removeUser().then(onRemoveUser)
-            : unsupportedEnvironment("removeUser"),
-        [userManager, onRemoveUser],
-    );
+    const removeUser = useCallback(async () => {
+        if (!userManager) unsupportedEnvironment("removeUser");
+        await userManager.removeUser();
+        onRemoveUser && await onRemoveUser();
+    }, [userManager, onRemoveUser]);
 
     return (
         <AuthContext.Provider
