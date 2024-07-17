@@ -8,7 +8,7 @@
   },
   "alias": {
     "react": "../node_modules/react",
-    "react-dom": "../node_modules/react-dom/profiling",
+    "react-dom": "../node_modules/react-dom",
     "scheduler/tracing": "../node_modules/scheduler/tracing-profiling"
   },
   "devDependencies": {

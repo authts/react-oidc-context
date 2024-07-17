@@ -1,5 +1,6 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import React from "react";
+
+import { createRoot } from "react-dom/client";
 
 import { AuthProvider, useAuth } from "../src/.";
 
@@ -34,9 +35,12 @@ function App() {
     return <button onClick={() => void auth.signinRedirect()}>Log in</button>;
 }
 
-ReactDOM.render(
+const rootElement = document.getElementById("root");
+if (!rootElement) throw new Error("Failed to find the root element");
+const root = createRoot(rootElement);
+
+root.render(
     <AuthProvider {...oidcConfig}>
         <App />
     </AuthProvider>,
-    document.getElementById("root"),
 );
