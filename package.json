@@ -37,7 +37,7 @@
     "prepack": "npm run build",
     "test": "tsc -p test/tsconfig.json && jest",
     "lint": "eslint --max-warnings=0 --cache .",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "peerDependencies": {
     "oidc-client-ts": "^3.0.0",
