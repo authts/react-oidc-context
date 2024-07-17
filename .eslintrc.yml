@@ -1,5 +1,7 @@
 plugins:
   - "@typescript-eslint"
+  - react
+  - react-hooks
   - testing-library
 env:
   browser: true
@@ -9,7 +11,12 @@ parserOptions:
   sourceType: module
 extends:
   - eslint:recommended
+  - plugin:react/recommended
+  - plugin:react-hooks/recommended
   - plugin:testing-library/dom
+settings:
+  react:
+    version: "detect"
 rules:
   comma-dangle:
     - error
