@@ -49,12 +49,7 @@ export const withAuthenticationRequired = <P extends object>(
                 onBeforeSignin && await onBeforeSignin();
                 await auth.signinRedirect(signinRedirectArgs);
             })();
-        }, [
-            auth.isLoading,
-            auth.isAuthenticated,
-            onBeforeSignin,
-            signinRedirectArgs,
-        ]);
+        }, [auth.isLoading, auth.isAuthenticated, auth]);
 
         return auth.isAuthenticated ? <Component {...props} /> : OnRedirecting();
     };
