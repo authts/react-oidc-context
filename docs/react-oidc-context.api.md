@@ -26,6 +26,8 @@ export const AuthContext: React_2.Context<AuthContextProps | undefined>;
 // @public (undocumented)
 export interface AuthContextProps extends AuthState {
     // (undocumented)
+    callSigninCallback(url: string): Promise<void>;
+    // (undocumented)
     clearStaleState(): Promise<void>;
     // (undocumented)
     readonly events: UserManagerEvents;

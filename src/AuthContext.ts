@@ -30,6 +30,7 @@ export interface AuthContextProps extends AuthState {
     revokeTokens(types?: RevokeTokensTypes): Promise<void>;
     startSilentRenew(): void;
     stopSilentRenew(): void;
+    callSigninCallback(url: string): Promise<void>;
 }
 
 /**
