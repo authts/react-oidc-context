@@ -296,12 +296,15 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         onRemoveUser && await onRemoveUser();
     }, [userManager, onRemoveUser]);
 
+    const callSigninCallback = (url: string) => userManager.signinCallback(url);
+
     return (
         <AuthContext.Provider
             value={{
                 ...state,
                 ...userManagerContext,
                 removeUser,
+                callSigninCallback,
             }}
         >
             {children}
