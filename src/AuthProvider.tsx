@@ -230,8 +230,9 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
 
         void (async (): Promise<void> => {
             // sign-in
-            let user: User | void | null = null;
             try {
+                let user: User | void | null = null;
+
                 // check if returning back from authority server
                 if (hasAuthParams() && !skipSigninCallback) {
                     user = await userManager.signinCallback();
