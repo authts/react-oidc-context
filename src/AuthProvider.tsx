@@ -1,11 +1,4 @@
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useReducer,
-    useRef,
-    useState,
-} from "react";
+import React from "react";
 import { UserManager, type UserManagerSettings, User } from "oidc-client-ts";
 import type {
     ProcessResourceOwnerPasswordCredentialsArgs,
@@ -174,15 +167,15 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         ...userManagerSettings
     } = props;
 
-    const [userManager] = useState(() => {
+    const [userManager] = React.useState(() => {
         return userManagerProp ??
             (UserManagerImpl
                 ? new UserManagerImpl(userManagerSettings as UserManagerSettings)
                 : ({ settings: userManagerSettings } as UserManager));
     });
 
-    const [state, dispatch] = useReducer(reducer, initialAuthState);
-    const userManagerContext = useMemo(
+    const [state, dispatch] = React.useReducer(reducer, initialAuthState);
+    const userManagerContext = React.useMemo(
         () =>
             Object.assign(
                 {
@@ -220,9 +213,9 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
             ),
         [userManager],
     );
-    const didInitialize = useRef(false);
+    const didInitialize = React.useRef(false);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (!userManager || didInitialize.current) {
             return;
         }
@@ -230,8 +223,9 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
 
         void (async (): Promise<void> => {
             // sign-in
-            let user: User | void | null = null;
             try {
+                let user: User | void | null = null;
+
                 // check if returning back from authority server
                 if (hasAuthParams() && !skipSigninCallback) {
                     user = await userManager.signinCallback();
@@ -256,7 +250,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     }, [userManager, skipSigninCallback, onSigninCallback, onSignoutCallback, matchSignoutCallback]);
 
     // register to userManager events
-    useEffect(() => {
+    React.useEffect(() => {
         if (!userManager) return undefined;
         // event UserLoaded (e.g. initial load, silent renew success)
         const handleUserLoaded = (user: User) => {
@@ -290,7 +284,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         };
     }, [userManager]);
 
-    const removeUser = useCallback(async () => {
+    const removeUser = React.useCallback(async () => {
         if (!userManager) unsupportedEnvironment("removeUser");
         await userManager.removeUser();
         onRemoveUser && await onRemoveUser();
