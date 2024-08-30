@@ -290,7 +290,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         onRemoveUser && await onRemoveUser();
     }, [userManager, onRemoveUser]);
 
-    const callSigninCallback = useCallback(async (url: string) => { 
+    const callSigninCallback = React.useCallback(async (url: string) => { 
         let user: User | void | null = null;
         try {
             user = await userManager.signinCallback(url);
