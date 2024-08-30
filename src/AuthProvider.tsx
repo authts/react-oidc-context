@@ -296,13 +296,17 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         onRemoveUser && await onRemoveUser();
     }, [userManager, onRemoveUser]);
 
-    const callSigninCallback = async (url: string) => { 
+    const callSigninCallback = useCallback(async (url: string) => { 
         let user: User | void | null = null;
-        user = await userManager.signinCallback(url);
-        onSigninCallback && await onSigninCallback(user);
-        user = !user ? await userManager.getUser() : user;
-        dispatch({ type: "INITIALISED", user });  
-    };
+        try {
+            user = await userManager.signinCallback(url);
+            onSigninCallback && await onSigninCallback(user);
+            user = !user ? await userManager.getUser() : user;
+            dispatch({ type: "INITIALISED", user });  
+        } catch (error) {
+            dispatch({ type: "ERROR", error: signinError(error) });
+        }
+    }, [onSigninCallback, userManager]);
 
     return (
         <AuthContext.Provider
