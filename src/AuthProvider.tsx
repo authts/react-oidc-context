@@ -290,14 +290,16 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         onRemoveUser && await onRemoveUser();
     }, [userManager, onRemoveUser]);
 
+    const contextValue = React.useMemo(() => {
+        return {
+            ...state,
+            ...userManagerContext,
+            removeUser,
+        };
+    }, [state, userManagerContext, removeUser]);
+
     return (
-        <AuthContext.Provider
-            value={{
-                ...state,
-                ...userManagerContext,
-                removeUser,
-            }}
-        >
+        <AuthContext.Provider value={contextValue}>
             {children}
         </AuthContext.Provider>
     );
