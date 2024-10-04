@@ -5,6 +5,7 @@ import type {
     SignoutPopupArgs,
     SignoutSilentArgs,
     ProcessResourceOwnerPasswordCredentialsArgs,
+    SignoutResponse,
 } from "oidc-client-ts";
 
 import { AuthContext } from "./AuthContext";
@@ -74,13 +75,13 @@ export interface AuthProviderPropsBase extends UserManagerSettings {
      * When using this, specifying `matchSignoutCallback` is required.
      *
      * ```jsx
-     * const onSignoutCallback = (): void => {
+     * const onSignoutCallback = (resp: SignoutResponse | void): void => {
      *     // go to home after logout
      *     window.location.pathname = ""
      * }
      * ```
      */
-    onSignoutCallback?: () => Promise<void> | void;
+    onSignoutCallback?: (resp: SignoutResponse | void) => Promise<void> | void;
 
     /**
      * On remove user hook. Can be a async function.
@@ -256,8 +257,8 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
             // sign-out
             try {
                 if (matchSignoutCallback && matchSignoutCallback(userManager.settings)) {
-                    await userManager.signoutCallback();
-                    onSignoutCallback && (await onSignoutCallback());
+                    const resp = await userManager.signoutCallback();
+                    onSignoutCallback && await onSignoutCallback(resp);
                 }
             } catch (error) {
                 dispatch({ type: "ERROR", error: signoutError(error) });
