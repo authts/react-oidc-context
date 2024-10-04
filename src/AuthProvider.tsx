@@ -281,6 +281,12 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         };
         userManager.events.addUserUnloaded(handleUserUnloaded);
 
+        // event UserSignedOut (e.g. user was signed out in background (checkSessionIFrame option))
+        const handleUserSignedOut = () => {
+            dispatch({ type: "USER_SIGNED_OUT" });
+        };
+        userManager.events.addUserSignedOut(handleUserSignedOut);
+
         // event SilentRenewError (silent renew error)
         const handleSilentRenewError = (error: Error) => {
             dispatch({ type: "ERROR", error });
@@ -290,6 +296,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         return () => {
             userManager.events.removeUserLoaded(handleUserLoaded);
             userManager.events.removeUserUnloaded(handleUserUnloaded);
+            userManager.events.removeUserSignedOut(handleUserSignedOut);
             userManager.events.removeSilentRenewError(handleSilentRenewError);
         };
     }, [userManager]);
