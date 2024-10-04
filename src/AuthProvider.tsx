@@ -23,7 +23,7 @@ export interface AuthProviderBaseProps {
      * Here you can remove the code and state parameters from the url when you are redirected from the authorize page.
      *
      * ```jsx
-     * const onSigninCallback = (_user: User | void): void => {
+     * const onSigninCallback = (_user: User | undefined): void => {
      *     window.history.replaceState(
      *         {},
      *         document.title,
@@ -32,7 +32,7 @@ export interface AuthProviderBaseProps {
      * }
      * ```
      */
-    onSigninCallback?: (user: User | void) => Promise<void> | void;
+    onSigninCallback?: (user: User | undefined) => Promise<void> | void;
 
     /**
      * By default, if the page url has code/state params, this provider will call automatically the `userManager.signinCallback`.
@@ -224,7 +224,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         void (async (): Promise<void> => {
             // sign-in
             try {
-                let user: User | void | null = null;
+                let user: User | undefined | null = null;
 
                 // check if returning back from authority server
                 if (hasAuthParams() && !skipSigninCallback) {

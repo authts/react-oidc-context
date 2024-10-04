@@ -64,7 +64,7 @@ export interface AuthProviderBaseProps {
     children?: React_2.ReactNode;
     matchSignoutCallback?: (args: UserManagerSettings) => boolean;
     onRemoveUser?: () => Promise<void> | void;
-    onSigninCallback?: (user: User | void) => Promise<void> | void;
+    onSigninCallback?: (user: User | undefined) => Promise<void> | void;
     onSignoutCallback?: () => Promise<void> | void;
     skipSigninCallback?: boolean;
 }

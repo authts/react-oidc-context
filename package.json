@@ -40,7 +40,7 @@
     "prepare": "husky"
   },
   "peerDependencies": {
-    "oidc-client-ts": "^3.0.0",
+    "oidc-client-ts": "^3.1.0",
     "react": ">=16.8.0"
   },
   "devDependencies": {
