@@ -14,6 +14,7 @@ import type { SigninResourceOwnerCredentialsArgs } from 'oidc-client-ts';
 import type { SigninSilentArgs } from 'oidc-client-ts';
 import type { SignoutPopupArgs } from 'oidc-client-ts';
 import type { SignoutRedirectArgs } from 'oidc-client-ts';
+import type { SignoutResponse } from 'oidc-client-ts';
 import type { SignoutSilentArgs } from 'oidc-client-ts';
 import { User } from 'oidc-client-ts';
 import { UserManager } from 'oidc-client-ts';
@@ -65,7 +66,7 @@ export interface AuthProviderBaseProps {
     matchSignoutCallback?: (args: UserManagerSettings) => boolean;
     onRemoveUser?: () => Promise<void> | void;
     onSigninCallback?: (user: User | undefined) => Promise<void> | void;
-    onSignoutCallback?: () => Promise<void> | void;
+    onSignoutCallback?: (resp: SignoutResponse | undefined) => Promise<void> | void;
     skipSigninCallback?: boolean;
 }
 
