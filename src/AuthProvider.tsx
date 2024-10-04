@@ -1,11 +1,4 @@
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useReducer,
-    useRef,
-    useState,
-} from "react";
+import React from "react";
 import { UserManager, type UserManagerSettings, User } from "oidc-client-ts";
 import type {
     SignoutRedirectArgs,
@@ -156,15 +149,15 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         ...userManagerSettings
     } = props;
 
-    const [userManager] = useState(() => {
+    const [userManager] = React.useState(() => {
         return userManagerProp ??
             (UserManagerImpl
                 ? new UserManagerImpl(userManagerSettings as UserManagerSettings)
                 : ({ settings: userManagerSettings } as UserManager));
     });
 
-    const [state, dispatch] = useReducer(reducer, initialAuthState);
-    const userManagerContext = useMemo(
+    const [state, dispatch] = React.useReducer(reducer, initialAuthState);
+    const userManagerContext = React.useMemo(
         () =>
             Object.assign(
                 {
@@ -202,9 +195,9 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
             ),
         [userManager],
     );
-    const didInitialize = useRef(false);
+    const didInitialize = React.useRef(false);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (!userManager || didInitialize.current) {
             return;
         }
@@ -227,7 +220,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     }, [userManager, skipSigninCallback, onSigninCallback]);
 
     // register to userManager events
-    useEffect(() => {
+    React.useEffect(() => {
         if (!userManager) return undefined;
         // event UserLoaded (e.g. initial load, silent renew success)
         const handleUserLoaded = (user: User) => {
@@ -254,26 +247,26 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         };
     }, [userManager]);
 
-    const removeUser = useCallback(
+    const removeUser = React.useCallback(
         userManager
             ? () => userManager.removeUser().then(onRemoveUser)
             : unsupportedEnvironment("removeUser"),
         [userManager, onRemoveUser],
     );
 
-    const signoutRedirect = useCallback(
+    const signoutRedirect = React.useCallback(
         (args?: SignoutRedirectArgs) =>
             userManagerContext.signoutRedirect(args).then(onSignoutRedirect),
         [userManagerContext.signoutRedirect, onSignoutRedirect],
     );
 
-    const signoutPopup = useCallback(
+    const signoutPopup = React.useCallback(
         (args?: SignoutPopupArgs) =>
             userManagerContext.signoutPopup(args).then(onSignoutPopup),
         [userManagerContext.signoutPopup, onSignoutPopup],
     );
 
-    const signoutSilent = useCallback(
+    const signoutSilent = React.useCallback(
         (args?: SignoutSilentArgs) =>
             userManagerContext.signoutSilent(args),
         [userManagerContext.signoutSilent],
