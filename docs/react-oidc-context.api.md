@@ -14,6 +14,7 @@ import type { SigninResourceOwnerCredentialsArgs } from 'oidc-client-ts';
 import type { SigninSilentArgs } from 'oidc-client-ts';
 import type { SignoutPopupArgs } from 'oidc-client-ts';
 import type { SignoutRedirectArgs } from 'oidc-client-ts';
+import type { SignoutResponse } from 'oidc-client-ts';
 import type { SignoutSilentArgs } from 'oidc-client-ts';
 import { User } from 'oidc-client-ts';
 import { UserManager } from 'oidc-client-ts';
@@ -73,8 +74,10 @@ export interface AuthProviderPropsBase extends UserManagerSettings {
     children?: React_2.ReactNode;
     // @deprecated (undocumented)
     implementation?: typeof UserManager | null;
+    matchSignoutCallback?: (args: UserManagerSettings) => boolean;
     onRemoveUser?: () => Promise<void> | void;
     onSigninCallback?: (user: User | void) => Promise<void> | void;
+    onSignoutCallback?: (resp: SignoutResponse | void) => Promise<void> | void;
     // @deprecated (undocumented)
     onSignoutPopup?: () => Promise<void> | void;
     // @deprecated (undocumented)
