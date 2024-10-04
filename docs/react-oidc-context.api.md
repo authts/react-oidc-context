@@ -73,8 +73,10 @@ export interface AuthProviderPropsBase extends UserManagerSettings {
     children?: React_2.ReactNode;
     // @deprecated (undocumented)
     implementation?: typeof UserManager | null;
+    matchSignoutCallback?: (args: UserManagerSettings) => boolean;
     onRemoveUser?: () => Promise<void> | void;
     onSigninCallback?: (user: User | void) => Promise<void> | void;
+    onSignoutCallback?: () => Promise<void> | void;
     // @deprecated (undocumented)
     onSignoutPopup?: () => Promise<void> | void;
     // @deprecated (undocumented)
