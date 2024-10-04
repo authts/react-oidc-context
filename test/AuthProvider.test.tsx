@@ -398,4 +398,22 @@ describe("AuthProvider", () => {
         mockSigninPopup.mockRestore();
     });
 
+    it("should not update context value after rerender without state changes", async () => {
+        // arrange
+        const wrapper = createWrapper({ ...settingsStub });
+        const { result, rerender } = await act(async () => {
+            const { result, rerender } = renderHook(() => useAuth(), {
+                wrapper,
+            });
+            return { result, rerender };
+        });
+        const memoized = result.current;
+
+        // act
+        rerender();
+
+        // assert
+        expect(result.current).toBe(memoized);
+    });
+
 });

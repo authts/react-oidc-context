@@ -272,17 +272,19 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         [userManagerContext.signoutSilent],
     );
 
+    const contextValue = React.useMemo(() => {
+        return {
+            ...state,
+            ...userManagerContext,
+            removeUser,
+            signoutRedirect,
+            signoutPopup,
+            signoutSilent,
+        };
+    }, [state, userManagerContext, removeUser]);
+
     return (
-        <AuthContext.Provider
-            value={{
-                ...state,
-                ...userManagerContext,
-                removeUser,
-                signoutRedirect,
-                signoutPopup,
-                signoutSilent,
-            }}
-        >
+        <AuthContext.Provider value={contextValue}>
             {children}
         </AuthContext.Provider>
     );
