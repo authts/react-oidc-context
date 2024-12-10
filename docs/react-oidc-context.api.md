@@ -58,7 +58,7 @@ export interface AuthContextProps extends AuthState {
 }
 
 // @public
-export const AuthProvider: (props: AuthProviderProps) => JSX.Element;
+export const AuthProvider: (props: AuthProviderProps) => React_2.JSX.Element;
 
 // @public (undocumented)
 export interface AuthProviderBaseProps {
@@ -107,7 +107,7 @@ export const withAuthenticationRequired: <P extends object>(Component: React_2.C
 // @public (undocumented)
 export interface WithAuthenticationRequiredProps {
     onBeforeSignin?: () => Promise<void> | void;
-    OnRedirecting?: () => JSX.Element;
+    OnRedirecting?: () => React_2.JSX.Element;
     signinRedirectArgs?: SigninRedirectArgs;
 }
 

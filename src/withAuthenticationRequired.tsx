@@ -11,7 +11,7 @@ export interface WithAuthenticationRequiredProps {
     /**
      * Show a message when redirected to the signin page.
      */
-    OnRedirecting?: () => JSX.Element;
+    OnRedirecting?: () => React.JSX.Element;
 
     /**
      * Allows executing logic before the user is redirected to the signin page.
@@ -35,7 +35,7 @@ export const withAuthenticationRequired = <P extends object>(
     Component: React.ComponentType<P>,
     options: WithAuthenticationRequiredProps = {},
 ): React.FC<P> => {
-    const { OnRedirecting = (): JSX.Element => <></>, onBeforeSignin, signinRedirectArgs } = options;
+    const { OnRedirecting = (): React.JSX.Element => <></>, onBeforeSignin, signinRedirectArgs } = options;
     const displayName = `withAuthenticationRequired(${Component.displayName || Component.name})`;
     const C: React.FC<P> = (props) => {
         const auth = useAuth();

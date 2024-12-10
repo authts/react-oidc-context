@@ -10,7 +10,7 @@ describe("withAuth", () => {
     it("should wrap a class component, adding AuthContextProps to the component's `auth` prop", async () => {
         // arrange
         class MyComponent extends Component {
-            render(): JSX.Element {
+            render(): React.JSX.Element {
                 for (const [k, v] of Object.entries(this.props)) {
                     if (k === "auth") {
                         return <>{k}: {Object.keys(v as Map<string, unknown>)}</>;
@@ -34,7 +34,7 @@ describe("withAuth", () => {
     it("should pass through wrapped component props", async () => {
         // arrange
         class MyPropsComponent extends Component<{ originalProp: string }> {
-            render(): JSX.Element {
+            render(): React.JSX.Element {
                 return <>originalPropValue: {this.props.originalProp}</>;
             }
         }
