@@ -15,7 +15,7 @@ describe("withAuthenticationRequired", () => {
         authContext.signinRedirect = signinRedirectMock;
         useAuthMock.mockReturnValue(authContext);
 
-        const MyComponent = (): JSX.Element => <>Private</>;
+        const MyComponent = (): React.JSX.Element => <>Private</>;
         const WrappedComponent = withAuthenticationRequired(MyComponent);
 
         // act
@@ -40,7 +40,7 @@ describe("withAuthenticationRequired", () => {
         authContext.signinRedirect = signinRedirectMock;
         useAuthMock.mockReturnValue(authContext);
 
-        const MyComponent = (): JSX.Element => <>Private</>;
+        const MyComponent = (): React.JSX.Element => <>Private</>;
         const WrappedComponent = withAuthenticationRequired(MyComponent);
 
         // act
@@ -67,8 +67,8 @@ describe("withAuthenticationRequired", () => {
         authContext.signinRedirect = signinRedirectMock;
         useAuthMock.mockReturnValue(authContext);
 
-        const MyComponent = (): JSX.Element => <>Private</>;
-        const OnRedirecting = (): JSX.Element => <>Redirecting</>;
+        const MyComponent = (): React.JSX.Element => <>Private</>;
+        const OnRedirecting = (): React.JSX.Element => <>Redirecting</>;
         const WrappedComponent = withAuthenticationRequired(MyComponent, {
             OnRedirecting,
         });
@@ -94,7 +94,7 @@ describe("withAuthenticationRequired", () => {
         authContext.signinRedirect = signinRedirectMock;
         useAuthMock.mockReturnValue(authContext);
 
-        const MyComponent = (): JSX.Element => <>Private</>;
+        const MyComponent = (): React.JSX.Element => <>Private</>;
         const onBeforeSigninMock = jest.fn();
         const WrappedComponent = withAuthenticationRequired(MyComponent, {
             onBeforeSignin: onBeforeSigninMock,
@@ -124,7 +124,7 @@ describe("withAuthenticationRequired", () => {
         authContext.signinRedirect = signinRedirectMock;
         useAuthMock.mockReturnValue(authContext);
 
-        const MyComponent = (): JSX.Element => <>Private</>;
+        const MyComponent = (): React.JSX.Element => <>Private</>;
         const WrappedComponent = withAuthenticationRequired(MyComponent, {
             signinRedirectArgs: {
                 redirect_uri: "foo",
@@ -156,9 +156,9 @@ describe("withAuthenticationRequired", () => {
         authContext.signinRedirect = signinRedirectMock;
         useAuthMock.mockReturnValue(authContext);
 
-        const MyComponent = (): JSX.Element => <>Private</>;
+        const MyComponent = (): React.JSX.Element => <>Private</>;
         const WrappedComponent = withAuthenticationRequired(MyComponent);
-        const App = ({ foo }: { foo: number }): JSX.Element => (
+        const App = ({ foo }: { foo: number }): React.JSX.Element => (
             <div>
                 {foo}
                 <AuthProvider {...settingsStub}>

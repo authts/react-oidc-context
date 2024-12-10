@@ -152,7 +152,7 @@ const UserManagerImpl =
  *
  * @public
  */
-export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
+export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
     const {
         children,
 
