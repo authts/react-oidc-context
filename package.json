@@ -41,7 +41,7 @@
   },
   "peerDependencies": {
     "oidc-client-ts": "^3.1.0",
-    "react": ">=16.8.0"
+    "react": ">=16.14.0"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.48.0",
