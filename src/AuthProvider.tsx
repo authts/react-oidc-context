@@ -230,7 +230,7 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                 // check if returning back from authority server
                 if (hasAuthParams() && !skipSigninCallback) {
                     user = await userManager.signinCallback();
-                    onSigninCallback && await onSigninCallback(user);
+                    if (onSigninCallback) await onSigninCallback(user);
                 }
                 user = !user ? await userManager.getUser() : user;
                 dispatch({ type: "INITIALISED", user });
@@ -242,7 +242,7 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
             try {
                 if (matchSignoutCallback && matchSignoutCallback(userManager.settings)) {
                     const resp = await userManager.signoutCallback();
-                    onSignoutCallback && await onSignoutCallback(resp);
+                    if (onSignoutCallback) await onSignoutCallback(resp);
                 }
             } catch (error) {
                 dispatch({ type: "ERROR", error: signoutError(error) });
@@ -288,7 +288,7 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
     const removeUser = React.useCallback(async () => {
         if (!userManager) unsupportedEnvironment("removeUser");
         await userManager.removeUser();
-        onRemoveUser && await onRemoveUser();
+        if (onRemoveUser) await onRemoveUser();
     }, [userManager, onRemoveUser]);
 
     const contextValue = React.useMemo(() => {
