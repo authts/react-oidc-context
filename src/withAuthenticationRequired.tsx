@@ -46,7 +46,7 @@ export const withAuthenticationRequired = <P extends object>(
                 return;
             }
             void (async (): Promise<void> => {
-                onBeforeSignin && await onBeforeSignin();
+                if (onBeforeSignin) await onBeforeSignin();
                 await auth.signinRedirect(signinRedirectArgs);
             })();
         }, [auth.isLoading, auth.isAuthenticated, auth]);
