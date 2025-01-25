@@ -41,11 +41,11 @@ export const useAutoSignin = ({ signinMethod = "signinRedirect" }: UseAutoSignIn
     const auth = useAuth();
     const [hasTriedSignin, setHasTriedSignin] = React.useState(false);
 
+    const shouldAttemptSignin = React.useMemo(() => !hasAuthParams() && !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading &&
+        !hasTriedSignin, [auth.activeNavigator, auth.isAuthenticated, auth.isLoading, hasTriedSignin]);
+
     React.useEffect(() => {
-        if (!hasAuthParams() &&
-            !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading &&
-            !hasTriedSignin
-        ) {
+        if (shouldAttemptSignin) {
             switch (signinMethod) {
                 case "signinSilent":
                     void auth.signinSilent();
@@ -61,7 +61,7 @@ export const useAutoSignin = ({ signinMethod = "signinRedirect" }: UseAutoSignIn
 
             setHasTriedSignin(true);
         }
-    }, [auth, hasTriedSignin, signinMethod]);
+    }, [auth, hasTriedSignin, shouldAttemptSignin, signinMethod]);
 
     return {
         isLoading: auth.isLoading,
