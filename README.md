@@ -313,6 +313,37 @@ function App() {
 export default App;
 ```
 
+#### useAutoSignin
+
+Use the `useAutoSignin` hook inside the AuthProvider to automatically sign in.
+
+```jsx
+// src/App.jsx
+import React from "react";
+import { useAutoSignin } from "react-oidc-context";
+
+function App() {
+    // If you provide no signinMethod at all, the default is signinRedirect
+    const { isLoading, isAuthenticated, isError } = useAutoSignin({signinMethod: "signinRedirect"});
+
+    if (isLoading) {
+        return <div>Signing you in/out...</div>;
+    }
+
+    if (!isAuthenticated) {
+        return <div>Unable to log in</div>;
+    }
+
+    if(isError) {
+        return <div>An error occured</div>
+    }
+
+    return <div>Signed in successfully</div>;
+}
+
+export default App;
+```
+
 ## Contributing
 
 We appreciate feedback and contribution to this repo!
