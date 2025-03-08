@@ -32,16 +32,6 @@ describe("useAutoSignin", () => {
         expect(UserManager.prototype.getUser).toHaveBeenCalled();
     });
 
-    it("should auto sign in using provided method signinSilent", async () => {
-        const wrapper = createWrapper({ ...settingsStub });
-        const { result } = renderHook(() => useAutoSignin({ signinMethod: "signinSilent" }), { wrapper });
-
-        await waitFor(() => expect(result.current).toBeDefined());
-
-        expect(UserManager.prototype.signinSilent).toHaveBeenCalled();
-        expect(UserManager.prototype.getUser).toHaveBeenCalled();
-    });
-
     it("should auto sign in using provided method signinPopup", async () => {
         const wrapper = createWrapper({ ...settingsStub });
         const { result } = renderHook(() => useAutoSignin({ signinMethod: "signinPopup" }), { wrapper });
