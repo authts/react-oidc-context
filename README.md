@@ -324,7 +324,7 @@ import { useAutoSignin } from "react-oidc-context";
 
 function App() {
     // If you provide no signinMethod at all, the default is signinRedirect
-    const { isLoading, isAuthenticated, isError } = useAutoSignin({signinMethod: "signinRedirect"});
+    const { isLoading, isAuthenticated, error } = useAutoSignin({signinMethod: "signinRedirect"});
 
     if (isLoading) {
         return <div>Signing you in/out...</div>;
@@ -334,7 +334,7 @@ function App() {
         return <div>Unable to log in</div>;
     }
 
-    if(isError) {
+    if(error) {
         return <div>An error occured</div>
     }
 

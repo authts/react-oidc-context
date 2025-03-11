@@ -2,16 +2,13 @@ import React from "react";
 import { useAuth } from "./useAuth";
 import { hasAuthParams } from "./utils";
 import type { AuthContextProps } from "./AuthContext";
+import type { AuthState } from "./AuthState";
 
 type UseAutoSignInProps = {
     signinMethod?: keyof Pick<AuthContextProps, "signinRedirect" | "signinPopup">;
 }
 
-type UseAutoSignInReturn = {
-    isLoading: boolean;
-    isAuthenticated: boolean;
-    isError: boolean;
-}
+type UseAutoSignInReturn = Pick<AuthState, "isAuthenticated" | "isLoading" | "error">
 
 /**
  * @public
@@ -57,6 +54,6 @@ export const useAutoSignin = ({ signinMethod = "signinRedirect" }: UseAutoSignIn
     return {
         isLoading: auth.isLoading,
         isAuthenticated: auth.isAuthenticated,
-        isError: !!auth.error,
+        error: auth.error,
     };
 };
