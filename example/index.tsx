@@ -18,7 +18,7 @@ function App() {
     }
 
     if (auth.error) {
-        return <div>Oops... {auth.error.message}</div>;
+        return <div>Oops... {auth.errorContext?.kind} caused {auth.error.message}</div>;
     }
 
     if (auth.isAuthenticated) {

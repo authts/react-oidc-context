@@ -139,6 +139,45 @@ describe("AuthProvider", () => {
         expect(UserManager.prototype.signoutCallback).toHaveBeenCalledTimes(1);
     });
 
+    it("should handle error when signoutCallback throws Error", async () => {
+        // arrange
+        const onSignoutCallback = () => { throw new Error("expected"); };
+        window.history.pushState(
+            {},
+            document.title,
+            "/signout-callback",
+        );
+        expect(window.location.pathname).toBe(
+            "/signout-callback",
+        );
+
+        const wrapper = createWrapper({
+            ...settingsStub,
+            post_logout_redirect_uri: "https://www.example.com/signout-callback",
+            matchSignoutCallback: () => window.location.pathname === "/signout-callback",
+            onSignoutCallback,
+        });
+
+        // act
+        const result = await act(async () => {
+            const { result } = renderHook(() => useAuth(), {
+                wrapper,
+            });
+            return result;
+        });
+
+        await act(async () => {
+            await waitFor(() => {
+                expect(result.current.user).toBeUndefined();
+            });
+        });
+
+        expect(result.current.error?.message).toStrictEqual("expected");
+        expect(result.current.errorContext).toEqual({
+            kind: "signoutCallback",
+        });
+    });
+
     it("should signinResourceOwnerCredentials when asked", async () => {
         // arrange
         const wrapper = createWrapper({ ...settingsStub });
@@ -251,6 +290,48 @@ describe("AuthProvider", () => {
         // assert
         expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
         expect(customUserManager.signinRedirect).toHaveBeenCalled();
+    });
+
+    it("should handle errors of signinRedirect", async () => {
+        // arrange
+        const customUserManager = new UserManager({ ...settingsStub });
+        customUserManager.signinRedirect = () => { throw new Error("expected"); };
+
+        const wrapper = createWrapper({
+            userManager: customUserManager,
+        });
+
+        const result = await act(async () => {
+            const { result } = renderHook(() => useAuth(), {
+                wrapper,
+            });
+            return result;
+        });
+
+        await act(async () => {
+            await waitFor(() => {
+                expect(result.current.user).toBeUndefined();
+            });
+        });
+
+        // act
+        await act(async () => {
+            await result.current.signinRedirect({
+                state: "foo",
+                ui_locales: "en",
+            });
+        });
+
+        // assert
+        expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
+        expect(result.current.error?.message).toStrictEqual("expected");
+        expect(result.current.errorContext).toEqual({
+            kind: "signinRedirect",
+            args: {
+                state: "foo",
+                ui_locales: "en",
+            },
+        });
     });
 
     it("should throw an error if user manager and custom settings are passed in", async () => {
