@@ -86,8 +86,7 @@ export interface AuthProviderUserManagerProps extends AuthProviderBaseProps {
 // @public
 export interface AuthState {
     activeNavigator?: "signinRedirect" | "signinResourceOwnerCredentials" | "signinPopup" | "signinSilent" | "signoutRedirect" | "signoutPopup" | "signoutSilent";
-    error?: Error;
-    errorContext?: ErrorContext;
+    error?: ErrorContext;
     isAuthenticated: boolean;
     isLoading: boolean;
     user?: User | null;
@@ -95,35 +94,39 @@ export interface AuthState {
 
 // @public
 export type ErrorContext = {
-    kind: "signinCallback";
+    message: string;
+    cause?: unknown;
+    stack?: string;
+} & ({
+    source: "signinCallback";
 } | {
-    kind: "signoutCallback";
+    source: "signoutCallback";
 } | {
-    kind: "renewSilent";
+    source: "renewSilent";
 } | {
-    kind: "signinPopup";
+    source: "signinPopup";
     args: SigninPopupArgs | undefined;
 } | {
-    kind: "signinSilent";
+    source: "signinSilent";
     args: SigninSilentArgs | undefined;
 } | {
-    kind: "signinRedirect";
+    source: "signinRedirect";
     args: SigninRedirectArgs | undefined;
 } | {
-    kind: "signinResourceOwnerCredentials";
+    source: "signinResourceOwnerCredentials";
     args: SigninResourceOwnerCredentialsArgs | undefined;
 } | {
-    kind: "signoutPopup";
+    source: "signoutPopup";
     args: SignoutPopupArgs | undefined;
 } | {
-    kind: "signoutRedirect";
+    source: "signoutRedirect";
     args: SignoutRedirectArgs | undefined;
 } | {
-    kind: "signoutSilent";
+    source: "signoutSilent";
     args: SignoutSilentArgs | undefined;
 } | {
-    kind: "unknown";
-};
+    source: "unknown";
+});
 
 // @public (undocumented)
 export const hasAuthParams: (location?: Location) => boolean;

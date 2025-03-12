@@ -8,7 +8,7 @@ type Action =
     | { type: "USER_SIGNED_OUT" }
     | { type: "NAVIGATOR_INIT"; method: NonNullable<AuthState["activeNavigator"]> }
     | { type: "NAVIGATOR_CLOSE" }
-    | { type: "ERROR"; error: Error; context: ErrorContext };
+    | { type: "ERROR"; error: ErrorContext };
 
 /**
  * Handles how that state changes in the `useAuth` hook.
@@ -49,16 +49,19 @@ export const reducer = (state: AuthState, action: Action): AuthState => {
                 ...state,
                 isLoading: false,
                 error: action.error,
-                errorContext: action.context,
             };
-        default:
+        default: {
+            const error = new Error(`unknown type ${action["type"] as string}`);
             return {
                 ...state,
                 isLoading: false,
-                error: new Error(`unknown type ${action["type"] as string}`),
-                errorContext: {
-                    kind: "unknown",
+                error: {
+                    message: error.message,
+                    cause: error,
+                    stack: error.stack,
+                    source: "unknown",
                 },
             };
+        }
     }
 };

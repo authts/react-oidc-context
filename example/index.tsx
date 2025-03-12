@@ -2,7 +2,7 @@ import React from "react";
 
 import { createRoot } from "react-dom/client";
 
-import { AuthProvider, useAuth } from "../src/.";
+import { AuthProvider, useAuth } from "../src";
 
 const oidcConfig = {
     authority: "<your authority>",
@@ -18,7 +18,7 @@ function App() {
     }
 
     if (auth.error) {
-        return <div>Oops... {auth.errorContext?.kind} caused {auth.error.message}</div>;
+        return <div>Oops... {auth.error.source} caused {auth.error.message}</div>;
     }
 
     if (auth.isAuthenticated) {

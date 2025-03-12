@@ -141,7 +141,8 @@ describe("AuthProvider", () => {
 
     it("should handle error when signoutCallback throws Error", async () => {
         // arrange
-        const onSignoutCallback = () => { throw new Error("expected"); };
+        const error = new Error("expected");
+        const onSignoutCallback = () => { throw error; };
         window.history.pushState(
             {},
             document.title,
@@ -172,9 +173,11 @@ describe("AuthProvider", () => {
             });
         });
 
-        expect(result.current.error?.message).toStrictEqual("expected");
-        expect(result.current.errorContext).toEqual({
-            kind: "signoutCallback",
+        expect(result.current.error).toEqual({
+            message: error.message,
+            cause: error,
+            stack: error.stack,
+            source: "signoutCallback",
         });
     });
 
@@ -294,8 +297,9 @@ describe("AuthProvider", () => {
 
     it("should handle errors of signinRedirect", async () => {
         // arrange
+        const error = new Error("expected");
         const customUserManager = new UserManager({ ...settingsStub });
-        customUserManager.signinRedirect = () => { throw new Error("expected"); };
+        customUserManager.signinRedirect = () => { throw error; };
 
         const wrapper = createWrapper({
             userManager: customUserManager,
@@ -324,9 +328,11 @@ describe("AuthProvider", () => {
 
         // assert
         expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
-        expect(result.current.error?.message).toStrictEqual("expected");
-        expect(result.current.errorContext).toEqual({
-            kind: "signinRedirect",
+        expect(result.current.error).toEqual({
+            message: error.message,
+            cause: error,
+            stack: error.stack,
+            source: "signinRedirect",
             args: {
                 state: "foo",
                 ui_locales: "en",

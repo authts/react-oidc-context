@@ -8,7 +8,7 @@ import type {
 import { AuthContext } from "./AuthContext";
 import { type ErrorContext, initialAuthState } from "./AuthState";
 import { reducer } from "./reducer";
-import { hasAuthParams, signinError, signoutError } from "./utils";
+import { hasAuthParams, signinError, signoutError, renewSilentError, messageOf, stackOf } from "./utils";
 
 /**
  * @public
@@ -204,8 +204,13 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                                 } catch (error) {
                                     dispatch({
                                         type: "ERROR",
-                                        error: error as Error,
-                                        context: { kind: key, args: args } as ErrorContext,
+                                        error: {
+                                            message: messageOf(error, `Unknown error while executing ${key}(...).`),
+                                            cause: error,
+                                            stack: stackOf(error, true),
+                                            source: key,
+                                            args: args,
+                                        } as ErrorContext,
                                     });
                                     return null;
                                 } finally {
@@ -242,7 +247,6 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                 dispatch({
                     type: "ERROR",
                     error: signinError(error),
-                    context: { kind: "signinCallback" },
                 });
             }
 
@@ -256,7 +260,6 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                 dispatch({
                     type: "ERROR",
                     error: signoutError(error),
-                    context: { kind: "signoutCallback" },
                 });
             }
         })();
@@ -287,8 +290,7 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
         const handleSilentRenewError = (error: Error) => {
             dispatch({
                 type: "ERROR",
-                error,
-                context: { kind: "renewSilent" },
+                error: renewSilentError(error),
             });
         };
         userManager.events.addSilentRenewError(handleSilentRenewError);

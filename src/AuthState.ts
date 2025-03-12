@@ -38,33 +38,32 @@ export interface AuthState {
     /**
      * Was there a signin or silent renew error?
      */
-    error?: Error;
-
-    /**
-     * If there is an error, in which context does it happen?
-     */
-    errorContext?: ErrorContext;
+    error?: ErrorContext;
 }
 
 /**
- * Represents the context in which an error happens.
+ * Represents an error while execution of a signing, renew, ...
  *
  * @public
  */
-export type ErrorContext =
-    | { kind: "signinCallback" }
-    | { kind: "signoutCallback" }
-    | { kind: "renewSilent" }
+export type ErrorContext = {
+    message: string;
+    cause?: unknown;
+    stack?: string;
+} & ({ source: "signinCallback" }
+    | { source: "signoutCallback" }
+    | { source: "renewSilent" }
 
-    | { kind: "signinPopup"; args: SigninPopupArgs | undefined }
-    | { kind: "signinSilent"; args: SigninSilentArgs | undefined }
-    | { kind: "signinRedirect"; args: SigninRedirectArgs | undefined }
-    | { kind: "signinResourceOwnerCredentials"; args: SigninResourceOwnerCredentialsArgs | undefined }
-    | { kind: "signoutPopup"; args: SignoutPopupArgs | undefined }
-    | { kind: "signoutRedirect"; args: SignoutRedirectArgs | undefined }
-    | { kind: "signoutSilent"; args: SignoutSilentArgs | undefined }
+    | { source: "signinPopup"; args: SigninPopupArgs | undefined }
+    | { source: "signinSilent"; args: SigninSilentArgs | undefined }
+    | { source: "signinRedirect"; args: SigninRedirectArgs | undefined }
+    | { source: "signinResourceOwnerCredentials"; args: SigninResourceOwnerCredentialsArgs | undefined }
+    | { source: "signoutPopup"; args: SignoutPopupArgs | undefined }
+    | { source: "signoutRedirect"; args: SignoutRedirectArgs | undefined }
+    | { source: "signoutSilent"; args: SignoutSilentArgs | undefined }
 
-    | { kind: "unknown" };
+    | { source: "unknown" }
+);
 
 /**
  * The initial auth state.
