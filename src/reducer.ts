@@ -44,23 +44,29 @@ export const reducer = (state: AuthState, action: Action): AuthState => {
                 isLoading: false,
                 activeNavigator: undefined,
             };
-        case "ERROR":
+        case "ERROR": {
+            const error = action.error;
+            error["toString"] = () => `${error.name}: ${error.message}`;
             return {
                 ...state,
                 isLoading: false,
-                error: action.error,
+                error,
             };
+        }
         default: {
-            const error = new Error(`unknown type ${action["type"] as string}`);
+            const cause = new TypeError(`unknown type ${action["type"] as string}`);
+            const error = {
+                name: cause.name,
+                message: cause.message,
+                cause,
+                stack: cause.stack,
+                source: "unknown",
+            } satisfies ErrorContext;
+            error["toString"] = () => `${error.name}: ${error.message}`;
             return {
                 ...state,
                 isLoading: false,
-                error: {
-                    message: error.message,
-                    cause: error,
-                    stack: error.stack,
-                    source: "unknown",
-                },
+                error,
             };
         }
     }

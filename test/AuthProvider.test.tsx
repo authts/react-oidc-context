@@ -141,7 +141,7 @@ describe("AuthProvider", () => {
 
     it("should handle error when signoutCallback throws Error", async () => {
         // arrange
-        const error = new Error("expected");
+        const error = new TypeError("expected");
         const onSignoutCallback = () => { throw error; };
         window.history.pushState(
             {},
@@ -173,12 +173,17 @@ describe("AuthProvider", () => {
             });
         });
 
-        expect(result.current.error).toEqual({
+        // assert
+        expect(result.current.error).toBeTruthy();
+        const { toString, ...actual } = result.current.error as unknown as Record<string, unknown>;
+        expect(actual).toEqual({
+            name: error.name,
             message: error.message,
             cause: error,
             stack: error.stack,
             source: "signoutCallback",
         });
+        expect(toString?.()).toEqual("TypeError: expected");
     });
 
     it("should signinResourceOwnerCredentials when asked", async () => {
@@ -297,7 +302,7 @@ describe("AuthProvider", () => {
 
     it("should handle errors of signinRedirect", async () => {
         // arrange
-        const error = new Error("expected");
+        const error = new TypeError("expected");
         const customUserManager = new UserManager({ ...settingsStub });
         customUserManager.signinRedirect = () => { throw error; };
 
@@ -328,7 +333,11 @@ describe("AuthProvider", () => {
 
         // assert
         expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
-        expect(result.current.error).toEqual({
+
+        expect(result.current.error).toBeTruthy();
+        const { toString, ...actual } = result.current.error as unknown as Record<string, unknown>;
+        expect(actual).toEqual({
+            name: error.name,
             message: error.message,
             cause: error,
             stack: error.stack,
@@ -338,6 +347,7 @@ describe("AuthProvider", () => {
                 ui_locales: "en",
             },
         });
+        expect(toString?.()).toEqual("TypeError: expected");
     });
 
     it("should throw an error if user manager and custom settings are passed in", async () => {

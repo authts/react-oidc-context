@@ -93,10 +93,8 @@ export interface AuthState {
 }
 
 // @public
-export type ErrorContext = {
-    message: string;
+export type ErrorContext = Error & {
     cause?: unknown;
-    stack?: string;
 } & ({
     source: "signinCallback";
 } | {

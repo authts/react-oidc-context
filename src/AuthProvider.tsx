@@ -8,7 +8,7 @@ import type {
 import { AuthContext } from "./AuthContext";
 import { type ErrorContext, initialAuthState } from "./AuthState";
 import { reducer } from "./reducer";
-import { hasAuthParams, signinError, signoutError, renewSilentError, messageOf, stackOf } from "./utils";
+import { hasAuthParams, signinError, signoutError, renewSilentError, messageOf, stackOf, nameOf } from "./utils";
 
 /**
  * @public
@@ -205,6 +205,7 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                                     dispatch({
                                         type: "ERROR",
                                         error: {
+                                            name: nameOf(error),
                                             message: messageOf(error, `Unknown error while executing ${key}(...).`),
                                             cause: error,
                                             stack: stackOf(error, true),
