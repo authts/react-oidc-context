@@ -179,7 +179,7 @@ describe("AuthProvider", () => {
         expect(actual).toEqual({
             name: error.name,
             message: error.message,
-            cause: error,
+            innerError: error,
             stack: error.stack,
             source: "signoutCallback",
         });
@@ -339,7 +339,7 @@ describe("AuthProvider", () => {
         expect(actual).toEqual({
             name: error.name,
             message: error.message,
-            cause: error,
+            innerError: error,
             stack: error.stack,
             source: "signinRedirect",
             args: {

@@ -25,7 +25,7 @@ const normalizeErrorFn = (source: "signoutCallback" | "signinCallback" | "renewS
     return {
         name: nameOf(error),
         message: messageOf(error, fallbackMessage),
-        cause: error,
+        innerError: error,
         stack: stackOf(error, true),
         source: source,
     };

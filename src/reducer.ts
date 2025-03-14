@@ -54,12 +54,12 @@ export const reducer = (state: AuthState, action: Action): AuthState => {
             };
         }
         default: {
-            const cause = new TypeError(`unknown type ${action["type"] as string}`);
+            const innerError = new TypeError(`unknown type ${action["type"] as string}`);
             const error = {
-                name: cause.name,
-                message: cause.message,
-                cause,
-                stack: cause.stack,
+                name: innerError.name,
+                message: innerError.message,
+                innerError,
+                stack: innerError.stack,
                 source: "unknown",
             } satisfies ErrorContext;
             error["toString"] = () => `${error.name}: ${error.message}`;

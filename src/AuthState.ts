@@ -47,7 +47,7 @@ export interface AuthState {
  * @public
  */
 export type ErrorContext = Error & {
-    cause?: unknown;
+    innerError?: unknown;
 } & ({ source: "signinCallback" }
     | { source: "signoutCallback" }
     | { source: "renewSilent" }

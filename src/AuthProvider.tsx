@@ -207,7 +207,7 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                                         error: {
                                             name: nameOf(error),
                                             message: messageOf(error, `Unknown error while executing ${key}(...).`),
-                                            cause: error,
+                                            innerError: error,
                                             stack: stackOf(error, true),
                                             source: key,
                                             args: args,
