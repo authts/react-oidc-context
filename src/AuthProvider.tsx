@@ -6,9 +6,9 @@ import type {
 } from "oidc-client-ts";
 
 import { AuthContext } from "./AuthContext";
-import { initialAuthState } from "./AuthState";
+import { type ErrorContext, initialAuthState } from "./AuthState";
 import { reducer } from "./reducer";
-import { hasAuthParams, signinError, signoutError } from "./utils";
+import { hasAuthParams, signinError, signoutError, renewSilentError, messageOf, stackOf, nameOf } from "./utils";
 
 /**
  * @public
@@ -202,7 +202,17 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                                 try {
                                     return await userManager[key](args);
                                 } catch (error) {
-                                    dispatch({ type: "ERROR", error: error as Error });
+                                    dispatch({
+                                        type: "ERROR",
+                                        error: {
+                                            name: nameOf(error),
+                                            message: messageOf(error, `Unknown error while executing ${key}(...).`),
+                                            innerError: error,
+                                            stack: stackOf(error, true),
+                                            source: key,
+                                            args: args,
+                                        } as ErrorContext,
+                                    });
                                     return null;
                                 } finally {
                                     dispatch({ type: "NAVIGATOR_CLOSE" });
@@ -235,7 +245,10 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                 user = !user ? await userManager.getUser() : user;
                 dispatch({ type: "INITIALISED", user });
             } catch (error) {
-                dispatch({ type: "ERROR", error: signinError(error) });
+                dispatch({
+                    type: "ERROR",
+                    error: signinError(error),
+                });
             }
 
             // sign-out
@@ -245,7 +258,10 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                     if (onSignoutCallback) await onSignoutCallback(resp);
                 }
             } catch (error) {
-                dispatch({ type: "ERROR", error: signoutError(error) });
+                dispatch({
+                    type: "ERROR",
+                    error: signoutError(error),
+                });
             }
         })();
     }, [userManager, skipSigninCallback, onSigninCallback, onSignoutCallback, matchSignoutCallback]);
@@ -273,7 +289,10 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
 
         // event SilentRenewError (silent renew error)
         const handleSilentRenewError = (error: Error) => {
-            dispatch({ type: "ERROR", error });
+            dispatch({
+                type: "ERROR",
+                error: renewSilentError(error),
+            });
         };
         userManager.events.addSilentRenewError(handleSilentRenewError);
 

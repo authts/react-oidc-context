@@ -1,6 +1,6 @@
 import type { User } from "oidc-client-ts";
 
-import type { AuthState } from "./AuthState";
+import type { AuthState, ErrorContext } from "./AuthState";
 
 type Action =
     | { type: "INITIALISED" | "USER_LOADED"; user: User | null }
@@ -8,7 +8,7 @@ type Action =
     | { type: "USER_SIGNED_OUT" }
     | { type: "NAVIGATOR_INIT"; method: NonNullable<AuthState["activeNavigator"]> }
     | { type: "NAVIGATOR_CLOSE" }
-    | { type: "ERROR"; error: Error };
+    | { type: "ERROR"; error: ErrorContext };
 
 /**
  * Handles how that state changes in the `useAuth` hook.
@@ -44,17 +44,30 @@ export const reducer = (state: AuthState, action: Action): AuthState => {
                 isLoading: false,
                 activeNavigator: undefined,
             };
-        case "ERROR":
+        case "ERROR": {
+            const error = action.error;
+            error["toString"] = () => `${error.name}: ${error.message}`;
             return {
                 ...state,
                 isLoading: false,
-                error: action.error,
+                error,
             };
-        default:
+        }
+        default: {
+            const innerError = new TypeError(`unknown type ${action["type"] as string}`);
+            const error = {
+                name: innerError.name,
+                message: innerError.message,
+                innerError,
+                stack: innerError.stack,
+                source: "unknown",
+            } satisfies ErrorContext;
+            error["toString"] = () => `${error.name}: ${error.message}`;
             return {
                 ...state,
                 isLoading: false,
-                error: new Error(`unknown type ${action["type"] as string}`),
+                error,
             };
+        }
     }
 };

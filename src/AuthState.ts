@@ -1,4 +1,13 @@
-import type { User } from "oidc-client-ts";
+import type {
+    SigninPopupArgs,
+    SigninRedirectArgs,
+    SigninResourceOwnerCredentialsArgs,
+    SigninSilentArgs,
+    SignoutPopupArgs,
+    SignoutRedirectArgs,
+    SignoutSilentArgs,
+    User,
+} from "oidc-client-ts";
 
 /**
  * The auth state which, when combined with the auth methods, make up the return object of the `useAuth` hook.
@@ -29,8 +38,30 @@ export interface AuthState {
     /**
      * Was there a signin or silent renew error?
      */
-    error?: Error;
+    error?: ErrorContext;
 }
+
+/**
+ * Represents an error while execution of a signing, renew, ...
+ *
+ * @public
+ */
+export type ErrorContext = Error & {
+    innerError?: unknown;
+} & ({ source: "signinCallback" }
+    | { source: "signoutCallback" }
+    | { source: "renewSilent" }
+
+    | { source: "signinPopup"; args: SigninPopupArgs | undefined }
+    | { source: "signinSilent"; args: SigninSilentArgs | undefined }
+    | { source: "signinRedirect"; args: SigninRedirectArgs | undefined }
+    | { source: "signinResourceOwnerCredentials"; args: SigninResourceOwnerCredentialsArgs | undefined }
+    | { source: "signoutPopup"; args: SignoutPopupArgs | undefined }
+    | { source: "signoutRedirect"; args: SignoutRedirectArgs | undefined }
+    | { source: "signoutSilent"; args: SignoutSilentArgs | undefined }
+
+    | { source: "unknown" }
+);
 
 /**
  * The initial auth state.

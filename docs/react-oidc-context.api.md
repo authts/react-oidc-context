@@ -86,11 +86,45 @@ export interface AuthProviderUserManagerProps extends AuthProviderBaseProps {
 // @public
 export interface AuthState {
     activeNavigator?: "signinRedirect" | "signinResourceOwnerCredentials" | "signinPopup" | "signinSilent" | "signoutRedirect" | "signoutPopup" | "signoutSilent";
-    error?: Error;
+    error?: ErrorContext;
     isAuthenticated: boolean;
     isLoading: boolean;
     user?: User | null;
 }
+
+// @public
+export type ErrorContext = Error & {
+    innerError?: unknown;
+} & ({
+    source: "signinCallback";
+} | {
+    source: "signoutCallback";
+} | {
+    source: "renewSilent";
+} | {
+    source: "signinPopup";
+    args: SigninPopupArgs | undefined;
+} | {
+    source: "signinSilent";
+    args: SigninSilentArgs | undefined;
+} | {
+    source: "signinRedirect";
+    args: SigninRedirectArgs | undefined;
+} | {
+    source: "signinResourceOwnerCredentials";
+    args: SigninResourceOwnerCredentialsArgs | undefined;
+} | {
+    source: "signoutPopup";
+    args: SignoutPopupArgs | undefined;
+} | {
+    source: "signoutRedirect";
+    args: SignoutRedirectArgs | undefined;
+} | {
+    source: "signoutSilent";
+    args: SignoutSilentArgs | undefined;
+} | {
+    source: "unknown";
+});
 
 // @public (undocumented)
 export const hasAuthParams: (location?: Location) => boolean;
