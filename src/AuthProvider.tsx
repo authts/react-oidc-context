@@ -1,14 +1,11 @@
+import type { ProcessResourceOwnerPasswordCredentialsArgs, SignoutResponse } from "oidc-client-ts";
+import { User, UserManager, type UserManagerSettings } from "oidc-client-ts";
 import React from "react";
-import { UserManager, type UserManagerSettings, User } from "oidc-client-ts";
-import type {
-    ProcessResourceOwnerPasswordCredentialsArgs,
-    SignoutResponse,
-} from "oidc-client-ts";
 
 import { AuthContext } from "./AuthContext";
 import { type ErrorContext, initialAuthState } from "./AuthState";
 import { reducer } from "./reducer";
-import { hasAuthParams, signinError, signoutError, renewSilentError, messageOf, stackOf, nameOf } from "./utils";
+import { hasAuthParams, normalizeError, renewSilentError, signinError, signoutError } from "./utils";
 
 /**
  * @public
@@ -49,21 +46,21 @@ export interface AuthProviderBaseProps {
     skipSigninCallback?: boolean;
 
     /**
-      * Match the redirect uri used for logout (e.g. `post_logout_redirect_uri`)
-      * This provider will then call automatically the `userManager.signoutCallback`.
-      *
-      * HINT:
-      * Do not call `userManager.signoutRedirect()` within a `React.useEffect`, otherwise the
-      * logout might be unsuccessful.
-      *
-      * ```jsx
-      * <AuthProvider
-      *   matchSignoutCallback={(args) => {
-      *     window &&
-      *     (window.location.href === args.post_logout_redirect_uri);
-      *   }}
-      * ```
-      */
+     * Match the redirect uri used for logout (e.g. `post_logout_redirect_uri`)
+     * This provider will then call automatically the `userManager.signoutCallback`.
+     *
+     * HINT:
+     * Do not call `userManager.signoutRedirect()` within a `React.useEffect`, otherwise the
+     * logout might be unsuccessful.
+     *
+     * ```jsx
+     * <AuthProvider
+     *   matchSignoutCallback={(args) => {
+     *     window &&
+     *     (window.location.href === args.post_logout_redirect_uri);
+     *   }}
+     * ```
+     */
     matchSignoutCallback?: (args: UserManagerSettings) => boolean;
 
     /**
@@ -187,7 +184,7 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                     userManagerContextKeys.map((key) => [
                         key,
                         userManager[key]?.bind(userManager) ??
-                            unsupportedEnvironment(key),
+                        unsupportedEnvironment(key),
                     ]),
                 ) as Pick<UserManager, typeof userManagerContextKeys[number]>,
                 Object.fromEntries(
@@ -205,10 +202,7 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                                     dispatch({
                                         type: "ERROR",
                                         error: {
-                                            name: nameOf(error),
-                                            message: messageOf(error, `Unknown error while executing ${key}(...).`),
-                                            innerError: error,
-                                            stack: stackOf(error, true),
+                                            ...normalizeError(error, `Unknown error while executing ${key}(...).`),
                                             source: key,
                                             args: args,
                                         } as ErrorContext,

@@ -21,31 +21,27 @@ export const hasAuthParams = (location = window.location): boolean => {
     return false;
 };
 
-const normalizeErrorFn = (source: "signoutCallback" | "signinCallback" | "renewSilent", fallbackMessage: string) => (error: unknown): ErrorContext => {
-    return {
-        name: nameOf(error),
-        message: messageOf(error, fallbackMessage),
-        innerError: error,
-        stack: stackOf(error, true),
-        source: source,
-    };
-};
-
 export const signinError = normalizeErrorFn("signinCallback", "Sign-in failed");
 export const signoutError = normalizeErrorFn("signoutCallback", "Sign-out failed");
 export const renewSilentError = normalizeErrorFn("renewSilent", "Renew silent failed");
 
-export const nameOf = (element: unknown, fallback?: string): string => {
-    return stringFieldOf(element, "name", () => fallback || "Error");
-};
+export function normalizeError(error: unknown, fallbackMessage: string): Pick<ErrorContext, "name" | "message" | "innerError" | "stack"> {
+    return {
+        name: stringFieldOf(error, "name", () => "Error"),
+        message: stringFieldOf(error, "message", () => fallbackMessage),
+        stack: stringFieldOf(error, "stack", () => new Error().stack),
+        innerError: error,
+    };
+}
 
-export const messageOf = (element: unknown, fallback: string): string => {
-    return stringFieldOf(element, "message", () => fallback);
-};
-
-export const stackOf = (element: unknown, generateIfAbsent: boolean): string | undefined => {
-    return stringFieldOf(element, "stack", () => generateIfAbsent ? new Error().stack : undefined);
-};
+function normalizeErrorFn(source: "signoutCallback" | "signinCallback" | "renewSilent", fallbackMessage: string) {
+    return (error: unknown): ErrorContext => {
+        return {
+            ...normalizeError(error, fallbackMessage),
+            source: source,
+        };
+    };
+}
 
 function stringFieldOf(element: unknown, fieldName: string, or: () => string): string;
 function stringFieldOf(element: unknown, fieldName: string, or: () => string | undefined): string | undefined;
