@@ -1,14 +1,11 @@
+import type { ProcessResourceOwnerPasswordCredentialsArgs, SignoutResponse } from "oidc-client-ts";
+import { User, UserManager, type UserManagerSettings } from "oidc-client-ts";
 import React from "react";
-import { UserManager, type UserManagerSettings, User } from "oidc-client-ts";
-import type {
-    ProcessResourceOwnerPasswordCredentialsArgs,
-    SignoutResponse,
-} from "oidc-client-ts";
 
 import { AuthContext } from "./AuthContext";
-import { initialAuthState } from "./AuthState";
+import { type ErrorContext, initialAuthState } from "./AuthState";
 import { reducer } from "./reducer";
-import { hasAuthParams, signinError, signoutError } from "./utils";
+import { hasAuthParams, normalizeError, renewSilentError, signinError, signoutError } from "./utils";
 
 /**
  * @public
@@ -49,21 +46,21 @@ export interface AuthProviderBaseProps {
     skipSigninCallback?: boolean;
 
     /**
-      * Match the redirect uri used for logout (e.g. `post_logout_redirect_uri`)
-      * This provider will then call automatically the `userManager.signoutCallback`.
-      *
-      * HINT:
-      * Do not call `userManager.signoutRedirect()` within a `React.useEffect`, otherwise the
-      * logout might be unsuccessful.
-      *
-      * ```jsx
-      * <AuthProvider
-      *   matchSignoutCallback={(args) => {
-      *     window &&
-      *     (window.location.href === args.post_logout_redirect_uri);
-      *   }}
-      * ```
-      */
+     * Match the redirect uri used for logout (e.g. `post_logout_redirect_uri`)
+     * This provider will then call automatically the `userManager.signoutCallback`.
+     *
+     * HINT:
+     * Do not call `userManager.signoutRedirect()` within a `React.useEffect`, otherwise the
+     * logout might be unsuccessful.
+     *
+     * ```jsx
+     * <AuthProvider
+     *   matchSignoutCallback={(args) => {
+     *     window &&
+     *     (window.location.href === args.post_logout_redirect_uri);
+     *   }}
+     * ```
+     */
     matchSignoutCallback?: (args: UserManagerSettings) => boolean;
 
     /**
@@ -187,7 +184,7 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                     userManagerContextKeys.map((key) => [
                         key,
                         userManager[key]?.bind(userManager) ??
-                            unsupportedEnvironment(key),
+                        unsupportedEnvironment(key),
                     ]),
                 ) as Pick<UserManager, typeof userManagerContextKeys[number]>,
                 Object.fromEntries(
@@ -202,7 +199,14 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                                 try {
                                     return await userManager[key](args);
                                 } catch (error) {
-                                    dispatch({ type: "ERROR", error: error as Error });
+                                    dispatch({
+                                        type: "ERROR",
+                                        error: {
+                                            ...normalizeError(error, `Unknown error while executing ${key}(...).`),
+                                            source: key,
+                                            args: args,
+                                        } as ErrorContext,
+                                    });
                                     return null;
                                 } finally {
                                     dispatch({ type: "NAVIGATOR_CLOSE" });
@@ -235,7 +239,10 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                 user = !user ? await userManager.getUser() : user;
                 dispatch({ type: "INITIALISED", user });
             } catch (error) {
-                dispatch({ type: "ERROR", error: signinError(error) });
+                dispatch({
+                    type: "ERROR",
+                    error: signinError(error),
+                });
             }
 
             // sign-out
@@ -245,7 +252,10 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
                     if (onSignoutCallback) await onSignoutCallback(resp);
                 }
             } catch (error) {
-                dispatch({ type: "ERROR", error: signoutError(error) });
+                dispatch({
+                    type: "ERROR",
+                    error: signoutError(error),
+                });
             }
         })();
     }, [userManager, skipSigninCallback, onSigninCallback, onSignoutCallback, matchSignoutCallback]);
@@ -273,7 +283,10 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
 
         // event SilentRenewError (silent renew error)
         const handleSilentRenewError = (error: Error) => {
-            dispatch({ type: "ERROR", error });
+            dispatch({
+                type: "ERROR",
+                error: renewSilentError(error),
+            });
         };
         userManager.events.addSilentRenewError(handleSilentRenewError);
 
