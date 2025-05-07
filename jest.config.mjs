@@ -12,13 +12,4 @@ export default {
     },
     collectCoverage,
     coverageReporters: collectCoverage ? ["lcov"] : ["lcov", "text"],
-    transform: {
-        "^.+\\.tsx?$": [
-            "ts-jest",
-            {
-                // skip ts-jest type checking, incremental compilation with tsc is much faster
-                isolatedModules: true,
-            },
-        ],
-    },
 };
