@@ -286,18 +286,18 @@ import { useAuth, hasAuthParams } from "react-oidc-context";
 
 function App() {
     const auth = useAuth();
-    const [hasTriedSignin, setHasTriedSignin] = React.useState(false);
+    const hasTriedSignin = React.useRef(false);
 
     // automatically sign-in
     React.useEffect(() => {
         if (!hasAuthParams() &&
             !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading &&
-            !hasTriedSignin
+            !hasTriedSignin.current
         ) {
             auth.signinRedirect();
-            setHasTriedSignin(true);
+            hasTriedSignin.current = true;
         }
-    }, [auth, hasTriedSignin]);
+    }, [auth]);
 
     if (auth.isLoading) {
         return <div>Signing you in/out...</div>;
