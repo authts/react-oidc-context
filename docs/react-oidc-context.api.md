@@ -147,7 +147,9 @@ export const withAuthenticationRequired: <P extends object>(Component: React_2.C
 // @public (undocumented)
 export interface WithAuthenticationRequiredProps {
     onBeforeSignin?: () => Promise<void> | void;
+    // @deprecated
     OnRedirecting?: () => React_2.JSX.Element;
+    onRedirecting?: () => React_2.JSX.Element;
     signinRedirectArgs?: SigninRedirectArgs;
 }
 

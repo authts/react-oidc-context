@@ -236,7 +236,7 @@ import { withAuthenticationRequired } from "react-oidc-context";
 const PrivateRoute = () => (<div>Private</div>);
 
 export default withAuthenticationRequired(PrivateRoute, {
-  OnRedirecting: () => (<div>Redirecting to the login page...</div>)
+  onRedirecting: () => (<div>Redirecting to the login page...</div>)
 });
 ```
 
