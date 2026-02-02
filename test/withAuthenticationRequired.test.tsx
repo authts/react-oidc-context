@@ -68,6 +68,33 @@ describe("withAuthenticationRequired", () => {
         useAuthMock.mockReturnValue(authContext);
 
         const MyComponent = (): React.JSX.Element => <>Private</>;
+        const onRedirecting = (): React.JSX.Element => <>Redirecting</>;
+        const WrappedComponent = withAuthenticationRequired(MyComponent, {
+            onRedirecting,
+        });
+
+        // act
+        act(() => {
+            render(
+                <AuthProvider {...settingsStub}>
+                    <WrappedComponent />
+                </AuthProvider>,
+            );
+        });
+
+        // assert
+        await screen.findByText("Redirecting");
+    });
+
+    it("should show a custom redirecting message when not authenticated (using deprecated OnRedirecting)", async () => {
+        // arrange
+        const useAuthMock = jest.spyOn(useAuthModule, "useAuth");
+        const authContext = { isLoading: false, isAuthenticated: false } as AuthContextProps;
+        const signinRedirectMock = jest.fn().mockResolvedValue(undefined);
+        authContext.signinRedirect = signinRedirectMock;
+        useAuthMock.mockReturnValue(authContext);
+
+        const MyComponent = (): React.JSX.Element => <>Private</>;
         const OnRedirecting = (): React.JSX.Element => <>Redirecting</>;
         const WrappedComponent = withAuthenticationRequired(MyComponent, {
             OnRedirecting,
