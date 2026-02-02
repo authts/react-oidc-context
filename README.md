@@ -30,7 +30,7 @@ The
 [`User`](https://authts.github.io/oidc-client-ts/classes/User.html)
 and
 [`UserManager`](https://authts.github.io/oidc-client-ts/classes/UserManager.html)
-is hold in this context, which is accessible from the
+is held in this context, which is accessible from the
 React application. Additionally it intercepts the auth redirects by looking at
 the query/fragment parameters and acts accordingly. You still need to setup a
 redirect uri, which must point to your application, but you do not need to
