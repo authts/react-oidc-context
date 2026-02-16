@@ -1,34 +1,76 @@
 import React from "react";
 import { useAuth } from "./useAuth";
 import { hasAuthParams } from "./utils";
-import type { AuthContextProps } from "./AuthContext";
 import type { AuthState } from "./AuthState";
-
-type UseAutoSignInProps = {
-    signinMethod?: keyof Pick<AuthContextProps, "signinRedirect" | "signinPopup">;
-}
+import type {
+    SigninPopupArgs, SigninRedirectArgs,
+} from "oidc-client-ts";
 
 type UseAutoSignInReturn = Pick<AuthState, "isAuthenticated" | "isLoading" | "error">
 
 /**
  * @public
  *
- * Automatically attempts to sign in a user based on the provided sign-in method and authentication state.
+ * Automatically attempts to sign in a user using popup method.
  *
- * This hook manages automatic sign-in behavior for a user. It uses the specified sign-in
+ * This hook manages automatic sign-in behavior for a user. It uses the popup sign-in
  * method, the current authentication state, and ensures the sign-in attempt is made only once
  * in the application context.
  *
  * Does not support the `signinResourceOwnerCredentials` method!
  *
- * @param options - (Optional) Configuration object for the sign-in method. Default to `{ signinMethod: "signinRedirect" }`.
- *       Possible values for `signinMethod` are:
- *        - `"signinRedirect"`: Redirects the user to the sign-in page (default).
- *        - `"signinPopup"`: Signs in the user through a popup.
+ * @param options - Configuration object with `signinMethod: "signinPopup"` and optional `args` for popup-specific settings (popup window features, redirect_uri, etc.).
  *
  * @returns The current status of the authentication process.
  */
-export const useAutoSignin = ({ signinMethod = "signinRedirect" }: UseAutoSignInProps = {}): UseAutoSignInReturn => {
+export function useAutoSignin(options: {
+    signinMethod: "signinPopup";
+    args?: SigninPopupArgs;
+}): UseAutoSignInReturn;
+
+/**
+ * @public
+ *
+ * Automatically attempts to sign in a user using redirect method.
+ *
+ * This hook manages automatic sign-in behavior for a user. It uses the redirect sign-in
+ * method, the current authentication state, and ensures the sign-in attempt is made only once
+ * in the application context.
+ *
+ * Does not support the `signinResourceOwnerCredentials` method!
+ *
+ * @param options - Configuration object with `signinMethod: "signinRedirect"` and optional `args` for redirect-specific settings (redirect_uri, state, extraQueryParams, etc.).
+ *
+ * @returns The current status of the authentication process.
+ */
+export function useAutoSignin(options: {
+    signinMethod: "signinRedirect";
+    args?: SigninRedirectArgs;
+}): UseAutoSignInReturn;
+
+/**
+ * @public
+ *
+ * Automatically attempts to sign in a user using the default redirect method.
+ *
+ * This hook manages automatic sign-in behavior for a user. It uses the redirect sign-in
+ * method by default, the current authentication state, and ensures the sign-in attempt is made only once
+ * in the application context.
+ *
+ * Does not support the `signinResourceOwnerCredentials` method!
+ *
+ * @param options - (Optional) Configuration object. Defaults to `{ signinMethod: "signinRedirect" }`. May include optional `args` for redirect-specific settings (redirect_uri, state, extraQueryParams, etc.).
+ *
+ * @returns The current status of the authentication process.
+ */
+export function useAutoSignin(options?: {
+    args?: SigninRedirectArgs;
+}): UseAutoSignInReturn;
+
+export function useAutoSignin({ signinMethod = "signinRedirect", args }: {
+    signinMethod?: "signinRedirect" | "signinPopup";
+    args?: SigninPopupArgs | SigninRedirectArgs;
+} = {}): UseAutoSignInReturn {
     const auth = useAuth();
     const [hasTriedSignin, setHasTriedSignin] = React.useState(false);
 
@@ -39,17 +81,17 @@ export const useAutoSignin = ({ signinMethod = "signinRedirect" }: UseAutoSignIn
         if (shouldAttemptSignin) {
             switch (signinMethod) {
                 case "signinPopup":
-                    void auth.signinPopup();
+                    void auth.signinPopup(args);
                     break;
                 case "signinRedirect":
                 default:
-                    void auth.signinRedirect();
+                    void auth.signinRedirect(args);
                     break;
             }
 
             setHasTriedSignin(true);
         }
-    }, [auth, hasTriedSignin, shouldAttemptSignin, signinMethod]);
+    }, [args, auth, hasTriedSignin, shouldAttemptSignin, signinMethod]);
 
     return {
         isLoading: auth.isLoading,
