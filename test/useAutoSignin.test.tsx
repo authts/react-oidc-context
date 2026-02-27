@@ -52,4 +52,77 @@ describe("useAutoSignin", () => {
         expect(UserManager.prototype.getUser).toHaveBeenCalled();
     });
 
+    it("should pass args to signinRedirect when provided", async () => {
+        const wrapper = createWrapper({ ...settingsStub });
+        const redirectArgs = {
+            redirect_uri: "custom_redirect",
+            state: "custom_state",
+        };
+        const { result } = renderHook(() => useAutoSignin({
+            signinMethod: "signinRedirect",
+            args: redirectArgs,
+        }), { wrapper });
+
+        await waitFor(() => expect(result.current).toBeDefined());
+
+        expect(UserManager.prototype.signinRedirect).toHaveBeenCalledWith(redirectArgs);
+    });
+
+    it("should pass args to signinPopup when provided", async () => {
+        const wrapper = createWrapper({ ...settingsStub });
+        const popupArgs = {
+            redirect_uri: "custom_popup_redirect",
+            popupWindowFeatures: {
+                width: 500,
+                height: 600,
+            },
+            extraQueryParams: { foo: "bar" },
+        };
+        const { result } = renderHook(() => useAutoSignin({
+            signinMethod: "signinPopup",
+            args: popupArgs,
+        }), { wrapper });
+
+        await waitFor(() => expect(result.current).toBeDefined());
+
+        expect(UserManager.prototype.signinPopup).toHaveBeenCalledWith(popupArgs);
+    });
+
+    it("should pass args to signinRedirect when using default method", async () => {
+        const wrapper = createWrapper({ ...settingsStub });
+        const redirectArgs = {
+            redirect_uri: "default_method_redirect",
+            extraQueryParams: { foo: "bar" },
+        };
+        const { result } = renderHook(() => useAutoSignin({
+            args: redirectArgs,
+        }), { wrapper });
+
+        await waitFor(() => expect(result.current).toBeDefined());
+
+        expect(UserManager.prototype.signinRedirect).toHaveBeenCalledWith(redirectArgs);
+    });
+
+    it("should call signinRedirect without args when no args provided", async () => {
+        const wrapper = createWrapper({ ...settingsStub });
+        const { result } = renderHook(() => useAutoSignin({
+            signinMethod: "signinRedirect",
+        }), { wrapper });
+
+        await waitFor(() => expect(result.current).toBeDefined());
+
+        expect(UserManager.prototype.signinRedirect).toHaveBeenCalledWith(undefined);
+    });
+
+    it("should call signinPopup without args when no args provided", async () => {
+        const wrapper = createWrapper({ ...settingsStub });
+        const { result } = renderHook(() => useAutoSignin({
+            signinMethod: "signinPopup",
+        }), { wrapper });
+
+        await waitFor(() => expect(result.current).toBeDefined());
+
+        expect(UserManager.prototype.signinPopup).toHaveBeenCalledWith(undefined);
+    });
+
 });
