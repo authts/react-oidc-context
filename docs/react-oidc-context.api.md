@@ -132,11 +132,24 @@ export const hasAuthParams: (location?: Location) => boolean;
 // @public (undocumented)
 export const useAuth: () => AuthContextProps;
 
-// Warning: (ae-forgotten-export) The symbol "UseAutoSignInProps" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "UseAutoSignInReturn" needs to be exported by the entry point index.d.ts
 //
 // @public
-export const useAutoSignin: (input?: UseAutoSignInProps) => UseAutoSignInReturn;
+export function useAutoSignin(options?: {
+    signinArgs?: SigninRedirectArgs;
+}): UseAutoSignInReturn;
+
+// @public
+export function useAutoSignin(options: {
+    signinMethod: "signinRedirect";
+    signinArgs?: SigninRedirectArgs;
+}): UseAutoSignInReturn;
+
+// @public
+export function useAutoSignin(options: {
+    signinMethod: "signinPopup";
+    signinArgs?: SigninPopupArgs;
+}): UseAutoSignInReturn;
 
 // @public
 export function withAuth<P>(Component: React_2.ComponentType<P>): React_2.ComponentType<Omit<P, keyof AuthContextProps>>;
