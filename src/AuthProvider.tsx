@@ -301,6 +301,9 @@ export const AuthProvider = (props: AuthProviderProps): React.JSX.Element => {
     const removeUser = React.useCallback(async () => {
         if (!userManager) unsupportedEnvironment("removeUser");
         await userManager.removeUser();
+        // keep local auth state in sync even when the underlying library
+        // does not emit UserUnloaded events in this runtime/test setup.
+        dispatch({ type: "USER_UNLOADED" });
         if (onRemoveUser) await onRemoveUser();
     }, [userManager, onRemoveUser]);
 

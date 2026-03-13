@@ -225,6 +225,31 @@ describe("AuthProvider", () => {
         expect(UserManager.prototype.removeUser).toHaveBeenCalled();
     });
 
+    it("should mark user as signed out immediately after removeUser", async () => {
+        const mockGetUser = mocked(
+            UserManager.prototype,
+        ).getUser.mockImplementation(() => {
+            return new Promise((resolve) => {
+                resolve(user);
+            });
+        });
+
+        const wrapper = createWrapper({ ...settingsStub }, false);
+        const { result } = renderHook(() => useAuth(), {
+            wrapper,
+        });
+
+        await waitFor(() => expect(result.current.user).toBe(user));
+        expect(result.current.isAuthenticated).toBe(true);
+
+        await act(() => result.current.removeUser());
+
+        await waitFor(() => expect(result.current.user).toBeUndefined());
+        expect(result.current.isAuthenticated).toBe(false);
+
+        mockGetUser.mockRestore();
+    });
+
     it("should handle signoutSilent", async () => {
         // arrange
         const wrapper = createWrapper({ ...settingsStub });
