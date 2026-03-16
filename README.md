@@ -255,7 +255,7 @@ function App() {
     React.useEffect(() => {
         // the `return` is important - addAccessTokenExpiring() returns a cleanup function
         return auth.events.addAccessTokenExpiring(() => {
-            if (alert("You're about to be signed out due to inactivity. Press continue to stay signed in.")) {
+            if (confirm("You're about to be signed out due to inactivity. Press continue to stay signed in.")) {
                 auth.signinSilent();
             }
         })
